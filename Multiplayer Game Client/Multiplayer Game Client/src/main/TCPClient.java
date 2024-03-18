@@ -132,7 +132,23 @@ public class TCPClient extends Client
                             }*/
 
                         }
-                        else if (messageReceived != null && !messageReceived.startsWith("*"))
+                        else if (messageReceived != null && messageReceived.contains(":") && !messageReceived.startsWith("*"))
+                        {
+                            if (messageReceived.endsWith(" has left the chat!"))
+                            {
+                                for (int i = 0; i < otherPlayers.size(); i++)
+                                {
+                                    if (messageReceived.substring(8).startsWith(otherPlayers.get(i).clientUserName))
+                                    {
+                                        otherPlayers.remove(i);
+                                        break;
+                                    }
+                                    //i--;
+                                }
+                            }
+                            System.out.println(messageReceived);
+                        }
+                        else
                         {
                             System.out.println(messageReceived);
                         }

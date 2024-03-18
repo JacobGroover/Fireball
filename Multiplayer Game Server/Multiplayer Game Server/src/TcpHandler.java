@@ -50,7 +50,7 @@ public class TcpHandler extends ClientHandler implements Runnable
 
             for (ClientHandler clientHandler: clientDataAL)
             {
-                System.out.println("\nCONSTRUCTOR:");
+                //System.out.println("\nCONSTRUCTOR:");
                 System.out.println(clientHandler);
                 System.out.println(clientHandler.clientUsername);
                 this.constructorBroadcastMessage(clientHandler.clientUsername);
@@ -74,7 +74,7 @@ public class TcpHandler extends ClientHandler implements Runnable
                 }
             }*/
 
-            System.out.print("\nbroadcast from constructor entered the chat message");
+            //System.out.print("\nbroadcast from constructor entered the chat message");
             broadcastMessage("Server: " + clientUsername + " has entered the chat!");
         } catch (IOException ioe)
         {
@@ -113,9 +113,10 @@ public class TcpHandler extends ClientHandler implements Runnable
         {
             try
             {
-                //System.out.println("\nBROADCAST:");
+                // TEST
+                /*System.out.println("\nBROADCAST:");
                 System.out.println(clientDataAL.get(i));
-                System.out.println(clientDataAL.get(i).clientUsername);
+                System.out.println(clientDataAL.get(i).clientUsername);*/
 
                 ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write(messageToSend);
                 ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
@@ -144,9 +145,10 @@ public class TcpHandler extends ClientHandler implements Runnable
             {
                 if (!clientDataAL.get(i).clientUsername.equals(this.clientUsername))
                 {
-                    System.out.println("\nBROADCAST:");
+                    // TEST
+                    /*System.out.println("\nBROADCAST:");
                     System.out.println(clientDataAL.get(i));
-                    System.out.println(clientDataAL.get(i).clientUsername);
+                    System.out.println(clientDataAL.get(i).clientUsername);*/
 
                     ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write(messageToSend);
                     ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
@@ -167,22 +169,6 @@ public class TcpHandler extends ClientHandler implements Runnable
             System.out.println(ch.clientUsername);
         }
 
-        /*for (ClientHandler clientHandler : clientHandlers)
-        {
-            try
-            {
-                if (!clientHandler.clientUsername.equals(this.clientUsername))
-                {
-                    clientHandler.bufferedWriter.write(messageToSend);
-                    clientHandler.bufferedWriter.newLine();
-                    clientHandler.bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
-
-                }
-            } catch (IOException ioe)
-            {
-                closeEverything(TCPSocket, bufferedReader, bufferedWriter);
-            }
-        }*/
     }
 
     // UDP method
