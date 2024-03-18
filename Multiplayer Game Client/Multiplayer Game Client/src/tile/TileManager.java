@@ -1,5 +1,6 @@
 package tile;
 
+import entities.Player;
 import main.GamePanel;
 import main.UtilityTool;
 

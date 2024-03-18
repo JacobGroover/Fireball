@@ -37,8 +37,8 @@ public class OtherPlayer extends Entity {
     public void setDefaultValues(String messageReceived) {
         //this.lastWorldX = 0.0;   // UDP
         //this.lastWorldY = 0.0;   // UDP
-        startX = 23;
-        startY = 21;
+        startX = 23.00;
+        startY = 21.00;
         worldX = gp.tileSize * startX;
         worldY = gp.tileSize * startY;
         speed = 4;

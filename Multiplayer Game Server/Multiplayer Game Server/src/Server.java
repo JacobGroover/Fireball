@@ -2,6 +2,15 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+// TO DO:
+
+// 1. Replace tcpHandlers ArrayList in TcpHandler.java with a global ClientHandler ArrayList to sync clients between TCP and UDP
+
+// 2. On client side, when a player disconnects, remove OtherPlayer.java object from all client's otherPlayers ArrayList and ensure
+// the disconnected player is no longer painted on each client game instance
+
+// 3. Transmit gp.player.worldX and gp.player.worldY with each "moving:" delimited UDP packet
+
 /**
  * This class: Listens for clients who wish to connect and spawns new threads to handle each new client connection.
  */
@@ -32,10 +41,11 @@ public class Server
                 Socket serverSocketTCP = this.serverSocketTCP.accept(); // Suspends code here until a client connects. When a client connects, values are stored to a socket object, which can be used to communicate with that client
                 //Socket serverSocketUDP = this.serverSocketUDP.accept();   // UDP
                 System.out.println("A new client has connected!");  // TEST CODE
-                ClientHandler clientHandler = new ClientHandler(serverSocketTCP, tcpPort);  // Custom class; see ClientHandler for details
+                TcpHandler tcpHandler = new TcpHandler(serverSocketTCP, tcpPort);  // Custom class; see ClientHandler for details
 
-                Thread thread = new Thread(clientHandler);   // Spawn a new Thread to handle the client connection, pass ClientHandler object to it
-                thread.start();
+                Thread tcpThread = new Thread(tcpHandler);   // Spawn a new Thread to handle the client connection, pass ClientHandler object to it
+                tcpThread.start();
+
             }
         } catch (IOException ioe)
         {
@@ -70,8 +80,13 @@ public class Server
         ServerSocket serverSocketTCP = new ServerSocket(tcpPort);
         //ServerSocket serverSocketUDP = new ServerSocket(udpPort); // UDP
         Server server = new Server(serverSocketTCP);
-        server.startServer();
 
+        // UdpBranch
+        UdpClientHandler udpClientHandler = new UdpClientHandler();
+        Thread udpThread = new Thread(udpClientHandler);
+        udpThread.start();
+
+        server.startServer();
     }
 
 }

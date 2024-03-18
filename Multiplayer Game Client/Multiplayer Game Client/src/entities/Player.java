@@ -22,11 +22,15 @@ public class Player extends Entity {
 
     public final int screenX;
     public final int screenY;
+    public static double startX;
+    public static double startY;
     /*public static double worldX;  // UDP
     public static double worldY;*/
 
     public int hasKey = 0;
     public static String sendVelocity = "00";
+    public static double sendVelocityX = 0;
+    public static double sendVelocityY = 0;
 
     public Player(GamePanel gp, KeyHandler keyH) {
 
@@ -45,8 +49,10 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues() {
-        worldX = gp.tileSize * 23;
-        worldY = gp.tileSize * 21;
+        startX = 23;
+        startY = 21;
+        worldX = gp.tileSize * startX;
+        worldY = gp.tileSize * startY;
         speed = 4;
         direction = "down";
         velocityX = 0;
@@ -142,7 +148,7 @@ public class Player extends Entity {
             }
 
             // Normalize movement vector
-            double length = Math.sqrt((velocityX * velocityX) + (velocityY * velocityY));
+            float length = (float) Math.sqrt((velocityX * velocityX) + (velocityY * velocityY));
 
             if (velocityX != 0) {
                 velocityX /= length;
@@ -186,6 +192,9 @@ public class Player extends Entity {
         } else {
             spriteNum = 1;
         }
+
+        sendVelocityX = velocityX;
+        sendVelocityY = velocityY;
 
         if (velocityX > 0)
         {

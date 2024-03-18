@@ -13,9 +13,14 @@ public class Main
         Scanner scanner = new Scanner(System.in);
         boolean validEntry;
         String username;
-        String serverAddress = "192.168.2.102"; // Oghma-Infinium home IP Address
+        // digital media classroom 10.255.11.27
+        // intermediate programming classroom 10.255.4.72
+        // Oghma-Infinium Home IP 192.168.2.102
+        // GGC Database class IP 10.255.36.219
+        Client.serverAddress = "192.168.2.102";
         //String serverAddress = "10.255.5.7"; // GGC IP Address
-        int serverTcpPort = 6682;
+        Client.serverTcpPort1 = 6682;
+        Client.serverUdpPort1 = 4445;
         //int serverUdpPort = 6690; // UDP
         do
         {
@@ -55,14 +60,18 @@ public class Main
 
 
 
-            Socket socket = new Socket(serverAddress, serverTcpPort);
+            Socket socket = new Socket(Client.serverAddress, Client.serverTcpPort1);
             TCPClient tcpClient = new TCPClient(socket, username);
+            UDPClient udpClient = new UDPClient(gamePanel);
 
             //UDPClient udpClient = new UDPClient(datagramSocket, username, serverAddress, serverUdpPort);
 
             // Call listenForMessage() and sendMessage() methods on this client instance; both run on separate threads and are blocked, so they both get called and run continuously while connected.
-            tcpClient.listenForMessage(gamePanel);
-            tcpClient.sendPosition();
+            tcpClient.listenForMessage(gamePanel);    // COMMENT
+            udpClient.run();    // COMMENT
+            //tcpClient.sendPosition();
+
+
             //tcpClient.listenForPosition();
             //udpClient.sendPosition(gamePanel);
             //udpClient.listenForPosition();
