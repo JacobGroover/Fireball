@@ -22,10 +22,10 @@ public class UDPClient extends Client implements Runnable
 
             // Send data to server
             // "entry:" String packet send instructions
-            byte[] byteArray = ("entry:" + clientUsername + "entry:" + gp.player.worldX + "entry:" + gp.player.worldY).getBytes(); // new byte[1024];
+            /*byte[] byteArray = ("entry:" + clientUsername + "entry:" + gp.player.worldX + "entry:" + gp.player.worldY).getBytes(); // new byte[1024];
             InetAddress address = InetAddress.getByName(Client.serverAddress);
             DatagramPacket dgPacket = new DatagramPacket(byteArray, byteArray.length, address, Client.serverUdpPort1);
-            socket.send(dgPacket);
+            socket.send(dgPacket);*/
 
             // TEST CODE
                     /*for (OtherPlayer otherPlayer : otherPlayers)
@@ -95,7 +95,8 @@ public class UDPClient extends Client implements Runnable
                     //DatagramSocket socket = new DatagramSocket();
 
                     // Send data to server
-                    byte[] byteArray = ("moving:" + clientUsername + "moving:" + String.format("%.16f", Player.sendVelocityX) + "moving:" + String.format("%.16f", Player.sendVelocityY)).getBytes(); // new byte[1024];
+                    byte[] byteArray = ("moving:" + clientUsername + "moving:" + String.format("%.16f", Player.sendVelocityX) + "moving:" + String.format("%.16f", Player.sendVelocityY) +
+                            "moving:" + String.format("%.16f", Player.worldX) + "moving:" + String.format("%.16f", Player.worldY)).getBytes(); // new byte[1024];
                     InetAddress address = InetAddress.getByName(Client.serverAddress);
                     DatagramPacket dgPacket = new DatagramPacket(byteArray, byteArray.length, address, Client.serverUdpPort1);
                     socket.send(dgPacket);
@@ -147,11 +148,13 @@ public class UDPClient extends Client implements Runnable
 
                         String[] usernameVelocityXY = messageReceived.split("moving:");
 
-                        for (int i = 1; i < usernameVelocityXY.length; i += 3)
+                        for (int i = 1; i < usernameVelocityXY.length; i += 5)
                         {
                             String clientUsername = usernameVelocityXY[i];
                             String velocityX = usernameVelocityXY[i + 1];
                             String velocityY = usernameVelocityXY[i + 2];
+                            String worldX = usernameVelocityXY[i + 3];
+                            String worldY = usernameVelocityXY[i + 4];
 
                             for (OtherPlayer otherPlayer : otherPlayers)
                             {
@@ -167,6 +170,8 @@ public class UDPClient extends Client implements Runnable
                                 {
                                     otherPlayer.velocityX = Double.parseDouble(velocityX);
                                     otherPlayer.velocityY = Double.parseDouble(velocityY);
+                                    otherPlayer.worldX = Double.parseDouble(worldX);
+                                    otherPlayer.worldY = Double.parseDouble(worldY);
                                 }
                             }
                         }

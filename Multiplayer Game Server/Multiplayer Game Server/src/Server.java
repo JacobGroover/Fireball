@@ -4,9 +4,7 @@ import java.net.Socket;
 
 // TO DO:
 
-// 2. When a player disconnects, remove them from server-side client ArrayList and remove OtherPlayer.java object from all client's otherPlayers ArrayList and ensure the disconnected player is no longer painted on each client game instance.
-
-// 3. Transmit gp.player.worldX and gp.player.worldY with each "moving:" delimited UDP packet
+// 3. Transmit gp.player.worldX and gp.player.worldY with each "moving:" delimited UDP packet so that players joining later have client positions synced correctly and de-syncs are handled (made Player.worldX and Player.worldY static, accounted for collisions accordingly)
 
 /**
  * This class: Listens for clients who wish to connect and spawns new threads to handle each new client connection.

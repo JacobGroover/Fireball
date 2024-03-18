@@ -15,8 +15,8 @@ public class ClientHandler
     protected InetAddress clientInetAddress;
     protected int port;
     protected String clientUsername;
-    protected String worldX;
-    protected String worldY;
+    protected double worldX;
+    protected double worldY;
     protected double velocityX;
     protected double velocityY;
 
@@ -25,7 +25,7 @@ public class ClientHandler
 
     }
 
-    public ClientHandler(String clientUsername, String worldX, String worldY)
+    public ClientHandler(String clientUsername, double worldX, double worldY)
     {
         setClientUsername(clientUsername);
         setWorldX(worldX);
@@ -52,22 +52,22 @@ public class ClientHandler
         this.clientUsername = clientUsername;
     }
 
-    public String getWorldX()
+    public double getWorldX()
     {
         return worldX;
     }
 
-    public void setWorldX(String worldX)
+    public void setWorldX(double worldX)
     {
         this.worldX = worldX;
     }
 
-    public String getWorldY()
+    public double getWorldY()
     {
         return worldY;
     }
 
-    public void setWorldY(String worldY)
+    public void setWorldY(double worldY)
     {
         this.worldY = worldY;
     }

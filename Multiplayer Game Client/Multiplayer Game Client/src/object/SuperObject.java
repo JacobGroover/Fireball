@@ -1,5 +1,6 @@
 package object;
 
+import entities.Player;
 import main.GamePanel;
 import main.UtilityTool;
 
@@ -19,7 +20,18 @@ public class SuperObject {
 
     public void draw(Graphics2D g2, GamePanel gp) {
 
-        int screenX = worldX - (int)gp.player.worldX + gp.player.screenX;
+        int screenX = worldX - (int) Player.worldX + gp.player.screenX;
+        int screenY = worldY - (int)Player.worldY + gp.player.screenY;
+
+        if (worldX + gp.tileSize > Player.worldX - gp.player.screenX &&
+                worldX - gp.tileSize < Player.worldX + gp.player.screenX &&
+                worldY + gp.tileSize > Player.worldY - gp.player.screenY &&
+                worldY - gp.tileSize < Player.worldY + gp.player.screenY)
+        {
+            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        }
+
+        /*int screenX = worldX - (int)gp.player.worldX + gp.player.screenX;
         int screenY = worldY - (int)gp.player.worldY + gp.player.screenY;
 
         if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
@@ -28,7 +40,7 @@ public class SuperObject {
                 worldY - gp.tileSize < gp.player.worldY + gp.player.screenY)
         {
             g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
-        }
+        }*/
 
     }
 

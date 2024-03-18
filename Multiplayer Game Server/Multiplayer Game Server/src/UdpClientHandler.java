@@ -63,6 +63,8 @@ public class UdpClientHandler extends ClientHandler implements Runnable //extend
                     String clientUsername = usernameWorldXY[1];
                     double velocityX = Double.parseDouble(usernameWorldXY[2]);
                     double velocityY = Double.parseDouble(usernameWorldXY[3]);
+                    double worldX = Double.parseDouble(usernameWorldXY[4]);
+                    double worldY = Double.parseDouble(usernameWorldXY[5]);
                         /*System.out.println(clientUsername);
                         System.out.println(velocityX);
                         System.out.println(velocityY);*/
@@ -76,10 +78,13 @@ public class UdpClientHandler extends ClientHandler implements Runnable //extend
                         {
                             client.setVelocityX(velocityX);
                             client.setVelocityY(velocityY);
+                            client.setWorldX(worldX);
+                            client.setWorldY(worldY);
                             //System.out.println(client.getClientUsername() + " " + client.getVelocityX() + " " + client.getVelocityY());
                             
                         }
-                        tempByteString += (String.format("moving:%s" + "moving:%.16f" + "moving:%.16f", client.getClientUsername(), client.getVelocityX(), client.getVelocityY()));
+                        tempByteString += (String.format("moving:%s" + "moving:%.16f" + "moving:%.16f" + "moving:%.16f" + "moving:%.16f",
+                                client.getClientUsername(), client.getVelocityX(), client.getVelocityY(), client.getWorldX(), client.getWorldY()));
                     }
                     //System.out.println(tempByteString);
                     byteArray = tempByteString.getBytes();
