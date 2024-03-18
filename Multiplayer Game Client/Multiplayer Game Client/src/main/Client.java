@@ -7,7 +7,10 @@ import java.util.ArrayList;
 public abstract class Client
 {
 
-    protected String clientUsername;
+    protected static String serverAddress;
+    protected static int serverTcpPort1;
+    protected static int serverUdpPort1;
+    protected static String clientUsername;
     protected static ArrayList<OtherPlayer> otherPlayers = new ArrayList<>();
 
 }
