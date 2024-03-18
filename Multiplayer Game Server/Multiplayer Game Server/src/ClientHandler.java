@@ -11,14 +11,19 @@ import java.util.ArrayList;
 public class ClientHandler
 {
 
-    //protected static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();  // Static ArrayList of ClientHandler objects to keep track of all the instances created
-    private InetAddress clientInetAddress;
-    private int port;
-    private String clientUsername;
-    private String worldX;
-    private String worldY;
-    private double velocityX;
-    private double velocityY;
+    protected static ArrayList<ClientHandler> clientDataAL = new ArrayList<>();  // Static ArrayList of ClientHandler objects to keep track of all the instances created
+    protected InetAddress clientInetAddress;
+    protected int port;
+    protected String clientUsername;
+    protected String worldX;
+    protected String worldY;
+    protected double velocityX;
+    protected double velocityY;
+
+    public ClientHandler()
+    {
+
+    }
 
     public ClientHandler(String clientUsername, String worldX, String worldY)
     {

@@ -142,7 +142,7 @@ public class UDPClient extends Client implements Runnable
                         DatagramPacket dgPacket2 = new DatagramPacket(byteArray2, byteArray2.length);
                         socket.receive(dgPacket2);
                         String messageReceived = new String(dgPacket2.getData());
-                        System.out.println(new String(dgPacket2.getData()));
+                        //System.out.println(new String(dgPacket2.getData()));
 
 
                         String[] usernameVelocityXY = messageReceived.split("moving:");

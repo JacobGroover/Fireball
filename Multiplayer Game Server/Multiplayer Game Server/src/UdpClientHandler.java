@@ -4,9 +4,9 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-public class UdpClientHandler implements Runnable //extends Thread
+public class UdpClientHandler extends ClientHandler implements Runnable //extends Thread
 {
-    protected static ArrayList<ClientHandler> clientDataAL = new ArrayList<>();
+    //protected static ArrayList<ClientHandler> clientDataAL = new ArrayList<>();
     protected DatagramSocket socket;
     protected boolean isWorking;
 
@@ -40,7 +40,7 @@ public class UdpClientHandler implements Runnable //extends Thread
                     String clientUsername = usernameWorldXY[1];
                     String worldX = usernameWorldXY[2];
                     String worldY = usernameWorldXY[3];
-                    clientDataAL.add(new ClientHandler(clientUsername, worldX, worldY));
+                    //clientDataAL.add(new ClientHandler(clientUsername, worldX, worldY));
                         /*System.out.println(clientUsername);
                         System.out.println(worldX);
                         System.out.println(worldY);*/
