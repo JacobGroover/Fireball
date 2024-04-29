@@ -4,7 +4,7 @@ import java.net.Socket;
 
 // TO DO:
 
-// 3. Transmit gp.player.worldX and gp.player.worldY with each "moving:" delimited UDP packet so that players joining later have client positions synced correctly and de-syncs are handled (made Player.worldX and Player.worldY static, accounted for collisions accordingly)
+
 
 /**
  * This class: Listens for clients who wish to connect and spawns new threads to handle each new client connection.
