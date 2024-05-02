@@ -11,10 +11,17 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
+    GamePanel gp;
+
     public boolean upPressed, downPressed, leftPressed, rightPressed;
 
     // DEBUG
     boolean checkDrawTime = false;
+
+    public KeyHandler(GamePanel gp)     // GAME STATE
+    {
+        this.gp = gp;
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -37,6 +44,17 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_D) {
             rightPressed = true;
+        }
+        if (code == KeyEvent.VK_ESCAPE)
+        {
+            if (gp.gameState == gp.PLAY_STATE)
+            {
+                gp.gameState = gp.GAME_MENU_STATE;
+            }
+            else if (gp.gameState == gp.GAME_MENU_STATE)
+            {
+                gp.gameState = gp.PLAY_STATE;
+            }
         }
 
         // DEBUG

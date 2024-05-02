@@ -7,8 +7,11 @@ import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable
+{
 
     // SCREEN SETTINGS
     final int originalTileSize = 16;    // 16x16 tile for characters and NPCs
@@ -31,7 +34,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     // SYSTEM
     TileManager tileManager = new TileManager(this);    // Instantiate TileManager object for game background tiles
-    KeyHandler keyHandler = new KeyHandler();
+    KeyHandler keyHandler = new KeyHandler(this);
+    MouseHandler mouseHandler = new MouseHandler(this);
     Sound music = new Sound();
     Sound sfx = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -43,6 +47,13 @@ public class GamePanel extends JPanel implements Runnable {
     // ENTITIES AND OBJECTS
     public Player player = new Player(this, keyHandler);   // Instantiate player class
     public SuperObject[] obj = new SuperObject[10];
+
+    // GAME STATE
+    public int gameState;
+    public final int MAIN_MENU_STATE = 0;
+    public final int PLAY_STATE = 1;
+    public final int SELECT_CHARACTER_STATE = 2;
+    public final int GAME_MENU_STATE = 3;
 
 
     /**
@@ -57,11 +68,14 @@ public class GamePanel extends JPanel implements Runnable {
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);   // improves game's rendering performance by drawing rendered images off-screen
         this.addKeyListener(keyHandler);
+        this.addMouseListener(mouseHandler);    // GAME STATE
+        this.addMouseMotionListener(mouseHandler);  // GAME STATE
         this.setFocusable(true);    // allows GamePanel to be focused to receive key input [over other applications?]
     }
 
     public void setupGame() {
         aSetter.setObject();
+        gameState = MAIN_MENU_STATE;  // GAME STATE
 
         // playMusic(0);
     }
@@ -153,11 +167,14 @@ public class GamePanel extends JPanel implements Runnable {
      *
      */
     public void update() {
-        player.update();
-
-        for (OtherPlayer otherPlayer : Client.otherPlayers)
+        if (gameState == PLAY_STATE || gameState == GAME_MENU_STATE)
         {
-            otherPlayer.update();
+            player.update();
+
+            for (OtherPlayer otherPlayer : Client.otherPlayers)
+            {
+                otherPlayer.update();
+            }
         }
     }
 
@@ -178,23 +195,31 @@ public class GamePanel extends JPanel implements Runnable {
             drawStart = System.nanoTime();
         }
 
-        tileManager.draw(g2);   // Draw background tiles before drawing players, so players will be on top of background
-
-        for (int i = 0; i < obj.length; i++) {
-            if (obj[i] != null) {
-                obj[i].draw(g2, this);
-            }
-        }
-
-        // PLAYER
-        player.draw(g2);
-        for (OtherPlayer otherPlayer : Client.otherPlayers)
+        // MAIN MENU
+        if (gameState == MAIN_MENU_STATE || gameState == SELECT_CHARACTER_STATE)
         {
-            otherPlayer.draw(g2);
+            ui.draw(g2);
         }
+        else    // If not on Main Menu or Character Menu:
+        {
+            tileManager.draw(g2);   // Draw background tiles before drawing players, so players will be on top of background
 
-        // UI
-        ui.draw(g2);
+            for (int i = 0; i < obj.length; i++) {
+                if (obj[i] != null) {
+                    obj[i].draw(g2, this);
+                }
+            }
+
+            // PLAYER
+            player.draw(g2);
+            for (OtherPlayer otherPlayer : Client.otherPlayers)
+            {
+                otherPlayer.draw(g2);
+            }
+
+            // UI
+            ui.draw(g2);
+        }
 
         // DEBUG
         if (keyHandler.checkDrawTime) {
