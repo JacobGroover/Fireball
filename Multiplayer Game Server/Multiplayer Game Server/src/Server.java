@@ -4,12 +4,7 @@ import java.net.Socket;
 
 // TO DO:
 
-// 1. Replace tcpHandlers ArrayList in TcpHandler.java with a global ClientHandler ArrayList to sync clients between TCP and UDP
 
-// 2. On client side, when a player disconnects, remove OtherPlayer.java object from all client's otherPlayers ArrayList and ensure
-// the disconnected player is no longer painted on each client game instance
-
-// 3. Transmit gp.player.worldX and gp.player.worldY with each "moving:" delimited UDP packet
 
 /**
  * This class: Listens for clients who wish to connect and spawns new threads to handle each new client connection.

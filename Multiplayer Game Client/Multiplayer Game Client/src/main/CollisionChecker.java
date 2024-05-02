@@ -1,6 +1,7 @@
 package main;
 
 import entities.Entity;
+import entities.Player;
 
 public class CollisionChecker {
 
@@ -11,10 +12,17 @@ public class CollisionChecker {
     }
 
     public void checkTile(Entity entity) {
-        int entityLeftWorldX = (int)entity.worldX + entity.solidArea.x;
-        int entityRightWorldX = (int)entity.worldX + entity.solidArea.x + entity.solidArea.width;
-        int entityTopWorldY = (int)entity.worldY + entity.solidArea.y;
-        int entityBottomWorldY = (int)entity.worldY + entity.solidArea.y + entity.solidArea.height;
+        double worldX = Player.worldX;
+        double worldY = Player.worldY;
+        if (!(entity instanceof Player))
+        {
+            worldX = entity.worldX;
+            worldY = entity.worldY;
+        }
+        int entityLeftWorldX = (int)worldX + entity.solidArea.x;
+        int entityRightWorldX = (int)worldX + entity.solidArea.x + entity.solidArea.width;
+        int entityTopWorldY = (int)worldY + entity.solidArea.y;
+        int entityBottomWorldY = (int)worldY + entity.solidArea.y + entity.solidArea.height;
 
         int entityLeftCol = entityLeftWorldX/gp.tileSize;
         int entityRightCol = entityRightWorldX/gp.tileSize;
@@ -134,13 +142,22 @@ public class CollisionChecker {
     }
 
     public int checkObject(Entity entity, boolean isPlayer) {
+
+        double worldX = Player.worldX;
+        double worldY = Player.worldY;
+        if (!(entity instanceof Player))
+        {
+            worldX = entity.worldX;
+            worldY = entity.worldY;
+        }
+
         int index = 999;
 
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] != null) {
                 // Get entity's solid area position
-                entity.solidArea.x = (int)entity.worldX + entity.solidArea.x;
-                entity.solidArea.y = (int)entity.worldY + entity.solidArea.y;
+                entity.solidArea.x = (int)worldX + entity.solidArea.x;
+                entity.solidArea.y = (int)worldY + entity.solidArea.y;
 
                 // Get object's solid area position
                 gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x;

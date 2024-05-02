@@ -4,9 +4,9 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-public class UdpClientHandler implements Runnable //extends Thread
+public class UdpClientHandler extends ClientHandler implements Runnable //extends Thread
 {
-    protected static ArrayList<ClientHandler> clientDataAL = new ArrayList<>();
+    //protected static ArrayList<ClientHandler> clientDataAL = new ArrayList<>();
     protected DatagramSocket socket;
     protected boolean isWorking;
 
@@ -40,7 +40,7 @@ public class UdpClientHandler implements Runnable //extends Thread
                     String clientUsername = usernameWorldXY[1];
                     String worldX = usernameWorldXY[2];
                     String worldY = usernameWorldXY[3];
-                    clientDataAL.add(new ClientHandler(clientUsername, worldX, worldY));
+                    //clientDataAL.add(new ClientHandler(clientUsername, worldX, worldY));
                         /*System.out.println(clientUsername);
                         System.out.println(worldX);
                         System.out.println(worldY);*/
@@ -63,6 +63,8 @@ public class UdpClientHandler implements Runnable //extends Thread
                     String clientUsername = usernameWorldXY[1];
                     double velocityX = Double.parseDouble(usernameWorldXY[2]);
                     double velocityY = Double.parseDouble(usernameWorldXY[3]);
+                    double worldX = Double.parseDouble(usernameWorldXY[4]);
+                    double worldY = Double.parseDouble(usernameWorldXY[5]);
                         /*System.out.println(clientUsername);
                         System.out.println(velocityX);
                         System.out.println(velocityY);*/
@@ -76,10 +78,13 @@ public class UdpClientHandler implements Runnable //extends Thread
                         {
                             client.setVelocityX(velocityX);
                             client.setVelocityY(velocityY);
+                            client.setWorldX(worldX);
+                            client.setWorldY(worldY);
                             //System.out.println(client.getClientUsername() + " " + client.getVelocityX() + " " + client.getVelocityY());
                             
                         }
-                        tempByteString += (String.format("moving:%s" + "moving:%.16f" + "moving:%.16f", client.getClientUsername(), client.getVelocityX(), client.getVelocityY()));
+                        tempByteString += (String.format("moving:%s" + "moving:%.16f" + "moving:%.16f" + "moving:%.16f" + "moving:%.16f",
+                                client.getClientUsername(), client.getVelocityX(), client.getVelocityY(), client.getWorldX(), client.getWorldY()));
                     }
                     //System.out.println(tempByteString);
                     byteArray = tempByteString.getBytes();

@@ -24,8 +24,8 @@ public class Player extends Entity {
     public final int screenY;
     public static double startX;
     public static double startY;
-    /*public static double worldX;  // UDP
-    public static double worldY;*/
+    public static double worldX;  // UDP
+    public static double worldY;
 
     public int hasKey = 0;
     public static String sendVelocity = "00";
@@ -104,7 +104,7 @@ public class Player extends Entity {
 
     public void update() {
 
-        if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
+        if (gp.gameState == gp.PLAY_STATE && (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed)) {
 
             if (keyH.upPressed) {
                 velocityY -= 1;

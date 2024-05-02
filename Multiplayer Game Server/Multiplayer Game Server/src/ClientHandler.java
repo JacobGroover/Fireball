@@ -11,16 +11,21 @@ import java.util.ArrayList;
 public class ClientHandler
 {
 
-    //protected static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();  // Static ArrayList of ClientHandler objects to keep track of all the instances created
-    private InetAddress clientInetAddress;
-    private int port;
-    private String clientUsername;
-    private String worldX;
-    private String worldY;
-    private double velocityX;
-    private double velocityY;
+    protected static ArrayList<ClientHandler> clientDataAL = new ArrayList<>();  // Static ArrayList of ClientHandler objects to keep track of all the instances created
+    protected InetAddress clientInetAddress;
+    protected int port;
+    protected String clientUsername;
+    protected double worldX;
+    protected double worldY;
+    protected double velocityX;
+    protected double velocityY;
 
-    public ClientHandler(String clientUsername, String worldX, String worldY)
+    public ClientHandler()
+    {
+
+    }
+
+    public ClientHandler(String clientUsername, double worldX, double worldY)
     {
         setClientUsername(clientUsername);
         setWorldX(worldX);
@@ -47,22 +52,22 @@ public class ClientHandler
         this.clientUsername = clientUsername;
     }
 
-    public String getWorldX()
+    public double getWorldX()
     {
         return worldX;
     }
 
-    public void setWorldX(String worldX)
+    public void setWorldX(double worldX)
     {
         this.worldX = worldX;
     }
 
-    public String getWorldY()
+    public double getWorldY()
     {
         return worldY;
     }
 
-    public void setWorldY(String worldY)
+    public void setWorldY(double worldY)
     {
         this.worldY = worldY;
     }

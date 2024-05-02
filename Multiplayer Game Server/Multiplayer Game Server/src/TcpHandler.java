@@ -8,20 +8,21 @@ import java.util.ArrayList;
  * Implements Runnable interface, indicating that each instance of this class will be executed on a separate thread;
  * Specifically, code in the overridden run() method will be executed on a separate thread.
  */
-public class TcpHandler implements Runnable
+public class TcpHandler extends ClientHandler implements Runnable
 {
 
-    public static ArrayList<TcpHandler> tcpHandlers = new ArrayList<>();  // Static ArrayList of ClientHandler objects to keep track of all the instances created
+    // public static ArrayList<TcpHandler> tcpHandlers = new ArrayList<>();  // Static ArrayList of ClientHandler objects to keep track of all the instances created
     private Socket TCPSocket;  // Socket object passed through constructor from Server class. Used to establish a connection between client and server.
     //private DatagramSocket datagramSocket;  // UDP
     private BufferedReader bufferedReader;  // Reads messages sent from the client
     private BufferedWriter bufferedWriter;  // Sends messages to the client (either from other clients or from the server)
     //private DatagramPacket datagramPacketReceive;   // UDP
     //private DatagramPacket datagramPacketSend;  // UDP
-    InetAddress clientInetAddress;
     //private int tcpPort;   // UDP
     //private int udpPort;    // UDP
-    private String clientUsername;
+
+    //InetAddress clientInetAddress;
+    // private String clientUsername;
 
     public TcpHandler(Socket serverSocketTCP, int tcpPort)
     {
@@ -33,8 +34,7 @@ public class TcpHandler implements Runnable
             // intermediate programming classroom 10.255.4.72
             // Home IP 192.168.2.102
             // GGC Database class IP 10.255.36.219
-            this.clientInetAddress = InetAddress.getByName("192.168.2.102");  // UDP
-            //this.clientInetAddress = InetAddress.getByName("10.255.5.7");   // GGC IP
+            //this.clientInetAddress = InetAddress.getByName("192.168.2.102");  // UDP
             //this.tcpPort = tcpPort;   // UDP
             //this.udpPort = udpPort; // UDP
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(serverSocketTCP.getOutputStream()));   // OutputStreamWriter is for character streams, OutputStream is for bytes. Therefore, wrap the byte stream in a character stream. Buffering the stream increases efficiency.
@@ -46,18 +46,21 @@ public class TcpHandler implements Runnable
             //datagramSocket.receive(datagramPacketReceive); // UDP
 
             this.clientUsername = bufferedReader.readLine();
-            tcpHandlers.add(this);
+            clientDataAL.add(this);
 
-            for (TcpHandler tcpHandler : tcpHandlers)
+            for (ClientHandler clientHandler: clientDataAL)
             {
-                tcpHandler.broadcastMessage(tcpHandler.clientUsername);
+                //System.out.println("\nCONSTRUCTOR:");
+                System.out.println(clientHandler);
+                System.out.println(clientHandler.clientUsername);
+                this.constructorBroadcastMessage(clientHandler.clientUsername);
             }
 
             /*for (ClientHandler clientHandler : clientHandlers)
             {
                 try
                 {
-                    System.out.println(clientHandler.clientUserName);
+                    System.out.println(clientHandler.clientUsername);
 
                     if (!clientHandler.clientUserName.equals(this.clientUserName))
                     {
@@ -71,6 +74,7 @@ public class TcpHandler implements Runnable
                 }
             }*/
 
+            //System.out.print("\nbroadcast from constructor entered the chat message");
             broadcastMessage("Server: " + clientUsername + " has entered the chat!");
         } catch (IOException ioe)
         {
@@ -103,40 +107,68 @@ public class TcpHandler implements Runnable
         }
     }
 
+    public void constructorBroadcastMessage(String messageToSend)
+    {
+        for (int i = 0; i < clientDataAL.size(); i++)
+        {
+            try
+            {
+                // TEST
+                /*System.out.println("\nBROADCAST:");
+                System.out.println(clientDataAL.get(i));
+                System.out.println(clientDataAL.get(i).clientUsername);*/
+
+                ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write(messageToSend);
+                ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
+                ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+            } catch (IOException ioe)
+            {
+                closeEverything(TCPSocket, bufferedReader, bufferedWriter);
+            }
+
+        }
+
+        // TEST
+        /*System.out.println("\nNames in clientDataAL:");
+        for (ClientHandler ch : clientDataAL)
+        {
+            System.out.println(ch.clientUsername);
+        }*/
+
+    }
+
     public void broadcastMessage(String messageToSend)
     {
-        for (int i = 0; i < tcpHandlers.size(); i++)
+        for (int i = 0; i < clientDataAL.size(); i++)
         {
             try
             {
-                if (!tcpHandlers.get(i).clientUsername.equals(this.clientUsername))
+                if (!clientDataAL.get(i).clientUsername.equals(this.clientUsername))
                 {
-                    tcpHandlers.get(i).bufferedWriter.write(messageToSend);
-                    tcpHandlers.get(i).bufferedWriter.newLine();
-                    tcpHandlers.get(i).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+                    // TEST
+                    /*System.out.println("\nBROADCAST:");
+                    System.out.println(clientDataAL.get(i));
+                    System.out.println(clientDataAL.get(i).clientUsername);*/
+
+                    ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write(messageToSend);
+                    ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
+                    ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
 
                 }
             } catch (IOException ioe)
             {
                 closeEverything(TCPSocket, bufferedReader, bufferedWriter);
             }
+
         }
-        /*for (ClientHandler clientHandler : clientHandlers)
-        {
-            try
-            {
-                if (!clientHandler.clientUsername.equals(this.clientUsername))
-                {
-                    clientHandler.bufferedWriter.write(messageToSend);
-                    clientHandler.bufferedWriter.newLine();
-                    clientHandler.bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
 
-                }
-            } catch (IOException ioe)
-            {
-                closeEverything(TCPSocket, bufferedReader, bufferedWriter);
-            }
-        }*/
+        // TEST
+        System.out.println("\nNames in clientDataAL:");
+        for (ClientHandler ch : clientDataAL)
+        {
+            System.out.println(ch.clientUsername);
+        }
+
     }
 
     // UDP method
@@ -167,7 +199,7 @@ public class TcpHandler implements Runnable
 
     public void removeClientHandler()
     {
-        tcpHandlers.remove(this);
+        clientDataAL.remove(this);
         broadcastMessage("Server: " + clientUsername + " has left the chat!");
     }
 

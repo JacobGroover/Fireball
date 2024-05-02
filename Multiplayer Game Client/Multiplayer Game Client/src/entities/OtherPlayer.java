@@ -39,8 +39,8 @@ public class OtherPlayer extends Entity {
         //this.lastWorldY = 0.0;   // UDP
         startX = 23.00;
         startY = 21.00;
-        worldX = gp.tileSize * startX;
-        worldY = gp.tileSize * startY;
+        this.worldX = gp.tileSize * startX;
+        this.worldY = gp.tileSize * startY;
         speed = 4;
         direction = "down";
         clientUserName = messageReceived;
@@ -317,6 +317,17 @@ public class OtherPlayer extends Entity {
         }
 
         // UDP
+        int screenX = (int)this.worldX - (int) Player.worldX + gp.player.screenX;  // gp.player.worldX
+        int screenY = (int)this.worldY - (int) Player.worldY + gp.player.screenY;
+
+        if (worldX + gp.tileSize > Player.worldX - gp.player.screenX &&
+                this.worldX - gp.tileSize < Player.worldX + gp.player.screenX &&
+                this.worldY + gp.tileSize > Player.worldY - gp.player.screenY &&
+                this.worldY - gp.tileSize < Player.worldY + gp.player.screenY)
+        {
+            graphics2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        }
+
         /*int screenX = (int)lastWorldX - (int) Player.worldX + gp.player.screenX;  // gp.player.worldX
         int screenY = (int)lastWorldY - (int) Player.worldY + gp.player.screenY;
 
@@ -329,7 +340,7 @@ public class OtherPlayer extends Entity {
         }*/
 
         // commented out for UDP
-        int screenX = (int)worldX - (int) gp.player.worldX + gp.player.screenX;  // gp.player.worldX
+        /*int screenX = (int)worldX - (int) gp.player.worldX + gp.player.screenX;  // gp.player.worldX
         int screenY = (int)worldY - (int) gp.player.worldY + gp.player.screenY;
 
         if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
@@ -338,7 +349,7 @@ public class OtherPlayer extends Entity {
                 worldY - gp.tileSize < gp.player.worldY + gp.player.screenY)
         {
             graphics2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
-        }
+        }*/
 
         //graphics2.drawImage(image, screenX, screenY, null);
     }
