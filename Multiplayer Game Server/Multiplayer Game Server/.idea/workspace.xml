@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
 <<<<<<< HEAD
+<<<<<<< HEAD
     <list default="true" id="5f42094f-51f1-40ab-82a8-5d0154adcbbf" name="Changes" comment="" />
 =======
     <list default="true" id="5f42094f-51f1-40ab-82a8-5d0154adcbbf" name="Changes" comment="">
@@ -21,6 +22,9 @@
       <change beforePath="$PROJECT_DIR$/src/TcpHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TcpHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UdpClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UdpClientHandler.java" afterDir="false" />
     </list>
+>>>>>>> console-to-GUI
+=======
+    <list default="true" id="5f42094f-51f1-40ab-82a8-5d0154adcbbf" name="Changes" comment="" />
 >>>>>>> console-to-GUI
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +76,7 @@
     "Application.Server.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Console-to-GUI",
+    "git-widget-placeholder": "console-to-GUI",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/hermu/Desktop/Coding Projects/Java Projects/Multiplayer Games/MLH Gaming Hackathon 2024/Multiplayer Game Server/Multiplayer Game Server/src",
