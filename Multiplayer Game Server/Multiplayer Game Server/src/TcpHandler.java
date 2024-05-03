@@ -26,7 +26,6 @@ public class TcpHandler extends ClientHandler implements Runnable
 
     public TcpHandler(Socket serverSocketTCP, int tcpPort)
     {
-
         try
         {
             this.TCPSocket = serverSocketTCP;
@@ -51,8 +50,8 @@ public class TcpHandler extends ClientHandler implements Runnable
             for (ClientHandler clientHandler: clientDataAL)
             {
                 //System.out.println("\nCONSTRUCTOR:");
-                System.out.println(clientHandler);
-                System.out.println(clientHandler.clientUsername);
+                //System.out.println(clientHandler);
+                //System.out.println(clientHandler.clientUsername);
                 this.constructorBroadcastMessage(clientHandler.clientUsername);
             }
 
@@ -163,11 +162,11 @@ public class TcpHandler extends ClientHandler implements Runnable
         }
 
         // TEST
-        System.out.println("\nNames in clientDataAL:");
+        /*System.out.println("\nNames in clientDataAL:");
         for (ClientHandler ch : clientDataAL)
         {
             System.out.println(ch.clientUsername);
-        }
+        }*/
 
     }
 

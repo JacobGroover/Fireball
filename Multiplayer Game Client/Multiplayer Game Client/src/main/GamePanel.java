@@ -7,8 +7,6 @@ import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 public class GamePanel extends JPanel implements Runnable
 {
@@ -54,6 +52,10 @@ public class GamePanel extends JPanel implements Runnable
     public final int PLAY_STATE = 1;
     public final int SELECT_CHARACTER_STATE = 2;
     public final int GAME_MENU_STATE = 3;
+
+    public boolean joinedGame;
+    TCPClient tcpClient;
+    UDPClient udpClient;
 
 
     /**
@@ -173,7 +175,11 @@ public class GamePanel extends JPanel implements Runnable
 
             for (OtherPlayer otherPlayer : Client.otherPlayers)
             {
-                otherPlayer.update();
+                if (otherPlayer.joinedGame)
+                {
+                    otherPlayer.update();
+                }
+                //otherPlayer.update();
             }
         }
     }
@@ -214,7 +220,11 @@ public class GamePanel extends JPanel implements Runnable
             player.draw(g2);
             for (OtherPlayer otherPlayer : Client.otherPlayers)
             {
-                otherPlayer.draw(g2);
+                if (otherPlayer.joinedGame)
+                {
+                    otherPlayer.draw(g2);
+                }
+                //otherPlayer.draw(g2);
             }
 
             // UI

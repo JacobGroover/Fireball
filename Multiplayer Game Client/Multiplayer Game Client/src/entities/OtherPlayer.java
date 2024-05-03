@@ -21,6 +21,7 @@ public class OtherPlayer extends Entity {
     //private double lastWorldX;  // UDP
     //private double lastWorldY;  // UDP
     public int hasKey = 0;
+    public boolean joinedGame;
 
     public OtherPlayer(GamePanel gp, String messageReceived) {
 
@@ -46,6 +47,7 @@ public class OtherPlayer extends Entity {
         clientUserName = messageReceived;
         velocityX = 0;
         velocityY = 0;
+        joinedGame = true;
     }
 
     public void getPlayerImage() {
