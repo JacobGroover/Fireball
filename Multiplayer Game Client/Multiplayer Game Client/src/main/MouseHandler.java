@@ -27,6 +27,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener
         {
             if (mainMenuHover1)
             {
+                gp.joinedGame = true;
                 gp.gameState = gp.PLAY_STATE;
             }
             else if (mainMenuHover2)
@@ -51,6 +52,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener
         {
             if (gameMenuHover1)
             {
+                gp.joinedGame = false;
                 gp.gameState = gp.MAIN_MENU_STATE;
             }
         }
@@ -129,8 +131,8 @@ public class MouseHandler implements MouseListener, MouseMotionListener
         {
             if (e.getX() > gp.ui.getCenteredTextX("CREATE CHARACTER") &&
                     e.getX() < gp.ui.getCenteredTextX("CREATE CHARACTER") + (int)gp.ui.g2.getFontMetrics().getStringBounds("CREATE CHARACTER", gp.ui.g2).getWidth() &&
-                    e.getY() > (int)(gp.screenHeight * 0.8) - (int)gp.ui.g2.getFontMetrics().getStringBounds("CREATE CHARACTER", gp.ui.g2).getHeight() + 20 &&
-                    e.getY() < (int)(gp.screenHeight * 0.8) + 15)
+                    e.getY() > (int)(gp.screenHeight * 0.9) - (int)gp.ui.g2.getFontMetrics().getStringBounds("CREATE CHARACTER", gp.ui.g2).getHeight() + 20 &&
+                    e.getY() < (int)(gp.screenHeight * 0.9) + 15)
             {
                 characterMenuHover1 = true;
             }

@@ -13,12 +13,14 @@ public class UDPClient extends Client implements Runnable
 {
 
     protected DatagramSocket socket;
+    GamePanel gp;
 
     public UDPClient(GamePanel gp)
     {
         try
         {
             socket = new DatagramSocket();
+            this.gp = gp;
 
             // Send data to server
             // "entry:" String packet send instructions
@@ -96,9 +98,15 @@ public class UDPClient extends Client implements Runnable
 
                     // Send data to server
                     byte[] byteArray = ("moving:" + clientUsername + "moving:" + String.format("%.16f", Player.sendVelocityX) + "moving:" + String.format("%.16f", Player.sendVelocityY) +
-                            "moving:" + String.format("%.16f", Player.worldX) + "moving:" + String.format("%.16f", Player.worldY)).getBytes(); // new byte[1024];
+                            "moving:" + String.format("%.16f", Player.worldX) + "moving:" + String.format("%.16f", Player.worldY) + "moving:" + gp.joinedGame).getBytes(); // + "moving:" + gp.joinedGame
+                    //System.out.println(gp.joinedGame);
                     InetAddress address = InetAddress.getByName(Client.serverAddress);
                     DatagramPacket dgPacket = new DatagramPacket(byteArray, byteArray.length, address, Client.serverUdpPort1);
+
+                    /*if (gp.joinedGame)
+                    {
+                        socket.send(dgPacket);
+                    }*/
                     socket.send(dgPacket);
 
                     //System.out.println(new String(dgPacket.getData()));
@@ -138,43 +146,51 @@ public class UDPClient extends Client implements Runnable
                         }
                     }*/
 
-                        // receive data from server
-                        byte[] byteArray2 = new byte[1024];
-                        DatagramPacket dgPacket2 = new DatagramPacket(byteArray2, byteArray2.length);
-                        socket.receive(dgPacket2);
-                        String messageReceived = new String(dgPacket2.getData());
-                        //System.out.println(new String(dgPacket2.getData()));
-
-
-                        String[] usernameVelocityXY = messageReceived.split("moving:");
-
-                        for (int i = 1; i < usernameVelocityXY.length; i += 5)
-                        {
-                            String clientUsername = usernameVelocityXY[i];
-                            String velocityX = usernameVelocityXY[i + 1];
-                            String velocityY = usernameVelocityXY[i + 2];
-                            String worldX = usernameVelocityXY[i + 3];
-                            String worldY = usernameVelocityXY[i + 4];
-
-                            for (OtherPlayer otherPlayer : otherPlayers)
-                            {
-
-
-                                // update local client with data from server
-
-
-                                //System.out.println(otherPlayer.clientUserName);
-                                //System.out.println(clientUsername + " " + velocityX + " " + velocityY);
-                                //System.out.println(otherPlayers.get(0));
-                                if (clientUsername.equals(otherPlayer.clientUserName))
-                                {
-                                    otherPlayer.velocityX = Double.parseDouble(velocityX);
-                                    otherPlayer.velocityY = Double.parseDouble(velocityY);
-                                    otherPlayer.worldX = Double.parseDouble(worldX);
-                                    otherPlayer.worldY = Double.parseDouble(worldY);
-                                }
-                            }
-                        }
+//                        // receive data from server
+//                        byte[] byteArray2 = new byte[1024];
+//                        DatagramPacket dgPacket2 = new DatagramPacket(byteArray2, byteArray2.length);
+//                        if (gp.joinedGame)
+//                        {
+//                            socket.receive(dgPacket2);
+//                        }
+//                        //socket.receive(dgPacket2);
+//                        String messageReceived = new String(dgPacket2.getData());
+//                        //System.out.println(new String(dgPacket2.getData()));
+//
+//
+//                        String[] usernameVelocityXY = messageReceived.split("moving:");
+//
+//                        for (int i = 1; i < usernameVelocityXY.length; i += 6)
+//                        {
+//                            String clientUsername = usernameVelocityXY[i];
+//                            String velocityX = usernameVelocityXY[i + 1];
+//                            String velocityY = usernameVelocityXY[i + 2];
+//                            String worldX = usernameVelocityXY[i + 3];
+//                            String worldY = usernameVelocityXY[i + 4];
+//                            String joinedGame = usernameVelocityXY[i + 5].substring(0, 4);
+//
+//                            for (OtherPlayer otherPlayer : otherPlayers)
+//                            {
+//
+//
+//                                // update local client with data from server
+//
+//
+//                                //System.out.println(otherPlayer.clientUserName);
+//                                //System.out.println(clientUsername + " " + velocityX + " " + velocityY);
+//                                //System.out.println(otherPlayers.get(0));
+//                                if (clientUsername.equals(otherPlayer.clientUserName))
+//                                {
+//                                    otherPlayer.velocityX = Double.parseDouble(velocityX);
+//                                    otherPlayer.velocityY = Double.parseDouble(velocityY);
+//                                    otherPlayer.worldX = Double.parseDouble(worldX);
+//                                    otherPlayer.worldY = Double.parseDouble(worldY);
+//                                    otherPlayer.joinedGame = Boolean.parseBoolean(joinedGame);
+//                                    System.out.println(otherPlayer.clientUserName);
+//                                    System.out.println(otherPlayer.joinedGame);
+//                                }
+//                            }
+//                        }
 
 
                 } catch (IOException ioe)
@@ -185,6 +201,61 @@ public class UDPClient extends Client implements Runnable
 
 
                 delta--;
+
+                String messageReceived = "";
+                try
+                {
+                    // receive data from server
+                    byte[] byteArray2 = new byte[1024];
+                    DatagramPacket dgPacket2 = new DatagramPacket(byteArray2, byteArray2.length);
+                    /*if (gp.joinedGame)
+                    {
+                        socket.receive(dgPacket2);
+                    }*/
+                    socket.receive(dgPacket2);
+                    messageReceived = new String(dgPacket2.getData());
+                    //System.out.println(new String(dgPacket2.getData()));
+                } catch (IOException ioe)
+                {
+                    ioe.printStackTrace();
+                    isWorking = false;
+                }
+
+
+                String[] usernameVelocityXY = messageReceived.split("moving:");
+
+                for (int i = 1; i < usernameVelocityXY.length; i += 6)
+                {
+                    String clientUsername = usernameVelocityXY[i];
+                    String velocityX = usernameVelocityXY[i + 1];
+                    String velocityY = usernameVelocityXY[i + 2];
+                    String worldX = usernameVelocityXY[i + 3];
+                    String worldY = usernameVelocityXY[i + 4];
+                    String joinedGame = usernameVelocityXY[i + 5].substring(0, 4);
+
+                    for (OtherPlayer otherPlayer : otherPlayers)
+                    {
+
+
+                        // update local client with data from server
+
+
+                        //System.out.println(otherPlayer.clientUserName);
+                        //System.out.println(clientUsername + " " + velocityX + " " + velocityY);
+                        //System.out.println(otherPlayers.get(0));
+                        if (clientUsername.equals(otherPlayer.clientUserName))
+                        {
+                            otherPlayer.velocityX = Double.parseDouble(velocityX);
+                            otherPlayer.velocityY = Double.parseDouble(velocityY);
+                            otherPlayer.worldX = Double.parseDouble(worldX);
+                            otherPlayer.worldY = Double.parseDouble(worldY);
+                            otherPlayer.joinedGame = Boolean.parseBoolean(joinedGame);
+                            System.out.println(otherPlayer.clientUserName);
+                            System.out.println(otherPlayer.joinedGame);
+                        }
+                    }
+                }
+
             }
         }
         socket.close();

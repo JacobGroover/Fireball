@@ -3,6 +3,7 @@ package main;
 import object.OBJ_Key;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
@@ -119,24 +120,39 @@ public class UI
 
     public void drawSelectCharacterScreen()
     {
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 40F));
+        String name = "NAME (REQUIRED)";
+        int x1 = getCenteredTextX(name);
+        int y1 = (int)(gp.screenHeight * 0.75);
+
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
 
         String create = "CREATE CHARACTER";
-        int x1 = getCenteredTextX(create);
-        int y1 = (int)(gp.screenHeight * 0.8);
+        int x2 = getCenteredTextX(create);
+        int y2 = (int)(gp.screenHeight * 0.9);
 
         // draw text shadow
         g2.setColor(Color.DARK_GRAY);
-        g2.drawString(create, x1+3, y1+3);
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 40F));
+        g2.drawString(name, x1+3, y1+3);
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
+        g2.drawString(create, x2+3, y2+3);
 
         // draw text
         g2.setColor(Color.WHITE);
 
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 40F));
+        g2.drawString(name, x1, y1);
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
         if (gp.mouseHandler.characterMenuHover1)
         {
             g2.setColor(Color.GREEN);
         }
-        g2.drawString(create, x1, y1);
+        g2.drawString(create, x2, y2);
+
+        g2.setColor(Color.WHITE);
+
     }
 
     public void drawPlayScreen()

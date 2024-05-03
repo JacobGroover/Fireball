@@ -19,10 +19,10 @@ public class ClientHandler
     protected double worldY;
     protected double velocityX;
     protected double velocityY;
+    protected boolean joinedGame;
 
     public ClientHandler()
     {
-
     }
 
     public ClientHandler(String clientUsername, double worldX, double worldY)
@@ -90,5 +90,14 @@ public class ClientHandler
     public void setVelocityY(double velocityY)
     {
         this.velocityY = velocityY;
+    }
+    public boolean getJoinedGame()
+    {
+        return joinedGame;
+    }
+
+    public void setJoinedGame(boolean joinedGame)
+    {
+        this.joinedGame = joinedGame;
     }
 }

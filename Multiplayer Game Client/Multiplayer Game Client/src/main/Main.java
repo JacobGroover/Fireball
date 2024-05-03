@@ -1,6 +1,11 @@
 package main;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
@@ -8,20 +13,79 @@ import java.util.Scanner;
 public class Main
 {
 
+    public static String username;
+    public static volatile boolean validEntry;
     public static void main(String[] args)
     {
-        Scanner scanner = new Scanner(System.in);
-        boolean validEntry;
-        String username;
-        // digital media classroom 10.255.11.27
-        // intermediate programming classroom 10.255.4.72
+
+            JFrame login = new JFrame();
+            login.setSize(640, 400);
+            login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            login.setResizable(false);
+            login.setTitle("Login");
+
+            login.setLayout(new BoxLayout(login.getContentPane(), BoxLayout.Y_AXIS));
+
+            JLabel label1 = new JLabel("PLEASE CREATE A USERNAME TO LOGIN:");
+            label1.setFont(new Font("Arial", Font.PLAIN, 20));
+            label1.setBorder(new EmptyBorder(40, 40, 40, 40));
+            label1.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label1.setAlignmentY(Component.TOP_ALIGNMENT);
+
+            JTextField textField1 = new JTextField(15);
+            textField1.setFont(new Font("Arial", Font.PLAIN, 40));
+            //textField1.setBorder(new EmptyBorder(40, 40, 40, 40));
+            textField1.setMaximumSize(new Dimension(600, 50));
+            textField1.setAlignmentX(Component.CENTER_ALIGNMENT);
+            textField1.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+            JButton button1 = new JButton("LOGIN");
+            button1.setFont(new Font("Arial", Font.BOLD, 80));
+            button1.setAlignmentX(Component.CENTER_ALIGNMENT);
+            button1.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+
+            button1.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    username = textField1.getText();
+                    if (username.length() < 2 || username.contains("+") || username.contains("-") ||
+                            username.contains(":") || username.contains("*") || username.substring(0, 1).matches("\\d"))
+                    {
+                        validEntry = false;
+                        JOptionPane.showMessageDialog(null, "Name must be longer than 1 characters, cannot start with a number, and cannot contain '+', '-', ':' or '*'",
+                                "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                    else
+                    {
+                        validEntry = true;
+                        login.dispose();
+                    }
+                }
+            });
+
+            login.add(label1);
+            login.add(textField1);
+            login.add(button1);
+
+            //login.pack();
+            login.setLocationRelativeTo(null);
+            login.setVisible(true);
+
+        while (!validEntry)
+        {
+            Thread.onSpinWait();
+        }
+
         // Oghma-Infinium Home IP 192.168.2.102
-        // GGC Database class IP 10.255.36.219
         Client.serverAddress = "192.168.2.102";
-        //String serverAddress = "10.255.5.7"; // GGC IP Address
         Client.serverTcpPort1 = 6682;
         Client.serverUdpPort1 = 4445;
-        //int serverUdpPort = 6690; // UDP
+
+        /*Scanner scanner = new Scanner(System.in);
+        boolean validEntry;
+        String username;
         do
         {
             validEntry = true;
@@ -33,11 +97,12 @@ public class Main
                 System.out.println("Name must be longer than 2 characters, cannot start with a number, and cannot contain '+', '-', ':' or '*'");
                 validEntry = false;
             }
-        } while (!validEntry);
+        } while (!validEntry);*/
 
         // PORTED FROM PREVIOUS MAIN CLASS
         JFrame window = new JFrame();   // create a window
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // set window to exit when closed
+        //window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         window.setResizable(false); // prevents resizing of the window
         window.setTitle(username);  // set name of the window
         // Add GamePanel object to main method for instantiating GUI on game launch
@@ -55,11 +120,6 @@ public class Main
 
         try
         {
-
-            //DatagramSocket datagramSocket = new DatagramSocket();
-
-
-
             Socket socket = new Socket(Client.serverAddress, Client.serverTcpPort1);
             TCPClient tcpClient = new TCPClient(socket, username);
             UDPClient udpClient = new UDPClient(gamePanel);
@@ -68,6 +128,7 @@ public class Main
 
             // Call listenForMessage() and sendMessage() methods on this client instance; both run on separate threads and are blocked, so they both get called and run continuously while connected.
             tcpClient.listenForMessage(gamePanel);    // COMMENT
+            //tcpClient.sendJoinedGame(gamePanel);
             udpClient.run();    // COMMENT
             //tcpClient.sendPosition();
 

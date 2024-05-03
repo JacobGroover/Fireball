@@ -6,7 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="5f42094f-51f1-40ab-82a8-5d0154adcbbf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/entities/OtherPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/entities/OtherPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/main/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/main/GamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/main/MouseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/main/MouseHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/main/TCPClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/main/TCPClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/main/UDPClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/main/UDPClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/main/UI.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Client/Multiplayer Game Client/src/main/UI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TcpHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TcpHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UdpClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UdpClientHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +50,7 @@
     "Application.Server.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "Console-to-GUI",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/hermu/Desktop/Coding Projects/Java Projects/Multiplayer Games/MLH Gaming Hackathon 2024/Multiplayer Game Server/Multiplayer Game Server/src",

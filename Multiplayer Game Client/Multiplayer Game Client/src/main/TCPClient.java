@@ -31,6 +31,43 @@ public class TCPClient extends Client
         }
     }
 
+    public void sendJoinedGame(GamePanel gp)
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    boolean changedGameState = gp.joinedGame;
+                    while (socket.isConnected())
+                    {
+                        System.out.println("HERE");
+
+                        if (changedGameState != gp.joinedGame)
+                        {
+                            changedGameState = true;
+                        }
+
+                        if (changedGameState)
+                        {
+                            bufferedWriter.write("*" + clientUsername + "*" + gp.joinedGame);
+                            bufferedWriter.newLine();
+                            bufferedWriter.flush();
+                            changedGameState = gp.joinedGame;
+                        }
+
+                    }
+                } catch (IOException ioe)
+                {
+                    closeEverything(socket, bufferedReader, bufferedWriter);
+                }
+            }
+        });
+
+    }
+
     public void sendPosition()
     {
         new Thread(new Runnable()
@@ -104,6 +141,7 @@ public class TCPClient extends Client
                 {
                     try
                     {
+
                         messageReceived = bufferedReader.readLine();
                         //System.out.println(messageReceived);
                         if (messageReceived != null && !messageReceived.startsWith("*") && !messageReceived.contains(":"))
@@ -147,6 +185,18 @@ public class TCPClient extends Client
                                 }
                             }
                             System.out.println(messageReceived);
+                        }
+                        else if (messageReceived != null && messageReceived.startsWith("*"))
+                        {
+                            System.out.println(messageReceived);
+                            String[] tokens = messageReceived.split("\\*");
+                            for (OtherPlayer otherPlayer : otherPlayers)
+                            {
+                                if (otherPlayer.clientUserName.equals(tokens[1]))
+                                {
+                                    otherPlayer.joinedGame = Boolean.parseBoolean(tokens[2].substring(0, 4));
+                                }
+                            }
                         }
                         else
                         {

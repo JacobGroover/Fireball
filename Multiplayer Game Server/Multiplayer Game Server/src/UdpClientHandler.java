@@ -65,6 +65,8 @@ public class UdpClientHandler extends ClientHandler implements Runnable //extend
                     double velocityY = Double.parseDouble(usernameWorldXY[3]);
                     double worldX = Double.parseDouble(usernameWorldXY[4]);
                     double worldY = Double.parseDouble(usernameWorldXY[5]);
+                    boolean joinedGame = Boolean.parseBoolean(usernameWorldXY[6].substring(0, 4));
+                    //System.out.println(usernameWorldXY[1] + " " + joinedGame);
                         /*System.out.println(clientUsername);
                         System.out.println(velocityX);
                         System.out.println(velocityY);*/
@@ -80,11 +82,14 @@ public class UdpClientHandler extends ClientHandler implements Runnable //extend
                             client.setVelocityY(velocityY);
                             client.setWorldX(worldX);
                             client.setWorldY(worldY);
+                            client.setJoinedGame(joinedGame);
+                            //System.out.println(client.getJoinedGame());
                             //System.out.println(client.getClientUsername() + " " + client.getVelocityX() + " " + client.getVelocityY());
                             
                         }
-                        tempByteString += (String.format("moving:%s" + "moving:%.16f" + "moving:%.16f" + "moving:%.16f" + "moving:%.16f",
-                                client.getClientUsername(), client.getVelocityX(), client.getVelocityY(), client.getWorldX(), client.getWorldY()));
+                        tempByteString += (String.format("moving:%s" + "moving:%.16f" + "moving:%.16f" + "moving:%.16f" + "moving:%.16f" + "moving:%b",   //  + "moving:%b"
+                                client.getClientUsername(), client.getVelocityX(), client.getVelocityY(), client.getWorldX(), client.getWorldY(), client.getJoinedGame())); // , client.getJoinedGame()
+                        //System.out.println(tempByteString);
                     }
                     //System.out.println(tempByteString);
                     byteArray = tempByteString.getBytes();
