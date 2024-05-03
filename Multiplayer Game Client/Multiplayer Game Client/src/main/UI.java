@@ -1,9 +1,9 @@
 package main;
 
+import object.OBJ_BloodDroplet;
 import object.OBJ_Key;
+import object.SuperObject;
 
-import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
@@ -15,11 +15,11 @@ public class UI
     Graphics2D g2;  // GAME STATE
     Font arial_40, arial_80B;
     BufferedImage keyImage;
+    BufferedImage bloodDroplet, bloodDropletEmpty;
     public boolean messageOn = false;
     public String message;
     int messageCounter = 0;
     public boolean gameFinished = false;
-    public int commandNum = 0;
 
     double playTime;
     DecimalFormat df = new DecimalFormat("#0.00");
@@ -30,6 +30,11 @@ public class UI
         arial_80B = new Font("Arial", Font.BOLD, 80);
         OBJ_Key key = new OBJ_Key(gp);
         keyImage = key.image;
+
+        // HUD OBJECTS
+        SuperObject life = new OBJ_BloodDroplet(gp);
+        bloodDroplet = life.image;
+        bloodDropletEmpty = life.image2;
     }
 
     public void displayMessage(String text) {
@@ -62,6 +67,7 @@ public class UI
             {
                 drawPlayScreen();
             }
+            drawPlayerHUD();
             if (gp.gameState == gp.GAME_MENU_STATE)
             {
                 drawGameMenuScreen();
@@ -121,9 +127,9 @@ public class UI
     public void drawSelectCharacterScreen()
     {
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 40F));
-        String name = "NAME (REQUIRED)";
-        int x1 = getCenteredTextX(name);
-        int y1 = (int)(gp.screenHeight * 0.75);
+//        String name = "NAME (REQUIRED)";
+//        int x1 = getCenteredTextX(name);
+//        int y1 = (int)(gp.screenHeight * 0.75);
 
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
 
@@ -133,16 +139,16 @@ public class UI
 
         // draw text shadow
         g2.setColor(Color.DARK_GRAY);
-        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 40F));
-        g2.drawString(name, x1+3, y1+3);
+//        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 40F));
+//        g2.drawString(name, x1+3, y1+3);
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
         g2.drawString(create, x2+3, y2+3);
 
         // draw text
         g2.setColor(Color.WHITE);
 
-        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 40F));
-        g2.drawString(name, x1, y1);
+//        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 40F));
+//        g2.drawString(name, x1, y1);
 
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
         if (gp.mouseHandler.characterMenuHover1)
@@ -157,6 +163,7 @@ public class UI
 
     public void drawPlayScreen()
     {
+        // ALL BELOW TO BE DEPRECATED
         if (gameFinished) {
 
             String text;
@@ -208,6 +215,36 @@ public class UI
                     messageOn = false;
                 }
             }
+        }
+    }
+
+    private void drawPlayerHUD()
+    {
+        drawPlayerLife();
+    }
+
+    private void drawPlayerLife()
+    {
+        // DRAW MAX LIFE
+        int x = gp.screenWidth/2 - ((gp.player.maxLife/10) * gp.tileSize)/4;
+        int y = gp.screenHeight - gp.tileSize;
+        int i = 0;
+        while (i < gp.player.maxLife/10)
+        {
+            g2.drawImage(bloodDropletEmpty, x, y, null);
+            x += gp.tileSize/2;
+            i++;
+        }
+
+        // DRAW CURRENT LIFE
+        x = gp.screenWidth/2 - ((gp.player.maxLife/10) * gp.tileSize)/4;
+        y = gp.screenHeight - gp.tileSize;
+        i = 0;
+        while (i < gp.player.life/10)
+        {
+            g2.drawImage(bloodDroplet, x, y, null);
+            x += gp.tileSize/2;
+            i++;
         }
     }
 

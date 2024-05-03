@@ -57,6 +57,8 @@ public class Player extends Entity {
         direction = "down";
         velocityX = 0;
         velocityY = 0;
+        maxLife = 100;
+        life = 30;
     }
 
     public void getPlayerImage() {

@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 
 public class SuperObject {
 
-    public BufferedImage image;
+    public BufferedImage image, image2;
     public String name;
     public boolean collision = false;
     public int worldX, worldY;
@@ -29,6 +29,7 @@ public class SuperObject {
                 worldY - gp.tileSize < Player.worldY + gp.player.screenY)
         {
             g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            //g2.drawImage(image2, screenX, screenY, gp.tileSize, gp.tileSize, null);
         }
 
         /*int screenX = worldX - (int)gp.player.worldX + gp.player.screenX;

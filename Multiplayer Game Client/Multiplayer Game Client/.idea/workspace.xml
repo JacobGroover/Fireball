@@ -5,23 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8f60464-d437-411c-aaed-6a2be90786b6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/res/objects/BloodDroplet.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/objects/EmptyBloodDroplet.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/object/OBJ_BloodDroplet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Entity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entities/OtherPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/OtherPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/GamePanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/MouseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/MouseHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/TCPClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/TCPClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/UDPClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/UDPClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/UI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/UI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Server/Multiplayer Game Server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Server/Multiplayer Game Server/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Server/Multiplayer Game Server/src/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Server/Multiplayer Game Server/src/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/object/SuperObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/object/SuperObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Server/Multiplayer Game Server/.idea/workspace.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Server/Multiplayer Game Server/src/TcpHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Server/Multiplayer Game Server/src/TcpHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Server/Multiplayer Game Server/src/UdpClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Server/Multiplayer Game Server/src/UdpClientHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -44,7 +51,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "Console-to-GUI",
+    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/hermu/Desktop/Coding Projects/Java Projects/Multiplayer Games/MLH Gaming Hackathon 2024/Multiplayer Game Client/Multiplayer Game Client/src",
@@ -92,10 +99,22 @@
       <workItem from="1710423668626" duration="11186000" />
       <workItem from="1710701459263" duration="449000" />
       <workItem from="1710753143348" duration="4826000" />
+      <workItem from="1714755242053" duration="2214000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

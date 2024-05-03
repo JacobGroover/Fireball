@@ -29,4 +29,8 @@ public abstract class Entity {
     public boolean xCollisionOn = false;
     public boolean yCollisionOn = false;
 
+    // ENTITY STATUS
+    public int maxLife;
+    public int life;
+
 }

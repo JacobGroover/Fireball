@@ -199,6 +199,7 @@ public class TcpHandler extends ClientHandler implements Runnable
     public void removeClientHandler()
     {
         clientDataAL.remove(this);
+        System.out.println("A client has disconnected!");
         broadcastMessage("Server: " + clientUsername + " has left the chat!");
     }
 

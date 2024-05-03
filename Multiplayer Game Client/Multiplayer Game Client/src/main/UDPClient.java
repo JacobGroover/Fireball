@@ -250,8 +250,8 @@ public class UDPClient extends Client implements Runnable
                             otherPlayer.worldX = Double.parseDouble(worldX);
                             otherPlayer.worldY = Double.parseDouble(worldY);
                             otherPlayer.joinedGame = Boolean.parseBoolean(joinedGame);
-                            System.out.println(otherPlayer.clientUserName);
-                            System.out.println(otherPlayer.joinedGame);
+//                            System.out.println(otherPlayer.clientUserName);
+//                            System.out.println(otherPlayer.joinedGame);
                         }
                     }
                 }

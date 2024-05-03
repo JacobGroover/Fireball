@@ -48,6 +48,9 @@ public class OtherPlayer extends Entity {
         velocityX = 0;
         velocityY = 0;
         joinedGame = true;
+
+        maxLife = 100;
+        life = maxLife;
     }
 
     public void getPlayerImage() {
