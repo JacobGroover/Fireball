@@ -1,8 +1,8 @@
 package main;
 
+import entities.Entity;
 import object.OBJ_BloodDroplet;
 import object.OBJ_Key;
-import object.SuperObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -29,10 +29,10 @@ public class UI
         arial_40 = new Font("Arial", Font.PLAIN, 40);
         arial_80B = new Font("Arial", Font.BOLD, 80);
         OBJ_Key key = new OBJ_Key(gp);
-        keyImage = key.image;
+        keyImage = key.down1;
 
         // HUD OBJECTS
-        SuperObject life = new OBJ_BloodDroplet(gp);
+        Entity life = new OBJ_BloodDroplet(gp);
         bloodDroplet = life.image;
         bloodDropletEmpty = life.image2;
     }

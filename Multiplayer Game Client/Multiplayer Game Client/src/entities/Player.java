@@ -6,6 +6,7 @@
 
 package entities;
 
+import main.Client;
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
@@ -17,7 +18,6 @@ import java.io.IOException;
 
 public class Player extends Entity {
 
-    GamePanel gp;
     KeyHandler keyH;
 
     public final int screenX;
@@ -32,9 +32,10 @@ public class Player extends Entity {
     public static double sendVelocityX = 0;
     public static double sendVelocityY = 0;
 
-    public Player(GamePanel gp, KeyHandler keyH) {
+    public Player(GamePanel gp, KeyHandler keyH)
+    {
+        super(gp);
 
-        this.gp = gp;
         this.keyH = keyH;
 
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
@@ -45,7 +46,7 @@ public class Player extends Entity {
         solidAreaDefaultY = solidArea.y;
 
         setDefaultValues();
-        getPlayerImage();
+        getImages("/player/FillerPlayer");
     }
 
     public void setDefaultValues() {
@@ -58,50 +59,7 @@ public class Player extends Entity {
         velocityX = 0;
         velocityY = 0;
         maxLife = 100;
-        life = 30;
-    }
-
-    public void getPlayerImage() {
-
-        up1 = setup("FillerPlayerUp1");
-        up2 = setup("FillerPlayerUp2");
-        up3 = setup("FillerPlayerUp3");
-        down1 = setup("FillerPlayerDown1");
-        down2 = setup("FillerPlayerDown2");
-        down3 = setup("FillerPlayerDown3");
-        left1 = setup("FillerPlayerLeft1");
-        left2 = setup("FillerPlayerLeft2");
-        left3 = setup("FillerPlayerLeft3");
-        right1 = setup("FillerPlayerRight1");
-        right2 = setup("FillerPlayerRight2");
-        right3 = setup("FillerPlayerRight3");
-        upLeft1 = setup("FillerPlayerUpLeft1");
-        upLeft2 = setup("FillerPlayerUpLeft2");
-        upLeft3 = setup("FillerPlayerUpLeft3");
-        upRight1 = setup("FillerPlayerUpRight1");
-        upRight2 = setup("FillerPlayerUpRight2");
-        upRight3 = setup("FillerPlayerUpRight3");
-        downLeft1 = setup("FillerPlayerDownLeft1");
-        downLeft2 = setup("FillerPlayerDownLeft2");
-        downLeft3 = setup("FillerPlayerDownLeft3");
-        downRight1 = setup("FillerPlayerDownRight1");
-        downRight2 = setup("FillerPlayerDownRight2");
-        downRight3 = setup("FillerPlayerDownRight3");
-    }
-
-    public BufferedImage setup(String imageName) {
-        UtilityTool uTool = new UtilityTool();
-        BufferedImage image = null;
-
-        try {
-            image = ImageIO.read(getClass().getResourceAsStream("/player/" + imageName + ".png"));
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
-
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
-        return image;
+        life = maxLife;
     }
 
     public void update() {
@@ -171,6 +129,17 @@ public class Player extends Entity {
             int objIndex = gp.cChecker.checkObject(this, true);
             pickUpObject(objIndex);
 
+            // Check for OtherPlayer collision
+            int entityIndex = gp.cChecker.checkEntity(this, Client.otherPlayers);
+//            collideOtherPlayer(entityIndex);
+
+            // Check for NPC collision
+//            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+//            interactNPC(npcIndex);
+
+            // Check Event triggers
+            gp.eventHandler.checkEvent();
+
             if (!xCollisionOn) {
                 worldX += velocityX;
             }
@@ -224,9 +193,10 @@ public class Player extends Entity {
         velocityY = 0;
     }
 
-    public void pickUpObject(int index) {
+    public void pickUpObject(int index)
+    {
 
-        if (index != 999) {
+        if (index != -1) {
             String  objectName = gp.obj[index].name;
 
 
@@ -268,100 +238,25 @@ public class Player extends Entity {
 
     }
 
-    public void draw(Graphics2D graphics2) {
-
-        BufferedImage image = null;
-        switch (direction) {
-            case "up":
-                if (spriteNum == 1) {
-                    image = up1;
-                }
-                if (spriteNum == 2) {
-                    image = up2;
-                }
-                if (spriteNum == 3) {
-                    image = up3;
-                }
-                break;
-            case "down":
-                if (spriteNum == 1) {
-                    image = down1;
-                }
-                if (spriteNum == 2) {
-                    image = down2;
-                }
-                if (spriteNum == 3) {
-                    image = down3;
-                }
-                break;
-            case "left":
-                if (spriteNum == 1) {
-                    image = left1;
-                }
-                if (spriteNum == 2) {
-                    image = left2;
-                }
-                if (spriteNum == 3) {
-                    image = left3;
-                }
-                break;
-            case "right":
-                if (spriteNum == 1) {
-                    image = right1;
-                }
-                if (spriteNum == 2) {
-                    image = right2;
-                }
-                if (spriteNum == 3) {
-                    image = right3;
-                }
-                break;
-            case "upLeft":
-                if (spriteNum == 1) {
-                    image = upLeft1;
-                }
-                if (spriteNum == 2) {
-                    image = upLeft2;
-                }
-                if (spriteNum == 3) {
-                    image = upLeft3;
-                }
-                break;
-            case "upRight":
-                if (spriteNum == 1) {
-                    image = upRight1;
-                }
-                if (spriteNum == 2) {
-                    image = upRight2;
-                }
-                if (spriteNum == 3) {
-                    image = upRight3;
-                }
-                break;
-            case "downLeft":
-                if (spriteNum == 1) {
-                    image = downLeft1;
-                }
-                if (spriteNum == 2) {
-                    image = downLeft2;
-                }
-                if (spriteNum == 3) {
-                    image = downLeft3;
-                }
-                break;
-            case "downRight":
-                if (spriteNum == 1) {
-                    image = downRight1;
-                }
-                if (spriteNum == 2) {
-                    image = downRight2;
-                }
-                if (spriteNum == 3) {
-                    image = downRight3;
-                }
-                break;
+    public void collideOtherPlayer(int index)
+    {
+        if (index <= -1)
+        {
+            // Any additional interactions related to colliding with this particular otherPlayer
         }
+    }
 
+    public void interactNPC(int index)
+    {
+        if (index != -1)
+        {
+            // NPC interaction code
+        }
+    }
+
+    @Override
+    protected void drawImage(Graphics2D graphics2, BufferedImage image)
+    {
         graphics2.drawImage(image, screenX, screenY, null);
     }
 
