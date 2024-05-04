@@ -11,6 +11,6 @@ public abstract class Client
     protected static int serverTcpPort1;
     protected static int serverUdpPort1;
     protected static String clientUsername;
-    protected static ArrayList<OtherPlayer> otherPlayers = new ArrayList<>();
+    public static ArrayList<OtherPlayer> otherPlayers = new ArrayList<>();
 
 }

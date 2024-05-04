@@ -181,6 +181,15 @@ public class GamePanel extends JPanel implements Runnable
                 }
                 //otherPlayer.update();
             }
+
+            // NPCs
+//            for (int i = 0; i < npc.length; i++)
+//            {
+//                if (npc[i] != null)
+//                {
+//                    npc[i].update();
+//                }
+//            }
         }
     }
 
@@ -210,13 +219,23 @@ public class GamePanel extends JPanel implements Runnable
         {
             tileManager.draw(g2);   // Draw background tiles before drawing players, so players will be on top of background
 
+            // OBJECTS
             for (int i = 0; i < obj.length; i++) {
                 if (obj[i] != null) {
                     obj[i].draw(g2, this);
                 }
             }
 
-            // PLAYER
+            // NPCs
+//            for (int i = 0; i < npc.length; i++)
+//            {
+//                if (npc[i] != null)
+//                {
+//                    npc[i].draw(g2);
+//                }
+//            }
+
+            // PLAYERS
             player.draw(g2);
             for (OtherPlayer otherPlayer : Client.otherPlayers)
             {

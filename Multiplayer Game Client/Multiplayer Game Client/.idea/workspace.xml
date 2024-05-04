@@ -5,18 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8f60464-d437-411c-aaed-6a2be90786b6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/res/objects/BloodDroplet.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/objects/EmptyBloodDroplet.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/object/OBJ_BloodDroplet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entities/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Entity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entities/OtherPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/OtherPlayer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entities/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/UDPClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/UDPClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/UI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/UI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/object/SuperObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/object/SuperObject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Server/Multiplayer Game Server/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Multiplayer Game Server/Multiplayer Game Server/src/TcpHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Multiplayer Game Server/Multiplayer Game Server/src/TcpHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/CollisionChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/CollisionChecker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/GamePanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +46,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "Mechanics",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/hermu/Desktop/Coding Projects/Java Projects/Multiplayer Games/MLH Gaming Hackathon 2024/Multiplayer Game Client/Multiplayer Game Client/src",
