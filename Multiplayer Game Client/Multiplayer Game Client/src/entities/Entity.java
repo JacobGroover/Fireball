@@ -25,15 +25,19 @@ public abstract class Entity {
 
     public BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, left3, right1, right2, right3,
             upLeft1, upLeft2, upLeft3, upRight1, upRight2, upRight3, downLeft1, downLeft2, downLeft3, downRight1, downRight2, downRight3;
-    public String direction;
+    public String direction = "down";
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
 
-    public Rectangle solidArea;
+    public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
     public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean xCollisionOn = false;
     public boolean yCollisionOn = false;
+
+    public BufferedImage image, image2;
+    public String name;
+    public boolean collision = false;
 
     // ENTITY STATUS
     public int maxLife;
@@ -79,6 +83,21 @@ public abstract class Entity {
         try {
             image = ImageIO.read(getClass().getResourceAsStream(imageName + ".png"));
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        return image;
+    }
+
+    public BufferedImage setup2(String imageName) {
+        UtilityTool uTool = new UtilityTool();
+        BufferedImage image = null;
+
+        try {
+            image = ImageIO.read(getClass().getResourceAsStream(imageName + ".png"));
+            image = uTool.scaleImage(image, gp.tileSize/2, gp.tileSize/2);
 
         } catch (IOException ioe) {
             ioe.printStackTrace();

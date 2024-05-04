@@ -47,13 +47,14 @@ public class OtherPlayer extends Entity {
         clientUserName = messageReceived;
         velocityX = 0;
         velocityY = 0;
-        joinedGame = true;
+//        joinedGame = true;
 
         maxLife = 100;
         life = maxLife;
     }
 
-    public void update() {
+    public void update()
+    {
         /*System.out.println("VelocityX: " + velocityX);
         System.out.println("VelocityY " + velocityY);*/
 

@@ -43,7 +43,6 @@ public class TCPClient extends Client
                     boolean changedGameState = gp.joinedGame;
                     while (socket.isConnected())
                     {
-                        System.out.println("HERE");
 
                         if (changedGameState != gp.joinedGame)
                         {
@@ -189,6 +188,7 @@ public class TCPClient extends Client
                         else if (messageReceived != null && messageReceived.startsWith("*"))
                         {
                             System.out.println(messageReceived);
+                            System.out.println("FOUND");
                             String[] tokens = messageReceived.split("\\*");
                             for (OtherPlayer otherPlayer : otherPlayers)
                             {

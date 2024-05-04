@@ -1,12 +1,15 @@
 package main;
 
+import entities.Entity;
 import entities.OtherPlayer;
 import entities.Player;
-import object.SuperObject;
 import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class GamePanel extends JPanel implements Runnable
 {
@@ -45,7 +48,8 @@ public class GamePanel extends JPanel implements Runnable
 
     // ENTITIES AND OBJECTS
     public Player player = new Player(this, keyHandler);   // Instantiate player class
-    public SuperObject[] obj = new SuperObject[10];
+    public Entity[] obj = new Entity[10];
+    public ArrayList<Entity> entityAL = new ArrayList<>();
 
     // GAME STATE
     public int gameState;
@@ -197,7 +201,8 @@ public class GamePanel extends JPanel implements Runnable
      *
      * @param graphics to be drawn on the JPanel
      */
-    public void paintComponent(Graphics graphics) {
+    public void paintComponent(Graphics graphics)
+    {
 
         super.paintComponent(graphics); // super class in this case is JPanel
 
@@ -218,21 +223,90 @@ public class GamePanel extends JPanel implements Runnable
         {
             tileManager.draw(g2);   // Draw background tiles before drawing players, so players will be on top of background
 
-            // OBJECTS
-            for (int i = 0; i < obj.length; i++) {
-                if (obj[i] != null) {
-                    obj[i].draw(g2, this);
-                }
-            }
+            // ADD ENTITIES TO THE LIST
+            entityAL.add(player);
 
-            // NPCs
+
+            for (OtherPlayer otherPlayer : Client.otherPlayers)
+            {
+                if (otherPlayer.joinedGame)
+                {
+                    entityAL.add(otherPlayer);
+                }
+                //otherPlayer.draw(g2);
+            }
+//            entityAL.addAll(Client.otherPlayers);
+
 //            for (int i = 0; i < npc.length; i++)
 //            {
 //                if (npc[i] != null)
 //                {
-//                    npc[i].draw(g2);
+//                    entityAL.add(npc[i]);
 //                }
 //            }
+
+            for (int i = 0; i < obj.length; i++)
+            {
+                if (obj[i] != null)
+                {
+                    entityAL.add(obj[i]);
+                }
+            }
+
+            // SORT
+            Collections.sort(entityAL, new Comparator<Entity>()
+                    {
+                        @Override
+                        public int compare(Entity e1, Entity e2)
+                        {
+                            if (e1 instanceof Player)
+                            {
+                                return Double.compare(Player.worldY, e2.worldY);
+                            }
+                            else if (e2 instanceof Player)
+                            {
+                                return Double.compare(e1.worldY, Player.worldY);
+                            }
+                            else
+                            {
+                                return Double.compare(e1.worldY, e2.worldY);
+                            }
+                        }
+                    });
+
+            // DRAW ENTITIES
+            for (int i = 0; i < entityAL.size(); i++)
+            {
+//                if (entityAL.get(i) instanceof OtherPlayer && ((OtherPlayer) entityAL.get(i)).joinedGame)
+//                {
+//                    entityAL.get(i).draw(g2);
+//                }
+//                else if (!(entityAL.get(i) instanceof OtherPlayer))
+//                {
+//                    entityAL.get(i).draw(g2);
+//                }
+                entityAL.get(i).draw(g2);
+            }
+            entityAL.clear();
+
+            // UI
+            ui.draw(g2);
+
+            /*// OBJECTS
+            for (int i = 0; i < obj.length; i++) {
+                if (obj[i] != null) {
+                    obj[i].draw(g2);
+                }
+            }
+
+            // NPCs
+            for (int i = 0; i < npc.length; i++)
+            {
+                if (npc[i] != null)
+                {
+                    npc[i].draw(g2);
+                }
+            }
 
             // PLAYERS
             player.draw(g2);
@@ -243,14 +317,13 @@ public class GamePanel extends JPanel implements Runnable
                     otherPlayer.draw(g2);
                 }
                 //otherPlayer.draw(g2);
-            }
+            }*/
 
-            // UI
-            ui.draw(g2);
         }
 
         // DEBUG
-        if (keyHandler.checkDrawTime) {
+        if (keyHandler.checkDrawTime)
+        {
             long drawEnd = System.nanoTime();
             long passed = drawEnd - drawStart;
             g2.setColor(Color.white);
@@ -261,18 +334,20 @@ public class GamePanel extends JPanel implements Runnable
         g2.dispose();
     }
 
-    public void playMusic(int i) {
-
+    public void playMusic(int i)
+    {
         music.setFile(i);
         music.play();
         music.loop();
     }
 
-    public void stopMusic() {
+    public void stopMusic()
+    {
         music.stop();
     }
 
-    public void playSFX(int i) {
+    public void playSFX(int i)
+    {
         sfx.setFile(i);
         sfx.play();
     }
