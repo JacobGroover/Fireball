@@ -34,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable
     TileManager tileManager = new TileManager(this);    // Instantiate TileManager object for game background tiles
     KeyHandler keyHandler = new KeyHandler(this);
     MouseHandler mouseHandler = new MouseHandler(this);
+    public EventHandler eventHandler = new EventHandler(this);
     Sound music = new Sound();
     Sound sfx = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -54,8 +55,6 @@ public class GamePanel extends JPanel implements Runnable
     public final int GAME_MENU_STATE = 3;
 
     public boolean joinedGame;
-    TCPClient tcpClient;
-    UDPClient udpClient;
 
 
     /**

@@ -137,6 +137,9 @@ public class Player extends Entity {
 //            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
 //            interactNPC(npcIndex);
 
+            // Check Event triggers
+            gp.eventHandler.checkEvent();
+
             if (!xCollisionOn) {
                 worldX += velocityX;
             }
