@@ -291,10 +291,14 @@ public class CollisionChecker {
 
         int index = -1;
 
+        boolean continueCheck = true;
         for (int i = 0; i < target.size(); i++)
         {
-
-            if (target.get(i) instanceof OtherPlayer && ((OtherPlayer) target.get(i)).joinedGame)
+            if (target.get(i) instanceof OtherPlayer && !((OtherPlayer) target.get(i)).joinedGame)
+            {
+                continueCheck = false;
+            }
+            if (continueCheck)
             {
                 if (target.get(i) != null) {
                     // Get entity's solid area position
