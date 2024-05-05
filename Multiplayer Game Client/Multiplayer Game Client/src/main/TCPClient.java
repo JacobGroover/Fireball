@@ -46,11 +46,6 @@ public class TCPClient extends Client
 
                         if (changedGameState != gp.joinedGame)
                         {
-                            changedGameState = true;
-                        }
-
-                        if (changedGameState)
-                        {
                             bufferedWriter.write("*" + clientUsername + "*" + gp.joinedGame);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
@@ -188,8 +183,8 @@ public class TCPClient extends Client
                         }
                         else if (messageReceived != null && messageReceived.startsWith("*"))
                         {
-                            System.out.println(messageReceived);
-                            System.out.println("FOUND");
+//                            System.out.println(messageReceived);
+//                            System.out.println("FOUND");
                             String[] tokens = messageReceived.split("\\*");
                             for (OtherPlayer otherPlayer : otherPlayers)
                             {

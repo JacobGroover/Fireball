@@ -47,7 +47,7 @@ public class OtherPlayer extends Entity {
         clientUserName = messageReceived;
         velocityX = 0;
         velocityY = 0;
-//        joinedGame = true;
+        joinedGame = false;
 
         maxLife = 100;
         life = maxLife;

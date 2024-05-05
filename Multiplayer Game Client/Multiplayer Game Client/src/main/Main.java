@@ -128,7 +128,7 @@ public class Main
 
             // Call listenForMessage() and sendMessage() methods on this client instance; both run on separate threads and are blocked, so they both get called and run continuously while connected.
             tcpClient.listenForMessage(gamePanel);    // COMMENT
-            //tcpClient.sendJoinedGame(gamePanel);
+            tcpClient.sendJoinedGame(gamePanel);
             udpClient.run();    // COMMENT
             //tcpClient.sendPosition();
 
