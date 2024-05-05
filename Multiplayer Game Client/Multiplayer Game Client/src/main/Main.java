@@ -50,11 +50,11 @@ public class Main
                 public void actionPerformed(ActionEvent e)
                 {
                     username = textField1.getText();
-                    if (username.length() < 2 || username.contains("+") || username.contains("-") ||
+                    if (username.length() < 2 || username.length() > 15 || username.contains("+") || username.contains("-") ||
                             username.contains(":") || username.contains("*") || username.substring(0, 1).matches("\\d"))
                     {
                         validEntry = false;
-                        JOptionPane.showMessageDialog(null, "Name must be longer than 1 characters, cannot start with a number, and cannot contain '+', '-', ':' or '*'",
+                        JOptionPane.showMessageDialog(null, "Name must be between 2 and 15 characters, cannot start with a number, and cannot contain '+', '-', ':' or '*'",
                                 "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
                     }
                     else
