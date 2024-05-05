@@ -33,7 +33,7 @@ public class TCPClient extends Client
 
     public void sendJoinedGame(GamePanel gp)
     {
-        new Thread(new Runnable()
+        Thread t1 = new Thread(new Runnable()
         {
             @Override
             public void run()
@@ -64,6 +64,7 @@ public class TCPClient extends Client
                 }
             }
         });
+        t1.start();
 
     }
 
@@ -129,7 +130,7 @@ public class TCPClient extends Client
 
     public void listenForMessage(GamePanel gp)
     {
-        new Thread(new Runnable()
+        Thread t2 = new Thread(new Runnable()
         {
             @Override
             public void run()
@@ -226,7 +227,9 @@ public class TCPClient extends Client
                     }
                 }
             }
-        }).start();
+        });
+        t2.start();
+
     }
 
     /*public void listenForPosition()
@@ -274,5 +277,4 @@ public class TCPClient extends Client
             ioe.printStackTrace();
         }
     }
-
 }
