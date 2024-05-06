@@ -1,12 +1,8 @@
 package main;
 
-import com.sun.security.jgss.GSSUtil;
-
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Rectangle2D;
 
 public class MouseHandler implements MouseListener, MouseMotionListener
 {
@@ -53,6 +49,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener
             if (gameMenuHover1)
             {
                 gp.joinedGame = false;
+//                Client.otherPlayers.clear();
                 gp.gameState = gp.MAIN_MENU_STATE;
             }
         }

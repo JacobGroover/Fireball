@@ -95,19 +95,11 @@ public class TCPClient extends Client
                         lastTime = currentTime;
 
                         if (delta >= 1) {
-                            //System.out.println("*" + Player.sendVelocity + username);
 
                             // TCP MOVEMENT
                             bufferedWriter.write("*" + Player.sendVelocity + clientUsername);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
-
-                            // UDP MOVEMENT
-                    /*DatagramSocket datagramSocket = new DatagramSocket();
-                    byte[] b = ("*" + Player.sendVelocity + clientUsername).getBytes();
-                    InetAddress ia = InetAddress.getByName("192.168.2.102");
-                    DatagramPacket datagramPacketSend = new DatagramPacket(b, b.length, ia, 1234);
-                    datagramSocket.send(datagramPacketSend);*/
 
 
                             delta--;
@@ -138,81 +130,51 @@ public class TCPClient extends Client
                     {
 
                         messageReceived = bufferedReader.readLine();
-                        //System.out.println(messageReceived);
-                        if (messageReceived != null && !messageReceived.startsWith("*") && !messageReceived.contains(":"))
+
+                        if (messageReceived != null && messageReceived.startsWith("*"))
                         {
-                            boolean isDuplicate = false;
-                            for (OtherPlayer otherPlayer : otherPlayers)
-                            {
-                                if (otherPlayer.clientUserName.equals(messageReceived))
-                                {
-                                    isDuplicate = true;
-                                    break;
-                                }
-                            }
 
-                            if (!(messageReceived.equals(clientUsername)) && !isDuplicate)    // AND if otherPlayers ArrayList does not include a copy of messageReceived
-                            {
-                                //System.out.println(messageReceived);
-                                otherPlayers.add(new OtherPlayer(gp, messageReceived));
-                                System.out.println("adding " + messageReceived);
-                            }
+                            String[] tokens = messageReceived.split("\\*");
 
-                            // TEST CODE
-                            /*for (OtherPlayer otherPlayer : otherPlayers)
+                            if (Boolean.parseBoolean(tokens[2].substring(0, 4)))
                             {
-                                System.out.println(otherPlayer.clientUserName);
-                            }*/
-
-                        }
-                        else if (messageReceived != null && messageReceived.contains(":") && !messageReceived.startsWith("*"))
-                        {
-                            if (messageReceived.endsWith(" has left the chat!"))
-                            {
+                                boolean duplicate = false;
                                 for (int i = 0; i < otherPlayers.size(); i++)
                                 {
-                                    if (messageReceived.substring(8).startsWith(otherPlayers.get(i).clientUserName))
+                                    if (otherPlayers.get(i).clientUserName.equals(tokens[1]))
                                     {
-                                        otherPlayers.remove(i);
-                                        break;
+                                        duplicate = true;
                                     }
-                                    //i--;
                                 }
-                            }
-                            System.out.println(messageReceived);
-                        }
-                        else if (messageReceived != null && messageReceived.startsWith("*"))
-                        {
-//                            System.out.println(messageReceived);
-//                            System.out.println("FOUND");
-                            String[] tokens = messageReceived.split("\\*");
-                            for (OtherPlayer otherPlayer : otherPlayers)
-                            {
-                                if (otherPlayer.clientUserName.equals(tokens[1]))
+                                if (!duplicate)
                                 {
-                                    otherPlayer.joinedGame = Boolean.parseBoolean(tokens[2].substring(0, 4));
+                                    otherPlayers.add(new OtherPlayer(gp, tokens[1]));
                                 }
                             }
+                            else
+                            {
+                                if (tokens[1].equals(Client.clientUsername))
+                                {
+                                    otherPlayers.clear();
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < otherPlayers.size(); i++)
+                                    {
+                                        if (otherPlayers.get(i).clientUserName.equals(tokens[1]))
+                                        {
+                                            otherPlayers.remove(i);
+                                            i--;
+                                        }
+                                    }
+                                }
+                            }
+
                         }
                         else
                         {
-                            System.out.println(messageReceived);
+//                            System.out.println("ELSE REACHED " + messageReceived);
                         }
-
-                        // commented out for UDP
-                        /*else
-                        {
-                            for (OtherPlayer otherPlayer : otherPlayers)
-                            {
-                                if (messageReceived != null && messageReceived.substring(5).equals(otherPlayer.clientUserName))
-                                {
-                                    //System.out.println(messageReceived.substring(5) + " moves");
-                                    //System.out.println(otherPlayer.velocityX + " " + otherPlayer.velocityY);
-                                    otherPlayer.velocityX = Double.parseDouble(messageReceived.substring(1, 3));
-                                    otherPlayer.velocityY = Double.parseDouble(messageReceived.substring(3, 5));
-                                }
-                            }
-                        }*/
 
                         byte[] b1 = new byte[1024];
 
@@ -226,30 +188,6 @@ public class TCPClient extends Client
         t2.start();
 
     }
-
-    /*public void listenForPosition()
-    {
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                String messageFromGroupChat;
-
-                while (socket.isConnected())
-                {
-                    try
-                    {
-                        messageFromGroupChat = bufferedReader.readLine();
-                        System.out.println(messageFromGroupChat);
-                    } catch (IOException ioe)
-                    {
-                        closeEverything(socket, bufferedReader, bufferedWriter);
-                    }
-                }
-            }
-        }).start();
-    }*/
 
     public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter)
     {

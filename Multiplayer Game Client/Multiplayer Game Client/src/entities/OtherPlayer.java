@@ -22,7 +22,7 @@ public class OtherPlayer extends Entity {
     public int hasKey = 0;
     public boolean joinedGame;
 
-    public OtherPlayer(GamePanel gp, String messageReceived)
+    public OtherPlayer(GamePanel gp, String clientUserName)
     {
 
         super(gp);
@@ -31,11 +31,11 @@ public class OtherPlayer extends Entity {
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
-        setDefaultValues(messageReceived);
+        setDefaultValues(clientUserName);
         getImages("/player/FillerPlayer");
     }
 
-    public void setDefaultValues(String messageReceived) {
+    public void setDefaultValues(String clientUserName) {
         //this.lastWorldX = 0.0;   // UDP
         //this.lastWorldY = 0.0;   // UDP
         startX = 23.00;
@@ -44,10 +44,10 @@ public class OtherPlayer extends Entity {
         this.worldY = gp.tileSize * startY;
         speed = 4;
         direction = "down";
-        clientUserName = messageReceived;
+        this.clientUserName = clientUserName;
         velocityX = 0;
         velocityY = 0;
-        joinedGame = false;
+        joinedGame = true;
 
         maxLife = 100;
         life = maxLife;

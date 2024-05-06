@@ -47,13 +47,13 @@ public class TcpHandler extends ClientHandler implements Runnable
             this.clientUsername = bufferedReader.readLine();
             clientDataAL.add(this);
 
-            for (ClientHandler clientHandler: clientDataAL)
-            {
-                //System.out.println("\nCONSTRUCTOR:");
-                //System.out.println(clientHandler);
-                //System.out.println(clientHandler.clientUsername);
-                this.constructorBroadcastMessage(clientHandler.clientUsername);
-            }
+//            for (ClientHandler clientHandler: clientDataAL)
+//            {
+//                //System.out.println("\nCONSTRUCTOR:");
+//                //System.out.println(clientHandler);
+//                //System.out.println(clientHandler.clientUsername);
+//                this.constructorBroadcastMessage(clientHandler.clientUsername);
+//            }
 
             /*for (ClientHandler clientHandler : clientHandlers)
             {
@@ -93,7 +93,12 @@ public class TcpHandler extends ClientHandler implements Runnable
             try
             {
                 messageFromClient = bufferedReader.readLine();
-                broadcastMessage(messageFromClient);
+                if (messageFromClient.startsWith("*"))
+                {
+                    String[] tokens = messageFromClient.split("\\*");
+                    this.setJoinedGame(Boolean.parseBoolean(tokens[2].substring(0, 4)));
+                    broadcastMessageAll(tokens[1], Boolean.parseBoolean(tokens[2].substring(0, 4)));
+                }
 
                 /*positionFromClient = bufferedReader.readLine();
                 broadcastPosition(positionFromClient);*/
@@ -169,6 +174,95 @@ public class TcpHandler extends ClientHandler implements Runnable
         }*/
 
     }
+
+    public void broadcastMessageAll(String clientUsername, boolean joinedGame)
+    {
+
+        if (joinedGame)
+        {
+            for (int i = 0; i < clientDataAL.size(); i++)
+            {
+                if (!clientDataAL.get(i).getClientUsername().equals(clientUsername) && clientDataAL.get(i).getJoinedGame())
+                {
+                    try
+                    {
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write("*" + clientUsername + "*" + true);
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+
+                        this.bufferedWriter.write("*" + clientDataAL.get(i).getClientUsername() + "*" + clientDataAL.get(i).getJoinedGame());
+                        this.bufferedWriter.newLine();
+                        this.bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+
+                    } catch (IOException ioe)
+                    {
+                        closeEverything(TCPSocket, bufferedReader, bufferedWriter);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < clientDataAL.size(); i++)
+            {
+                if (!clientDataAL.get(i).getClientUsername().equals(clientUsername) && clientDataAL.get(i).getJoinedGame())
+                {
+                    try
+                    {
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write("*" + clientUsername + "*" + false);
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+
+                    } catch (IOException ioe)
+                    {
+                        closeEverything(TCPSocket, bufferedReader, bufferedWriter);
+                    }
+                }
+            }
+            try
+            {
+                this.bufferedWriter.write("*" + clientUsername + "*" + false);
+                this.bufferedWriter.newLine();
+                this.bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+
+            } catch (IOException ioe)
+            {
+                closeEverything(TCPSocket, bufferedReader, bufferedWriter);
+            }
+
+        }
+
+    }
+
+//    public void broadcastMessageAll()
+//    {
+//        for (int i = 0; i < clientDataAL.size(); i++)
+//        {
+//            for (int j = 0; j < clientDataAL.size(); j++)
+//            {
+//                if (!clientDataAL.get(i).getClientUsername().equals(clientDataAL.get(j).getClientUsername()) && clientDataAL.get(i).getJoinedGame())
+//                {
+//                    System.out.println("HERE");
+//                    try
+//                    {
+//                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write("*" + clientDataAL.get(j).getClientUsername() + "*" + clientDataAL.get(j).getJoinedGame());
+//                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
+//                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+//
+////                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write(messageToSend);
+////                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
+////                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+//
+//                    } catch (IOException ioe)
+//                    {
+//                        closeEverything(TCPSocket, bufferedReader, bufferedWriter);
+//                    }
+//                }
+//
+//            }
+//        }
+//
+//    }
 
     // UDP method
     /*public void broadcastPosition()

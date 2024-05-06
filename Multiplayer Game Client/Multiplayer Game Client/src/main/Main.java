@@ -83,22 +83,6 @@ public class Main
         Client.serverTcpPort1 = 6682;
         Client.serverUdpPort1 = 4445;
 
-        /*Scanner scanner = new Scanner(System.in);
-        boolean validEntry;
-        String username;
-        do
-        {
-            validEntry = true;
-            System.out.println("Enter your username for the group chat: ");
-            username = scanner.nextLine();
-            if (username.length() <= 2 || username.contains("+") || username.contains("-") ||
-                    username.contains(":") || username.contains("*") || username.substring(0, 1).matches("\\d"))
-            {
-                System.out.println("Name must be longer than 2 characters, cannot start with a number, and cannot contain '+', '-', ':' or '*'");
-                validEntry = false;
-            }
-        } while (!validEntry);*/
-
         // PORTED FROM PREVIOUS MAIN CLASS
         JFrame window = new JFrame();   // create a window
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // set window to exit when closed
@@ -126,17 +110,12 @@ public class Main
 
             //UDPClient udpClient = new UDPClient(datagramSocket, username, serverAddress, serverUdpPort);
 
-            // Call listenForMessage() and sendMessage() methods on this client instance; both run on separate threads and are blocked, so they both get called and run continuously while connected.
-            tcpClient.listenForMessage(gamePanel);    // COMMENT
+            // Call listenForMessage() and sendJoinedGame() methods on this client instance; both run on separate threads and are blocked, so they both get called and run continuously while connected.
+            tcpClient.listenForMessage(gamePanel);
             tcpClient.sendJoinedGame(gamePanel);
-            udpClient.run();    // COMMENT
-            //tcpClient.sendPosition();
 
-
-            //tcpClient.listenForPosition();
-            //udpClient.sendPosition(gamePanel);
-            //udpClient.listenForPosition();
-            //tcpClient.sendMessage();
+            // Run UDP thread to handle movement and position packets
+            udpClient.run();
 
         } catch (IOException ioe)
         {
