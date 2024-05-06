@@ -83,12 +83,12 @@ public class Main
         Client.serverTcpPort1 = 6682;
         Client.serverUdpPort1 = 4445;
 
-        // PORTED FROM PREVIOUS MAIN CLASS
         JFrame window = new JFrame();   // create a window
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // set window to exit when closed
         //window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         window.setResizable(false); // prevents resizing of the window
         window.setTitle(username);  // set name of the window
+
         // Add GamePanel object to main method for instantiating GUI on game launch
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel);
@@ -100,7 +100,6 @@ public class Main
 
         gamePanel.setupGame();
         gamePanel.startGameThread();
-        // END OF PORT FROM PREVIOUS MAIN CLASS
 
         try
         {
@@ -108,14 +107,13 @@ public class Main
             TCPClient tcpClient = new TCPClient(socket, username);
             UDPClient udpClient = new UDPClient(gamePanel);
 
-            //UDPClient udpClient = new UDPClient(datagramSocket, username, serverAddress, serverUdpPort);
-
             // Call listenForMessage() and sendJoinedGame() methods on this client instance; both run on separate threads and are blocked, so they both get called and run continuously while connected.
             tcpClient.listenForMessage(gamePanel);
             tcpClient.sendJoinedGame(gamePanel);
 
-            // Run UDP thread to handle movement and position packets
-            udpClient.run();
+            // Run UDP threads to handle movement and position packets
+            udpClient.sendDP();
+            udpClient.receiveDP();
 
         } catch (IOException ioe)
         {
@@ -124,5 +122,4 @@ public class Main
         }
 
     }
-
 }

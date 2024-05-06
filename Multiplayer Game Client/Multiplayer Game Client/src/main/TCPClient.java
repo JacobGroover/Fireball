@@ -176,7 +176,6 @@ public class TCPClient extends Client
 //                            System.out.println("ELSE REACHED " + messageReceived);
                         }
 
-                        byte[] b1 = new byte[1024];
 
                     } catch (IOException ioe)
                     {

@@ -58,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable
     public final int SELECT_CHARACTER_STATE = 2;
     public final int GAME_MENU_STATE = 3;
 
-    public boolean joinedGame;
+    public volatile boolean joinedGame;
 
 
     /**

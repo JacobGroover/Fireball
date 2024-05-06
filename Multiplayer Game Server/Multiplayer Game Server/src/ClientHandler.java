@@ -1,6 +1,4 @@
-import java.io.*;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.util.ArrayList;
 
 /**
@@ -12,6 +10,7 @@ public class ClientHandler
 {
 
     protected static ArrayList<ClientHandler> clientDataAL = new ArrayList<>();  // Static ArrayList of ClientHandler objects to keep track of all the instances created
+    protected boolean firstDPReceived;
     protected InetAddress clientInetAddress;
     protected int port;
     protected String clientUsername;
@@ -32,6 +31,16 @@ public class ClientHandler
         setWorldY(worldY);
     }
 
+    public boolean isFirstDPReceived()
+    {
+        return firstDPReceived;
+    }
+
+    public void setFirstDPReceived(boolean firstDPReceived)
+    {
+        this.firstDPReceived = firstDPReceived;
+    }
+
     public InetAddress getClientInetAddress()
     {
         return clientInetAddress;
@@ -40,6 +49,16 @@ public class ClientHandler
     public void setClientInetAddress(InetAddress clientInetAddress)
     {
         this.clientInetAddress = clientInetAddress;
+    }
+
+    public int getPort()
+    {
+        return port;
+    }
+
+    public void setPort(int port)
+    {
+        this.port = port;
     }
 
     public String getClientUsername()

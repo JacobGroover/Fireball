@@ -15,9 +15,7 @@ public class Server
     // Creates a socket object to communicate with incoming clients. Represents a connection between the Server or ClientHandler and the client.
     // Each socket has an output stream to send data through the connection, and an input stream to read data
     private final ServerSocket serverSocketTCP;
-    //private final ServerSocket serverSocketUDP;   // UDP
     private final static int tcpPort = 6682;
-    //private final static int udpPort = 9999;  // UDP
 
 
     public Server(ServerSocket serverSocketTCP)
@@ -34,7 +32,6 @@ public class Server
             while (!serverSocketTCP.isClosed())
             {
                 Socket serverSocketTCP = this.serverSocketTCP.accept(); // Suspends code here until a client connects. When a client connects, values are stored to a socket object, which can be used to communicate with that client
-                //Socket serverSocketUDP = this.serverSocketUDP.accept();   // UDP
                 System.out.println("A new client has connected!");  // TEST CODE
                 TcpHandler tcpHandler = new TcpHandler(serverSocketTCP, tcpPort);  // Custom class; see ClientHandler for details
 
@@ -73,13 +70,13 @@ public class Server
     public static void main(String[] args) throws IOException
     {
         ServerSocket serverSocketTCP = new ServerSocket(tcpPort);
-        //ServerSocket serverSocketUDP = new ServerSocket(udpPort); // UDP
         Server server = new Server(serverSocketTCP);
 
         // UdpBranch
         UdpClientHandler udpClientHandler = new UdpClientHandler();
-        Thread udpThread = new Thread(udpClientHandler);
-        udpThread.start();
+
+        udpClientHandler.receiveDP();
+        udpClientHandler.sendDP();
 
         server.startServer();
     }
