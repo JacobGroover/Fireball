@@ -3,6 +3,7 @@ package main;
 import entities.Entity;
 import entities.OtherPlayer;
 import entities.Player;
+import entities.Projectile;
 
 import java.util.ArrayList;
 
@@ -386,7 +387,14 @@ public class CollisionChecker {
                 }
             }
 
-            if (target.get(i) != null) {
+            if (target.get(i) != null)
+            {
+                if (entity instanceof Projectile && index != -1 && !((Projectile) entity).detonating)
+                {
+                    entity.worldX = target.get(i).worldX;
+                    entity.worldY = target.get(i).worldY;
+                }
+
                 entity.solidArea.x = entity.solidAreaDefaultX;
                 entity.solidArea.y = entity.solidAreaDefaultY;
                 target.get(i).solidArea.x = target.get(i).solidAreaDefaultX;

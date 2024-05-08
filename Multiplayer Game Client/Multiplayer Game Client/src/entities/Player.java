@@ -47,9 +47,6 @@ public class Player extends Entity {
         setDefaultValues();
         getImages("/player/FillerPlayer");
         getPlayerAttackImages("/player/attack/FillerPlayerCast");
-        {
-
-        }
     }
 
     public void setDefaultValues() {
@@ -92,25 +89,17 @@ public class Player extends Entity {
         }
 
         // CHECK FOR DAMAGE OVER TIME
-        if (hasDot)
+        if (isBurning)
         {
-            boolean applied;
-            for (int i = 0; i < dotAL.size(); i++)
+            if (dotBurningDmgCounter <= 0)
             {
-                if (dotAL.get(i).equals("fire"))
-                {
-                    if (dotFireCounter % 2 == 0)
-                    {
-                        life--;
-                    }
-                    dotFireCounter--;
-                    if (dotFireCounter <= 0)
-                    {
-                        dotAL.remove(i);
-                        i--;
-                    }
-                }
+                isBurning = false;
             }
+            else if (dotBurningDmgCounter % 18 == 0)
+            {
+                life--;
+            }
+            dotBurningDmgCounter--;
         }
 
         // CHECK FOR SKILL/ABILITY INPUTS
@@ -426,6 +415,7 @@ public class Player extends Entity {
     @Override
     protected void drawImage(Graphics2D graphics2, BufferedImage image)
     {
+
         graphics2.drawImage(image, screenX, screenY, null);
     }
 

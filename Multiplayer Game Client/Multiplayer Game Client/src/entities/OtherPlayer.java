@@ -7,12 +7,8 @@
 package entities;
 
 import main.GamePanel;
-import main.UtilityTool;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class OtherPlayer extends Entity {
 
@@ -57,25 +53,17 @@ public class OtherPlayer extends Entity {
     {
 
         // CHECK FOR DAMAGE OVER TIME
-        if (hasDot)
+        if (isBurning)
         {
-            boolean applied;
-            for (int i = 0; i < dotAL.size(); i++)
+            if (dotBurningDmgCounter <= 0)
             {
-                if (dotAL.get(i).equals("fire"))
-                {
-                    if (dotFireCounter % 2 == 0)
-                    {
-                        life--;
-                    }
-                    dotFireCounter--;
-                    if (dotFireCounter <= 0)
-                    {
-                        dotAL.remove(i);
-                        i--;
-                    }
-                }
+                isBurning = false;
             }
+            else if (dotBurningDmgCounter % 18 == 0)
+            {
+                life--;
+            }
+            dotBurningDmgCounter--;
         }
 
         if (velocityX != 0 || velocityY != 0) {

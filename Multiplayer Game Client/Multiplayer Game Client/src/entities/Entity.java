@@ -26,6 +26,9 @@ public abstract class Entity {
     public BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, left3, right1, right2, right3,
             upLeft1, upLeft2, upLeft3, upRight1, upRight2, upRight3, downLeft1, downLeft2, downLeft3, downRight1, downRight2, downRight3;
     public BufferedImage attackUp1, attackDown1, attackLeft1, attackRight1, attackUpLeft1, attackUpRight1, attackDownLeft1, attackDownRight1;
+
+    // Images for visual effects applied to an Entity
+    public BufferedImage burning1, burning2;
     public String direction = "down";
     public boolean attacking = false;
 
@@ -58,9 +61,9 @@ public abstract class Entity {
     public int mana;
     public int attack;
     public Projectile projectile;
-    boolean hasDot;
-    ArrayList<String> dotAL = new ArrayList<>();
-    int dotFireCounter;
+    boolean isBurning;
+    int dotBurningVfxCounter;
+    int dotBurningDmgCounter;
 
     // SKILL STATS
 
@@ -74,6 +77,11 @@ public abstract class Entity {
     public Entity(GamePanel gp)
     {
         this.gp = gp;
+
+        if (this instanceof Player || this instanceof OtherPlayer)
+        {
+            getVFX();
+        }
     }
 
     public void getImages(String imagePath) {
@@ -101,6 +109,12 @@ public abstract class Entity {
         downRight1 = setup(imagePath + "DownRight1");
         downRight2 = setup(imagePath + "DownRight2");
         downRight3 = setup(imagePath + "DownRight3");
+    }
+
+    public void getVFX()
+    {
+        burning1 = setup("/objects/projectiles/FireballDetonate3");
+        burning2 = setup("/objects/projectiles/FireballDetonate4");
     }
 
     public BufferedImage setup(String imageName) {
@@ -257,6 +271,27 @@ public abstract class Entity {
                     if (spriteNum == 3) {image = downRight3;}
                 }
                 break;
+        }
+
+        if (isBurning)
+        {
+            if (dotBurningVfxCounter == 0)
+            {
+                dotBurningVfxCounter = 24;
+            }
+            if (dotBurningVfxCounter > 12 && dotBurningVfxCounter <= 24)
+            {
+                drawImage(graphics2, burning1);
+            }
+            if (dotBurningVfxCounter <= 12)
+            {
+                drawImage(graphics2, burning2);
+            }
+            dotBurningVfxCounter--;
+        }
+        else
+        {
+            dotBurningVfxCounter = 0;
         }
 
         drawImage(graphics2, image);

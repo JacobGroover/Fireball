@@ -10,7 +10,7 @@ public abstract class Projectile extends Entity
 {
 
     Entity owner;
-    boolean detonating;
+    public boolean detonating;
     protected int deathTimer;
 
     // DOTS
@@ -155,6 +155,11 @@ public abstract class Projectile extends Entity
             {
                 collideWithEntity(Client.otherPlayers, entityIndex);
             }
+            if (detonating)
+            {
+                xCollisionOn = false;
+                yCollisionOn = false;
+            }
         }
 
         // Check for player collision
@@ -162,25 +167,12 @@ public abstract class Projectile extends Entity
         {
             collideWithEntity(gp.player);
         }
+        if (detonating)
+        {
+            xCollisionOn = false;
+            yCollisionOn = false;
+        }
 
-//        if (owner instanceof Player)
-//        {
-//            // Check for OtherPlayer collision
-//            int entityIndex = gp.cChecker.checkEntity(this, Client.otherPlayers);
-//            if (entityIndex != -1)
-//            {
-//                collideWithEntity(Client.otherPlayers, entityIndex);
-//            }
-//            if (detonating)
-//            {
-//                gp.cChecker.checkPlayer(this);
-//            }
-//        }
-//        else
-//        {
-//            // Check for Player collision
-//            gp.cChecker.checkPlayer(this);
-//        }
 
     }
 
@@ -193,23 +185,12 @@ public abstract class Projectile extends Entity
             {
                 int damage = this.attack;
                 fromList.get(entityIndex).life -= damage;
-//                applyDot = true;
             }
             else if (detonating)
             {
-                boolean applied = false;
-                for (int i = 0; i < fromList.get(entityIndex).dotAL.size(); i++)
-                {
-                    if (fromList.get(entityIndex).dotAL.get(i).equals("fire"))
-                    {
-                        applied = true;
-                        fromList.get(entityIndex).dotFireCounter = 10;
-                    }
-                }
-                if (!applied)
-                {
-                    fromList.get(entityIndex).dotAL.add("fire");
-                }
+                System.out.println("POP");
+                fromList.get(entityIndex).dotBurningDmgCounter = 180;
+                fromList.get(entityIndex).isBurning = true;
             }
         }
 
@@ -225,24 +206,12 @@ public abstract class Projectile extends Entity
             {
                 int damage = this.attack;
                 entity.life -= damage;
-//                applyDot = true;
             }
             else if (detonating)
             {
-                boolean applied = false;
-                for (int i = 0; i < entity.dotAL.size(); i++)
-                {
-                    if (entity.dotAL.get(i).equals("fire"))
-                    {
-                        applied = true;
-                        entity.dotFireCounter = 10;
-                    }
-                }
-                if (!applied)
-                {
-                    entity.dotAL.add("fire");
-                    entity.hasDot = true;
-                }
+                System.out.println("POP");
+                entity.dotBurningDmgCounter = 180;
+                entity.isBurning = true;
             }
 
         }
