@@ -91,6 +91,28 @@ public class Player extends Entity {
             attackingAnimation();
         }
 
+        // CHECK FOR DAMAGE OVER TIME
+        if (hasDot)
+        {
+            boolean applied;
+            for (int i = 0; i < dotAL.size(); i++)
+            {
+                if (dotAL.get(i).equals("fire"))
+                {
+                    if (dotFireCounter % 2 == 0)
+                    {
+                        life--;
+                    }
+                    dotFireCounter--;
+                    if (dotFireCounter <= 0)
+                    {
+                        dotAL.remove(i);
+                        i--;
+                    }
+                }
+            }
+        }
+
         // CHECK FOR SKILL/ABILITY INPUTS
         if (!attacking)
         {
@@ -158,8 +180,8 @@ public class Player extends Entity {
                 velocityY *= speed;
 
                 // Check for tile collision
-                xCollisionOn = false;
-                yCollisionOn = false;
+//                xCollisionOn = false;
+//                yCollisionOn = false;
                 gp.cChecker.checkTile(this);
 
                 // Check for object collision
@@ -204,6 +226,9 @@ public class Player extends Entity {
                 spriteNum = 1;
             }
         }
+
+        xCollisionOn = false;
+        yCollisionOn = false;
 
         // UPDATE COOLDOWN TIMERS
         if (mouseH.playPressed1Cooldown)

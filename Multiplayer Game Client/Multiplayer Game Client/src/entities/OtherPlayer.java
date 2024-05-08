@@ -55,6 +55,29 @@ public class OtherPlayer extends Entity {
 
     public void update()
     {
+
+        // CHECK FOR DAMAGE OVER TIME
+        if (hasDot)
+        {
+            boolean applied;
+            for (int i = 0; i < dotAL.size(); i++)
+            {
+                if (dotAL.get(i).equals("fire"))
+                {
+                    if (dotFireCounter % 2 == 0)
+                    {
+                        life--;
+                    }
+                    dotFireCounter--;
+                    if (dotFireCounter <= 0)
+                    {
+                        dotAL.remove(i);
+                        i--;
+                    }
+                }
+            }
+        }
+
         if (velocityX != 0 || velocityY != 0) {
 
 
@@ -98,8 +121,6 @@ public class OtherPlayer extends Entity {
             velocityY *= speed;
 
             // Check for tile collision
-            xCollisionOn = false;
-            yCollisionOn = false;
             gp.cChecker.checkTile(this);
 
             // Check for object collision
@@ -134,6 +155,10 @@ public class OtherPlayer extends Entity {
         } else {
             spriteNum = 1;
         }
+
+        xCollisionOn = false;
+        yCollisionOn = false;
+
         velocityX = 0;
         velocityY = 0;
     }

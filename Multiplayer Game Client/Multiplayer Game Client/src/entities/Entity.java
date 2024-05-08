@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public abstract class Entity {
 
@@ -36,6 +37,9 @@ public abstract class Entity {
     public boolean xCollisionOn = false;
     public boolean yCollisionOn = false;
 
+    public boolean xTileCollisionOn;    // currently used for fireballs
+    public boolean yTileCollisionOn;    // currently used for fireballs
+
     public BufferedImage image, image2;
     public String name;
     public boolean collision = false;
@@ -54,6 +58,9 @@ public abstract class Entity {
     public int mana;
     public int attack;
     public Projectile projectile;
+    boolean hasDot;
+    ArrayList<String> dotAL = new ArrayList<>();
+    int dotFireCounter;
 
     // SKILL STATS
 
@@ -135,6 +142,8 @@ public abstract class Entity {
                 {
                     if (spriteNum == 1) {image = up1;}
                     if (spriteNum == 2) {image = attackUp1;}
+                    if (spriteNum == -1) {image = this.image;}
+                    if (spriteNum == -2) {image = this.image2;}
                 }
                 else
                 {
@@ -148,6 +157,8 @@ public abstract class Entity {
                 {
                     if (spriteNum == 1) {image = down1;}
                     if (spriteNum == 2) {image = attackDown1;}
+                    if (spriteNum == -1) {image = this.image;}
+                    if (spriteNum == -2) {image = this.image2;}
                 }
                 else
                 {
@@ -161,6 +172,8 @@ public abstract class Entity {
                 {
                     if (spriteNum == 1) {image = left1;}
                     if (spriteNum == 2) {image = attackLeft1;}
+                    if (spriteNum == -1) {image = this.image;}
+                    if (spriteNum == -2) {image = this.image2;}
                 }
                 else
                 {
@@ -174,6 +187,8 @@ public abstract class Entity {
                 {
                     if (spriteNum == 1) {image = right1;}
                     if (spriteNum == 2) {image = attackRight1;}
+                    if (spriteNum == -1) {image = this.image;}
+                    if (spriteNum == -2) {image = this.image2;}
                 }
                 else
                 {
@@ -187,6 +202,8 @@ public abstract class Entity {
                 {
                     if (spriteNum == 1) {image = upLeft1;}
                     if (spriteNum == 2) {image = attackUpLeft1;}
+                    if (spriteNum == -1) {image = this.image;}
+                    if (spriteNum == -2) {image = this.image2;}
                 }
                 else
                 {
@@ -200,6 +217,8 @@ public abstract class Entity {
                 {
                     if (spriteNum == 1) {image = upRight1;}
                     if (spriteNum == 2) {image = attackUpRight1;}
+                    if (spriteNum == -1) {image = this.image;}
+                    if (spriteNum == -2) {image = this.image2;}
                 }
                 else
                 {
@@ -213,6 +232,8 @@ public abstract class Entity {
                 {
                     if (spriteNum == 1) {image = downLeft1;}
                     if (spriteNum == 2) {image = attackDownLeft1;}
+                    if (spriteNum == -1) {image = this.image;}
+                    if (spriteNum == -2) {image = this.image2;}
                 }
                 else
                 {
@@ -226,6 +247,8 @@ public abstract class Entity {
                 {
                     if (spriteNum == 1) {image = downRight1;}
                     if (spriteNum == 2) {image = attackDownRight1;}
+                    if (spriteNum == -1) {image = this.image;}
+                    if (spriteNum == -2) {image = this.image2;}
                 }
                 else
                 {
