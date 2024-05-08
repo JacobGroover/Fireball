@@ -19,13 +19,14 @@ public abstract class Entity {
     GamePanel gp;
     public double worldX, worldY;
     public double startX, startY;
-    public int speed;
     public double velocityX;
     public double velocityY;
 
     public BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, left3, right1, right2, right3,
             upLeft1, upLeft2, upLeft3, upRight1, upRight2, upRight3, downLeft1, downLeft2, downLeft3, downRight1, downRight2, downRight3;
+    public BufferedImage attackUp1, attackDown1, attackLeft1, attackRight1, attackUpLeft1, attackUpRight1, attackDownLeft1, attackDownRight1;
     public String direction = "down";
+    public boolean attacking = false;
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
@@ -39,9 +40,29 @@ public abstract class Entity {
     public String name;
     public boolean collision = false;
 
-    // ENTITY STATUS
+    // ENTITY MATH
+    public double unitCircleX;
+    public double unitCircleY;
+    public double angle;
+
+    // ENTITY STATS
+    public boolean alive;
+    public int speed;
     public int maxLife;
     public int life;
+    public int maxMana;
+    public int mana;
+    public int attack;
+    public Projectile projectile;
+
+    // SKILL STATS
+
+    // ITEM STATS
+    public int projectileDestinationX;
+    public int projectileDestinationY;
+    public double projectileDistanceX;
+    public double projectileDistanceY;
+    public int useCost;
 
     public Entity(GamePanel gp)
     {
@@ -49,7 +70,6 @@ public abstract class Entity {
     }
 
     public void getImages(String imagePath) {
-
         up1 = setup(imagePath + "Up1");
         up2 = setup(imagePath + "Up2");
         up3 = setup(imagePath + "Up3");
@@ -94,7 +114,6 @@ public abstract class Entity {
     public BufferedImage setup2(String imageName) {
         UtilityTool uTool = new UtilityTool();
         BufferedImage image = null;
-
         try {
             image = ImageIO.read(getClass().getResourceAsStream(imageName + ".png"));
             image = uTool.scaleImage(image, gp.tileSize/2, gp.tileSize/2);
@@ -106,96 +125,113 @@ public abstract class Entity {
         return image;
     }
 
-    public void draw(Graphics2D graphics2) {
+    public void draw(Graphics2D graphics2)
+    {
 
         BufferedImage image = null;
         switch (direction) {
             case "up":
-                if (spriteNum == 1) {
-                    image = up1;
+                if (attacking)
+                {
+                    if (spriteNum == 1) {image = up1;}
+                    if (spriteNum == 2) {image = attackUp1;}
                 }
-                if (spriteNum == 2) {
-                    image = up2;
-                }
-                if (spriteNum == 3) {
-                    image = up3;
+                else
+                {
+                    if (spriteNum == 1) {image = up1;}
+                    if (spriteNum == 2) {image = up2;}
+                    if (spriteNum == 3) {image = up3;}
                 }
                 break;
             case "down":
-                if (spriteNum == 1) {
-                    image = down1;
+                if (attacking)
+                {
+                    if (spriteNum == 1) {image = down1;}
+                    if (spriteNum == 2) {image = attackDown1;}
                 }
-                if (spriteNum == 2) {
-                    image = down2;
-                }
-                if (spriteNum == 3) {
-                    image = down3;
+                else
+                {
+                    if (spriteNum == 1) {image = down1;}
+                    if (spriteNum == 2) {image = down2;}
+                    if (spriteNum == 3) {image = down3;}
                 }
                 break;
             case "left":
-                if (spriteNum == 1) {
-                    image = left1;
+                if (attacking)
+                {
+                    if (spriteNum == 1) {image = left1;}
+                    if (spriteNum == 2) {image = attackLeft1;}
                 }
-                if (spriteNum == 2) {
-                    image = left2;
-                }
-                if (spriteNum == 3) {
-                    image = left3;
+                else
+                {
+                    if (spriteNum == 1) {image = left1;}
+                    if (spriteNum == 2) {image = left2;}
+                    if (spriteNum == 3) {image = left3;}
                 }
                 break;
             case "right":
-                if (spriteNum == 1) {
-                    image = right1;
+                if (attacking)
+                {
+                    if (spriteNum == 1) {image = right1;}
+                    if (spriteNum == 2) {image = attackRight1;}
                 }
-                if (spriteNum == 2) {
-                    image = right2;
-                }
-                if (spriteNum == 3) {
-                    image = right3;
+                else
+                {
+                    if (spriteNum == 1) {image = right1;}
+                    if (spriteNum == 2) {image = right2;}
+                    if (spriteNum == 3) {image = right3;}
                 }
                 break;
             case "upLeft":
-                if (spriteNum == 1) {
-                    image = upLeft1;
+                if (attacking)
+                {
+                    if (spriteNum == 1) {image = upLeft1;}
+                    if (spriteNum == 2) {image = attackUpLeft1;}
                 }
-                if (spriteNum == 2) {
-                    image = upLeft2;
-                }
-                if (spriteNum == 3) {
-                    image = upLeft3;
+                else
+                {
+                    if (spriteNum == 1) {image = upLeft1;}
+                    if (spriteNum == 2) {image = upLeft2;}
+                    if (spriteNum == 3) {image = upLeft3;}
                 }
                 break;
             case "upRight":
-                if (spriteNum == 1) {
-                    image = upRight1;
+                if (attacking)
+                {
+                    if (spriteNum == 1) {image = upRight1;}
+                    if (spriteNum == 2) {image = attackUpRight1;}
                 }
-                if (spriteNum == 2) {
-                    image = upRight2;
-                }
-                if (spriteNum == 3) {
-                    image = upRight3;
+                else
+                {
+                    if (spriteNum == 1) {image = upRight1;}
+                    if (spriteNum == 2) {image = upRight2;}
+                    if (spriteNum == 3) {image = upRight3;}
                 }
                 break;
             case "downLeft":
-                if (spriteNum == 1) {
-                    image = downLeft1;
+                if (attacking)
+                {
+                    if (spriteNum == 1) {image = downLeft1;}
+                    if (spriteNum == 2) {image = attackDownLeft1;}
                 }
-                if (spriteNum == 2) {
-                    image = downLeft2;
-                }
-                if (spriteNum == 3) {
-                    image = downLeft3;
+                else
+                {
+                    if (spriteNum == 1) {image = downLeft1;}
+                    if (spriteNum == 2) {image = downLeft2;}
+                    if (spriteNum == 3) {image = downLeft3;}
                 }
                 break;
             case "downRight":
-                if (spriteNum == 1) {
-                    image = downRight1;
+                if (attacking)
+                {
+                    if (spriteNum == 1) {image = downRight1;}
+                    if (spriteNum == 2) {image = attackDownRight1;}
                 }
-                if (spriteNum == 2) {
-                    image = downRight2;
-                }
-                if (spriteNum == 3) {
-                    image = downRight3;
+                else
+                {
+                    if (spriteNum == 1) {image = downRight1;}
+                    if (spriteNum == 2) {image = downRight2;}
+                    if (spriteNum == 3) {image = downRight3;}
                 }
                 break;
         }

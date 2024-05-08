@@ -1,5 +1,7 @@
 package main;
 
+import entities.Player;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -8,9 +10,13 @@ public class MouseHandler implements MouseListener, MouseMotionListener
 {
 
     GamePanel gp;
+    public int mouseX;
+    public int mouseY;
     public boolean mainMenuHover1, mainMenuHover2, mainMenuHover3;
     public boolean characterMenuHover1;
     public boolean gameMenuHover1;
+    public boolean playPressed1;
+    public boolean playPressed1Cooldown;
 
     public MouseHandler(GamePanel gp)     // GAME STATE
     {
@@ -19,7 +25,17 @@ public class MouseHandler implements MouseListener, MouseMotionListener
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        if (gp.gameState == gp.MAIN_MENU_STATE)
+        if (gp.gameState == gp.PLAY_STATE)
+        {
+            if (e.getButton() == MouseEvent.BUTTON1 && !playPressed1Cooldown)
+            {
+                mouseX = e.getX();
+                mouseY = e.getY();
+                //playPressed1Cooldown = true;
+                playPressed1 = true;
+            }
+        }
+        else if (gp.gameState == gp.MAIN_MENU_STATE)
         {
             if (mainMenuHover1)
             {
@@ -58,13 +74,19 @@ public class MouseHandler implements MouseListener, MouseMotionListener
     @Override
     public void mousePressed(MouseEvent e)
     {
+        if (gp.gameState == gp.PLAY_STATE)
+        {
 
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e)
     {
+        if (gp.gameState == gp.PLAY_STATE)
+        {
 
+        }
     }
 
     @Override

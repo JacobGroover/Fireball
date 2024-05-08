@@ -55,11 +55,6 @@ public class OtherPlayer extends Entity {
 
     public void update()
     {
-        /*System.out.println("VelocityX: " + velocityX);
-        System.out.println("VelocityY " + velocityY);*/
-
-        //velocityX = worldX - lastWorldX;  // UDP
-        //velocityY = worldY - lastWorldY;  // UDP
         if (velocityX != 0 || velocityY != 0) {
 
 

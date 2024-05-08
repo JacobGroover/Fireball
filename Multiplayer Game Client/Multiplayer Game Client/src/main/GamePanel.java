@@ -3,6 +3,7 @@ package main;
 import entities.Entity;
 import entities.OtherPlayer;
 import entities.Player;
+import entities.Projectile;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -47,8 +48,9 @@ public class GamePanel extends JPanel implements Runnable
 
 
     // ENTITIES AND OBJECTS
-    public Player player = new Player(this, keyHandler);   // Instantiate player class
+    public Player player = new Player(this, keyHandler, this.mouseHandler);   // Instantiate player class
     public Entity[] obj = new Entity[10];
+    public ArrayList<Projectile> projectileAL = new ArrayList<>();
     public ArrayList<Entity> entityAL = new ArrayList<>();
 
     // GAME STATE
@@ -185,6 +187,19 @@ public class GamePanel extends JPanel implements Runnable
                 //otherPlayer.update();
             }
 
+            for (int i = 0; i < projectileAL.size(); i++)
+            {
+                if (projectileAL.get(i).alive)
+                {
+                    projectileAL.get(i).update();
+                }
+                if (!projectileAL.get(i).alive)
+                {
+                    projectileAL.remove(i);
+                    i--;
+                }
+            }
+
             // NPCs
 //            for (int i = 0; i < npc.length; i++)
 //            {
@@ -227,15 +242,14 @@ public class GamePanel extends JPanel implements Runnable
             entityAL.add(player);
 
 
-            for (OtherPlayer otherPlayer : Client.otherPlayers)
-            {
-                if (otherPlayer.joinedGame)
-                {
-                    entityAL.add(otherPlayer);
-                }
-                //otherPlayer.draw(g2);
-            }
-//            entityAL.addAll(Client.otherPlayers);
+//            for (OtherPlayer otherPlayer : Client.otherPlayers)
+//            {
+//                if (otherPlayer.joinedGame)
+//                {
+//                    entityAL.add(otherPlayer);
+//                }
+//            }
+            entityAL.addAll(Client.otherPlayers);
 
 //            for (int i = 0; i < npc.length; i++)
 //            {
@@ -252,6 +266,15 @@ public class GamePanel extends JPanel implements Runnable
                     entityAL.add(obj[i]);
                 }
             }
+
+            entityAL.addAll(projectileAL);
+//            for (int i = 0; i < projectileAL.size(); i++)
+//            {
+//                if (obj[i] != null)
+//                {
+//                    entityAL.add(projectileAL.get(i));
+//                }
+//            }
 
             // SORT
             Collections.sort(entityAL, new Comparator<Entity>()

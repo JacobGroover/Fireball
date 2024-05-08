@@ -6,19 +6,16 @@
 
 package entities;
 
-import main.Client;
-import main.GamePanel;
-import main.KeyHandler;
-import main.UtilityTool;
+import main.*;
+import object.projectiles.OBJ_Fireball;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class Player extends Entity {
 
     KeyHandler keyH;
+    MouseHandler mouseH;
 
     public final int screenX;
     public final int screenY;
@@ -26,17 +23,19 @@ public class Player extends Entity {
     public static double startY;
     public static double worldX;  // UDP
     public static double worldY;
+    int cooldown1Counter;
 
     public int hasKey = 0;
     public static String sendVelocity = "00";
     public static double sendVelocityX = 0;
     public static double sendVelocityY = 0;
 
-    public Player(GamePanel gp, KeyHandler keyH)
+    public Player(GamePanel gp, KeyHandler keyH, MouseHandler mouseH)
     {
         super(gp);
 
         this.keyH = keyH;
+        this.mouseH = mouseH;
 
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
@@ -47,6 +46,10 @@ public class Player extends Entity {
 
         setDefaultValues();
         getImages("/player/FillerPlayer");
+        getPlayerAttackImages("/player/attack/FillerPlayerCast");
+        {
+
+        }
     }
 
     public void setDefaultValues() {
@@ -60,14 +63,44 @@ public class Player extends Entity {
         velocityY = 0;
         maxLife = 100;
         life = maxLife;
+//        projectile = new OBJ_Fireball(gp);
+        cooldown1Counter = 60;
+    }
+
+    private void getPlayerAttackImages(String imagePath)
+    {
+        attackUp1 = setup(imagePath + "Up1");
+        attackDown1 = setup(imagePath + "Down1");
+        attackLeft1 = setup(imagePath + "Left1");
+        attackRight1 = setup(imagePath + "Right1");
+        attackUpLeft1 = setup(imagePath + "UpLeft1");
+        attackUpRight1 = setup(imagePath + "UpRight1");
+        attackDownLeft1 = setup(imagePath + "DownLeft1");
+        attackDownRight1 = setup(imagePath + "DownRight1");
     }
 
     public void update()
     {
 
-        if (gp.gameState == gp.PLAY_STATE && (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed))
+//        if (gp.gameState == gp.PLAY_STATE && mouseH.playPressed1)
+//        {
+//            attacking = true;
+//        }
+        if (gp.gameState == gp.PLAY_STATE && attacking)
         {
+            attackingAnimation();
+        }
 
+        // CHECK FOR SKILL/ABILITY INPUTS
+        if (gp.gameState == gp.PLAY_STATE && !attacking && mouseH.playPressed1 && !mouseH.playPressed1Cooldown)
+        {
+            attacking = true;
+            mouseH.playPressed1Cooldown = true;
+            mouseH.playPressed1 = false;
+            attacking();
+        }
+        else if (gp.gameState == gp.PLAY_STATE && !attacking && (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed))
+        {
             if (keyH.upPressed) {
                 velocityY -= 1;
             }
@@ -142,10 +175,12 @@ public class Player extends Entity {
             // Check Event triggers
             gp.eventHandler.checkEvent();
 
-            if (!xCollisionOn) {
+            if (!xCollisionOn)
+            {
                 worldX += velocityX;
             }
-            if (!yCollisionOn) {
+            if (!yCollisionOn)
+            {
                 worldY += velocityY;
             }
 
@@ -164,6 +199,17 @@ public class Player extends Entity {
             }
         } else {
             spriteNum = 1;
+        }
+
+        // UPDATE COOLDOWN TIMERS
+        if (mouseH.playPressed1Cooldown)
+        {
+            cooldown1Counter--;
+            if (cooldown1Counter <= 0)
+            {
+                mouseH.playPressed1Cooldown = false;
+                cooldown1Counter = 60;
+            }
         }
 
         sendVelocityX = velocityX;
@@ -193,6 +239,98 @@ public class Player extends Entity {
 
         velocityX = 0;
         velocityY = 0;
+    }
+
+    private void attacking()
+    {
+        projectileDestinationX = (int) worldX + mouseH.mouseX - gp.screenWidth/2;
+        projectileDestinationY = (int)worldY + mouseH.mouseY - gp.screenHeight/2;
+
+        projectileDistanceX = projectileDestinationX - worldX;
+        projectileDistanceY = projectileDestinationY - worldY;
+
+        double hyp = Math.hypot(projectileDistanceX, projectileDistanceY);
+        if (projectileDistanceX != 0)
+        {
+            unitCircleX = projectileDistanceX / hyp;
+//            projectileDistanceX /= hyp;
+        }
+        if (projectileDistanceY != 0)
+        {
+            unitCircleY = projectileDistanceY / hyp;
+//            projectileDistanceY /= hyp;
+        }
+
+        double radian = Math.atan2(unitCircleY, unitCircleX);
+        angle = radian * (180 / Math.PI);
+        if (angle < 0.0)
+        {
+            angle += 360.0;
+        }
+
+        if (angle > 202.5 && angle < 247.5)
+        {
+            direction = "upLeft";
+        } else if (angle >= 247.5 && angle <= 292.5)
+        {
+            direction = "up";
+        } else if (angle > 292.5 && angle < 337.5)
+        {
+            direction = "upRight";
+        }
+        else if ((angle >= 337.5 && angle <= 360.0) || angle <= 22.5)
+        {
+            direction = "right";
+        } else if (angle > 22.5 && angle < 67.5)
+        {
+            direction = "downRight";
+        } else if (angle >= 67.5 && angle <= 112.5)
+        {
+            direction = "down";
+        } else if (angle > 112.5 && angle < 157.5)
+        {
+            direction = "downLeft";
+        } else if (angle >= 157.5 && angle <= 202.5)
+        {
+            direction = "left";
+        }
+        else
+        {
+            attacking = false;
+        }
+
+    }
+
+    private void attackingAnimation()
+    {
+        spriteCounter++;
+//        if (spriteCounter <= 3)
+//        {
+//            spriteNum = 1;
+//        }
+        if (spriteCounter <= 12)
+        {
+            spriteNum = 2;
+        }
+        if (spriteCounter > 12)
+        {
+            castFireball();
+            spriteNum = 1;
+            spriteCounter = 0;
+            attacking = false;
+        }
+    }
+
+    public void castFireball()
+    {
+        // SPAWN PROJECTILE
+        Projectile p = new OBJ_Fireball(gp);
+        p.set(projectileDestinationX, projectileDestinationY, direction, true, this);
+
+        // ADD PROJECTILE TO ARRAYLIST
+//        gp.projectileAL.add(projectile);
+        gp.projectileAL.add(p);
+//        gp.playSFX(0);
     }
 
     public void pickUpObject(int index)

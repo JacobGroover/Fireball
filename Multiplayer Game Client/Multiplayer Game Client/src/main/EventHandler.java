@@ -53,7 +53,12 @@ public class EventHandler
         if (canTriggerEvent)
         {
 //            if (trigger(15, 36, "any")) {damagePit(15, 36);}
+//            if (trigger(15, 36, "any")) {fireball(15, 36);}
         }
+    }
+
+    private void fireball(int col, int row)
+    {
     }
 
     private void damagePit(int col, int row)

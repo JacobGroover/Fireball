@@ -389,8 +389,8 @@ public class CollisionChecker {
             if (target.get(i) != null) {
                 entity.solidArea.x = entity.solidAreaDefaultX;
                 entity.solidArea.y = entity.solidAreaDefaultY;
-                target.get(i).solidArea.x =target.get(i).solidAreaDefaultX;
-                target.get(i).solidArea.y =target.get(i).solidAreaDefaultY;
+                target.get(i).solidArea.x = target.get(i).solidAreaDefaultX;
+                target.get(i).solidArea.y = target.get(i).solidAreaDefaultY;
             }
 
         }
