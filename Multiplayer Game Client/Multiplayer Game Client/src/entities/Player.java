@@ -64,7 +64,7 @@ public class Player extends Entity {
         maxLife = 100;
         life = maxLife;
 //        projectile = new OBJ_Fireball(gp);
-        cooldown1Counter = 60;
+        cooldown1Counter = 30;
     }
 
     private void getPlayerAttackImages(String imagePath)
@@ -92,113 +92,117 @@ public class Player extends Entity {
         }
 
         // CHECK FOR SKILL/ABILITY INPUTS
-        if (gp.gameState == gp.PLAY_STATE && !attacking && mouseH.playPressed1 && !mouseH.playPressed1Cooldown)
+        if (!attacking)
         {
-            attacking = true;
-            mouseH.playPressed1Cooldown = true;
-            mouseH.playPressed1 = false;
-            attacking();
-        }
-        else if (gp.gameState == gp.PLAY_STATE && !attacking && (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed))
-        {
-            if (keyH.upPressed) {
-                velocityY -= 1;
-            }
-            if (keyH.downPressed) {
-                velocityY += 1;
-            }
-            if (keyH.leftPressed) {
-                velocityX -= 1;
-            }
-            if (keyH.rightPressed) {
-                velocityX += 1;
-            }
-
-            if (keyH.upPressed && velocityY != 0) {
-                direction = "up";
-            }
-            if (keyH.downPressed && velocityY != 0) {
-                direction = "down";
-            }
-            if (keyH.leftPressed && velocityX != 0) {
-                direction = "left";
-            }
-            if (keyH.rightPressed && velocityX != 0) {
-                direction = "right";
-            }
-
-            if (velocityX != 0 && velocityY != 0) {
-                if (keyH.upPressed && keyH.leftPressed) {
-                    direction = "upLeft";
-                }
-                if (keyH.upPressed && keyH.rightPressed) {
-                    direction = "upRight";
-                }
-                if (keyH.downPressed && keyH.leftPressed) {
-                    direction = "downLeft";
-                }
-                if (keyH.downPressed && keyH.rightPressed) {
-                    direction = "downRight";
-                }
-            }
-
-            // Normalize movement vector
-            float length = (float) Math.sqrt((velocityX * velocityX) + (velocityY * velocityY));
-
-            if (velocityX != 0) {
-                velocityX /= length;
-            }
-            if (velocityY != 0) {
-                velocityY /= length;
-            }
-
-            velocityX *= speed;
-            velocityY *= speed;
-
-            // Check for tile collision
-            xCollisionOn = false;
-            yCollisionOn = false;
-            gp.cChecker.checkTile(this);
-
-            // Check for object collision
-            int objIndex = gp.cChecker.checkObject(this, true);
-            pickUpObject(objIndex);
-
-            // Check for OtherPlayer collision
-            int entityIndex = gp.cChecker.checkEntity(this, Client.otherPlayers);
-//            collideOtherPlayer(entityIndex);
-
-            // Check for NPC collision
-//            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
-//            interactNPC(npcIndex);
-
-            // Check Event triggers
-            gp.eventHandler.checkEvent();
-
-            if (!xCollisionOn)
+            if (gp.gameState == gp.PLAY_STATE && mouseH.playPressed1 && !mouseH.playPressed1Cooldown)
             {
-                worldX += velocityX;
+                attacking = true;
+                mouseH.playPressed1Cooldown = true;
+                mouseH.playPressed1 = false;
+                attacking();
             }
-            if (!yCollisionOn)
+            else if (gp.gameState == gp.PLAY_STATE && (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed))
             {
-                worldY += velocityY;
-            }
+                if (keyH.upPressed) {
+                    velocityY -= 1;
+                }
+                if (keyH.downPressed) {
+                    velocityY += 1;
+                }
+                if (keyH.leftPressed) {
+                    velocityX -= 1;
+                }
+                if (keyH.rightPressed) {
+                    velocityX += 1;
+                }
 
-            spriteCounter++;
-            if (velocityX == 0 && velocityY == 0) {
+                if (keyH.upPressed && velocityY != 0) {
+                    direction = "up";
+                }
+                if (keyH.downPressed && velocityY != 0) {
+                    direction = "down";
+                }
+                if (keyH.leftPressed && velocityX != 0) {
+                    direction = "left";
+                }
+                if (keyH.rightPressed && velocityX != 0) {
+                    direction = "right";
+                }
+
+                if (velocityX != 0 && velocityY != 0) {
+                    if (keyH.upPressed && keyH.leftPressed) {
+                        direction = "upLeft";
+                    }
+                    if (keyH.upPressed && keyH.rightPressed) {
+                        direction = "upRight";
+                    }
+                    if (keyH.downPressed && keyH.leftPressed) {
+                        direction = "downLeft";
+                    }
+                    if (keyH.downPressed && keyH.rightPressed) {
+                        direction = "downRight";
+                    }
+                }
+
+                // Normalize movement vector
+                float length = (float) Math.sqrt((velocityX * velocityX) + (velocityY * velocityY));
+
+                if (velocityX != 0) {
+                    velocityX /= length;
+                }
+                if (velocityY != 0) {
+                    velocityY /= length;
+                }
+
+                velocityX *= speed;
+                velocityY *= speed;
+
+                // Check for tile collision
+                xCollisionOn = false;
+                yCollisionOn = false;
+                gp.cChecker.checkTile(this);
+
+                // Check for object collision
+                int objIndex = gp.cChecker.checkObject(this, true);
+                pickUpObject(objIndex);
+
+                // Check for OtherPlayer collision
+                int entityIndex = gp.cChecker.checkEntity(this, Client.otherPlayers);
+    //            collideOtherPlayer(entityIndex);
+
+                // Check for NPC collision
+    //            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+    //            interactNPC(npcIndex);
+
+                // Check Event triggers
+                gp.eventHandler.checkEvent();
+
+                if (!xCollisionOn)
+                {
+                    worldX += velocityX;
+                }
+                if (!yCollisionOn)
+                {
+                    worldY += velocityY;
+                }
+
+                spriteCounter++;
+                if (velocityX == 0 && velocityY == 0) {
+                    spriteNum = 1;
+                } else if (spriteCounter > 8) {
+                    if (spriteNum == 1) {
+                        spriteNum = 2;
+                    } else if (spriteNum == 2) {
+                        spriteNum = 3;
+                    } else if (spriteNum == 3) {
+                        spriteNum = 2;
+                    }
+                    spriteCounter = 0;
+                }
+            } else
+            {
                 spriteNum = 1;
-            } else if (spriteCounter > 8) {
-                if (spriteNum == 1) {
-                    spriteNum = 2;
-                } else if (spriteNum == 2) {
-                    spriteNum = 3;
-                } else if (spriteNum == 3) {
-                    spriteNum = 2;
-                }
-                spriteCounter = 0;
             }
-        } else {
-            spriteNum = 1;
         }
 
         // UPDATE COOLDOWN TIMERS
@@ -208,7 +212,7 @@ public class Player extends Entity {
             if (cooldown1Counter <= 0)
             {
                 mouseH.playPressed1Cooldown = false;
-                cooldown1Counter = 60;
+                cooldown1Counter = 30;
             }
         }
 
