@@ -37,111 +37,121 @@ public class CollisionChecker {
 
         int tileNum1, tileNum2, tileNum3;
 
-        switch (entity.direction) {
-            case "up":
-                entityTopRow = (entityTopWorldY - entity.speed)/gp.tileSize;
-                tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
-                tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
-                if (gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision) {
-                    entity.yCollisionOn = true;
-                }
-                break;
-            case "down":
-                entityBottomRow = (entityBottomWorldY + entity.speed)/gp.tileSize;
-                tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
-                tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
-                if (gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision) {
-                    entity.yCollisionOn = true;
-                }
-                break;
-            case "left":
-                entityLeftCol = (entityLeftWorldX - entity.speed)/gp.tileSize;
-                tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
-                tileNum2 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
-                if (gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision) {
-                    entity.xCollisionOn = true;
-                }
-                break;
-            case "right":
-                entityRightCol = (entityRightWorldX + entity.speed)/gp.tileSize;
-                tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
-                tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
-                if (gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision) {
-                    entity.xCollisionOn = true;
-                }
-                break;
-            case "upLeft":
-                entityTopRow = (entityTopWorldY - entity.speed)/gp.tileSize;
-                entityLeftCol = (entityLeftWorldX - entity.speed)/gp.tileSize;
-                tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
-                tileNum2 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
-                tileNum3 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
-                if (gp.tileManager.tile[tileNum1].collision) {
-                    entity.yCollisionOn = true;
-                }
-                if (gp.tileManager.tile[tileNum2].collision) {
-                    entity.xCollisionOn = true;
-                }
-                if (gp.tileManager.tile[tileNum3].collision &&
-                        !gp.tileManager.tile[tileNum1].collision && !gp.tileManager.tile[tileNum2].collision) {
-                    entity.yCollisionOn = true;
-                    entity.xCollisionOn = true;
-                }
-                break;
-            case "upRight":
-                entityTopRow = (entityTopWorldY - entity.speed)/gp.tileSize;
-                entityRightCol = (entityRightWorldX + entity.speed)/gp.tileSize;
-                tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
-                tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
-                tileNum3 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
-                if (gp.tileManager.tile[tileNum1].collision) {
-                    entity.yCollisionOn = true;
-                }
-                if (gp.tileManager.tile[tileNum2].collision) {
-                    entity.xCollisionOn = true;
-                }
-                if (gp.tileManager.tile[tileNum3].collision &&
-                        !gp.tileManager.tile[tileNum1].collision && !gp.tileManager.tile[tileNum2].collision) {
-                    entity.yCollisionOn = true;
-                    entity.xCollisionOn = true;
-                }
-                break;
-            case "downLeft":
-                entityBottomRow = (entityBottomWorldY + entity.speed)/gp.tileSize;
-                entityLeftCol = (entityLeftWorldX - entity.speed)/gp.tileSize;
-                tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
-                tileNum2 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
-                tileNum3 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
-                if (gp.tileManager.tile[tileNum1].collision) {
-                    entity.yCollisionOn = true;
-                }
-                if (gp.tileManager.tile[tileNum2].collision) {
-                    entity.xCollisionOn = true;
-                }
-                if (gp.tileManager.tile[tileNum3].collision &&
-                        !gp.tileManager.tile[tileNum1].collision && !gp.tileManager.tile[tileNum2].collision) {
-                    entity.yCollisionOn = true;
-                    entity.xCollisionOn = true;
-                }
-                break;
-            case "downRight":
-                entityBottomRow = (entityBottomWorldY + entity.speed)/gp.tileSize;
-                entityRightCol = (entityRightWorldX + entity.speed)/gp.tileSize;
-                tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
-                tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
-                tileNum3 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
-                if (gp.tileManager.tile[tileNum1].collision) {
-                    entity.yCollisionOn = true;
-                }
-                if (gp.tileManager.tile[tileNum2].collision) {
-                    entity.xCollisionOn = true;
-                }
-                if (gp.tileManager.tile[tileNum3].collision &&
-                        !gp.tileManager.tile[tileNum1].collision && !gp.tileManager.tile[tileNum2].collision) {
-                    entity.yCollisionOn = true;
-                    entity.xCollisionOn = true;
-                }
-                break;
+        boolean continueCheck = true;
+        if ( entity instanceof Projectile && ((Projectile) entity).detonating)
+        {
+            continueCheck = false;
+        }
+
+        if (continueCheck)
+        {
+            switch (entity.direction)
+            {
+                case "up":
+                    entityTopRow = (entityTopWorldY - entity.speed)/gp.tileSize;
+                    tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
+                    tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
+                    if (gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision) {
+                        entity.yCollisionOn = true;
+                    }
+                    break;
+                case "down":
+                    entityBottomRow = (entityBottomWorldY + entity.speed)/gp.tileSize;
+                    tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
+                    tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
+                    if (gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision) {
+                        entity.yCollisionOn = true;
+                    }
+                    break;
+                case "left":
+                    entityLeftCol = (entityLeftWorldX - entity.speed)/gp.tileSize;
+                    tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
+                    tileNum2 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
+                    if (gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision) {
+                        entity.xCollisionOn = true;
+                    }
+                    break;
+                case "right":
+                    entityRightCol = (entityRightWorldX + entity.speed)/gp.tileSize;
+                    tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
+                    tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
+                    if (gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision) {
+                        entity.xCollisionOn = true;
+                    }
+                    break;
+                case "upLeft":
+                    entityTopRow = (entityTopWorldY - entity.speed)/gp.tileSize;
+                    entityLeftCol = (entityLeftWorldX - entity.speed)/gp.tileSize;
+                    tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
+                    tileNum2 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
+                    tileNum3 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
+                    if (gp.tileManager.tile[tileNum1].collision) {
+                        entity.yCollisionOn = true;
+                    }
+                    if (gp.tileManager.tile[tileNum2].collision) {
+                        entity.xCollisionOn = true;
+                    }
+                    if (gp.tileManager.tile[tileNum3].collision &&
+                            !gp.tileManager.tile[tileNum1].collision && !gp.tileManager.tile[tileNum2].collision) {
+                        entity.yCollisionOn = true;
+                        entity.xCollisionOn = true;
+                    }
+                    break;
+                case "upRight":
+                    entityTopRow = (entityTopWorldY - entity.speed)/gp.tileSize;
+                    entityRightCol = (entityRightWorldX + entity.speed)/gp.tileSize;
+                    tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
+                    tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
+                    tileNum3 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
+                    if (gp.tileManager.tile[tileNum1].collision) {
+                        entity.yCollisionOn = true;
+                    }
+                    if (gp.tileManager.tile[tileNum2].collision) {
+                        entity.xCollisionOn = true;
+                    }
+                    if (gp.tileManager.tile[tileNum3].collision &&
+                            !gp.tileManager.tile[tileNum1].collision && !gp.tileManager.tile[tileNum2].collision) {
+                        entity.yCollisionOn = true;
+                        entity.xCollisionOn = true;
+                    }
+                    break;
+                case "downLeft":
+                    entityBottomRow = (entityBottomWorldY + entity.speed)/gp.tileSize;
+                    entityLeftCol = (entityLeftWorldX - entity.speed)/gp.tileSize;
+                    tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
+                    tileNum2 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
+                    tileNum3 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
+                    if (gp.tileManager.tile[tileNum1].collision) {
+                        entity.yCollisionOn = true;
+                    }
+                    if (gp.tileManager.tile[tileNum2].collision) {
+                        entity.xCollisionOn = true;
+                    }
+                    if (gp.tileManager.tile[tileNum3].collision &&
+                            !gp.tileManager.tile[tileNum1].collision && !gp.tileManager.tile[tileNum2].collision) {
+                        entity.yCollisionOn = true;
+                        entity.xCollisionOn = true;
+                    }
+                    break;
+                case "downRight":
+                    entityBottomRow = (entityBottomWorldY + entity.speed)/gp.tileSize;
+                    entityRightCol = (entityRightWorldX + entity.speed)/gp.tileSize;
+                    tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
+                    tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
+                    tileNum3 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
+                    if (gp.tileManager.tile[tileNum1].collision) {
+                        entity.yCollisionOn = true;
+                    }
+                    if (gp.tileManager.tile[tileNum2].collision) {
+                        entity.xCollisionOn = true;
+                    }
+                    if (gp.tileManager.tile[tileNum3].collision &&
+                            !gp.tileManager.tile[tileNum1].collision && !gp.tileManager.tile[tileNum2].collision) {
+                        entity.yCollisionOn = true;
+                        entity.xCollisionOn = true;
+                    }
+                    break;
+            }
         }
 
     }
@@ -299,7 +309,7 @@ public class CollisionChecker {
             {
                 continueCheck = false;
             }
-            // If target is the owner of the projectile and the projectile is not detonating, then check collision (implication logic)
+            // If target is the owner of the projectile, and the projectile is not detonating, then check collision (implication logic)
             // equivalent implication logic: (Client.otherPlayers.get(entityIndex) == this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && !detonating)
             if ( entity instanceof Projectile && (((Projectile) entity).owner == target.get(i) && !((Projectile) entity).detonating))
             {
@@ -434,13 +444,14 @@ public class CollisionChecker {
         {
             continueCheck = false;
         }
-        // If target is the owner of the projectile and the projectile is not detonating, then check collision (implication logic)
+        // If target is the owner of the projectile, and the projectile is not detonating, then check collision (implication logic)
         // equivalent implication logic: (Client.otherPlayers.get(entityIndex) == this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && !detonating)
         if ( entity instanceof Projectile && (((Projectile) entity).owner == target && !((Projectile) entity).detonating))
         {
             continueCheck = false;
         }
 
+        boolean collideWithThis = false;
         if (continueCheck)
         {
             // Get this entity's solid area position
@@ -457,6 +468,7 @@ public class CollisionChecker {
                     if (entity.solidArea.intersects(target.solidArea))
                     {
                         entity.yCollisionOn = true;
+                        collideWithThis = true;
                     }
                     break;
                 case "down":
@@ -464,6 +476,7 @@ public class CollisionChecker {
                     if (entity.solidArea.intersects(target.solidArea))
                     {
                         entity.yCollisionOn = true;
+                        collideWithThis = true;
                     }
                     break;
                 case "left":
@@ -471,6 +484,7 @@ public class CollisionChecker {
                     if (entity.solidArea.intersects(target.solidArea))
                     {
                         entity.xCollisionOn = true;
+                        collideWithThis = true;
                     }
                     break;
                 case "right":
@@ -478,6 +492,7 @@ public class CollisionChecker {
                     if (entity.solidArea.intersects(target.solidArea))
                     {
                         entity.xCollisionOn = true;
+                        collideWithThis = true;
                     }
                     break;
                 case "upRight":
@@ -487,6 +502,7 @@ public class CollisionChecker {
                     {
                         entity.xCollisionOn = true;
                         entity.yCollisionOn = true;
+                        collideWithThis = true;
                     }
                     break;
                 case "upLeft":
@@ -496,6 +512,7 @@ public class CollisionChecker {
                     {
                         entity.xCollisionOn = true;
                         entity.yCollisionOn = true;
+                        collideWithThis = true;
                     }
                     break;
                 case "downRight":
@@ -505,6 +522,7 @@ public class CollisionChecker {
                     {
                         entity.xCollisionOn = true;
                         entity.yCollisionOn = true;
+                        collideWithThis = true;
                     }
                     break;
                 case "downLeft":
@@ -514,12 +532,13 @@ public class CollisionChecker {
                     {
                         entity.xCollisionOn = true;
                         entity.yCollisionOn = true;
+                        collideWithThis = true;
                     }
                     break;
             }
         }
 
-        if (entity instanceof Projectile && (entity.xCollisionOn || entity.yCollisionOn) && !((Projectile) entity).detonating && ((Projectile) entity).owner != target)
+        if (entity instanceof Projectile && collideWithThis && !((Projectile) entity).detonating && ((Projectile) entity).owner != target)
         {
             entity.worldX = target.worldX;
             entity.worldY = target.worldY;
@@ -535,91 +554,7 @@ public class CollisionChecker {
         target.solidArea.x = target.solidAreaDefaultX;
         target.solidArea.y = target.solidAreaDefaultY;
 
-        return entity.xCollisionOn || entity.yCollisionOn;
-    }
-
-    public boolean checkPlayer(Entity entity)
-    {
-        // Get entity's solid area position
-        entity.solidArea.x = (int)entity.worldX + entity.solidArea.x;
-        entity.solidArea.y = (int)entity.worldY + entity.solidArea.y;
-
-        // Get object's solid area position
-        gp.player.solidArea.x = (int)Player.worldX + gp.player.solidArea.x;
-        gp.player.solidArea.y = (int)Player.worldY + gp.player.solidArea.y;
-
-        switch (entity.direction) {
-            case "up":
-                entity.solidArea.y -= entity.speed;
-                if (entity.solidArea.intersects(gp.player.solidArea))
-                {
-                    entity.yCollisionOn = true;
-                }
-                break;
-            case "down":
-                entity.solidArea.y += entity.speed;
-                if (entity.solidArea.intersects(gp.player.solidArea))
-                {
-                    entity.yCollisionOn = true;
-                }
-                break;
-            case "left":
-                entity.solidArea.x -= entity.speed;
-                if (entity.solidArea.intersects(gp.player.solidArea))
-                {
-                    entity.xCollisionOn = true;
-                }
-                break;
-            case "right":
-                entity.solidArea.x += entity.speed;
-                if (entity.solidArea.intersects(gp.player.solidArea))
-                {
-                    entity.xCollisionOn = true;
-                }
-                break;
-            case "upRight":
-                entity.solidArea.x += entity.speed;
-                entity.solidArea.y -= entity.speed;
-                if (entity.solidArea.intersects(gp.player.solidArea))
-                {
-                    entity.xCollisionOn = true;
-                    entity.yCollisionOn = true;
-                }
-                break;
-            case "upLeft":
-                entity.solidArea.x -= entity.speed;
-                entity.solidArea.y -= entity.speed;
-                if (entity.solidArea.intersects(gp.player.solidArea))
-                {
-                    entity.xCollisionOn = true;
-                    entity.yCollisionOn = true;
-                }
-                break;
-            case "downRight":
-                entity.solidArea.x += entity.speed;
-                entity.solidArea.y += entity.speed;
-                if (entity.solidArea.intersects(gp.player.solidArea))
-                {
-                    entity.xCollisionOn = true;
-                    entity.yCollisionOn = true;
-                }
-                break;
-            case "downLeft":
-                entity.solidArea.x -= entity.speed;
-                entity.solidArea.y += entity.speed;
-                if (entity.solidArea.intersects(gp.player.solidArea))
-                {
-                    entity.xCollisionOn = true;
-                    entity.yCollisionOn = true;
-                }
-                break;
-        }
-        entity.solidArea.x = entity.solidAreaDefaultX;
-        entity.solidArea.y = entity.solidAreaDefaultY;
-        gp.player.solidArea.x = gp.player.solidAreaDefaultX;
-        gp.player.solidArea.y = gp.player.solidAreaDefaultY;
-
-        return entity.xCollisionOn || entity.yCollisionOn;
+        return collideWithThis;
     }
 
 }

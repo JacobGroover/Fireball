@@ -42,65 +42,36 @@ public abstract class Projectile extends Entity
         this.projectileDistanceY = owner.projectileDistanceY;
         velocityX = owner.unitCircleX * speed;
         velocityY = owner.unitCircleY * speed;
-
-//        projectileDestinationX = Math.abs(Math.abs(projectileDestinationX) - (int)worldX);
-//        projectileDestinationY = Math.abs(Math.abs(projectileDestinationY) - (int)worldY);
-
-//        if (this.projectileX < owner.worldX)
-//        {
-//            projectileDistanceX *= -1;
-//            this.projectileX *= -1;
-//        }
-//        if (this.projectileY < owner.worldY)
-//        {
-//            projectileDistanceY *= -1;
-//            this.projectileY *= -1;
-//        }
-
-//        switch (this.direction)
-//        {
-//            case "up":
-//                break;
-//            case "down":
-//                break;
-//            case "left":
-//                break;
-//            case "right":
-//                break;
-//            case "upLeft":
-//                break;
-//            case "upRight":
-//                break;
-//            case "downLeft":
-//                break;
-//            case "downRight":
-//                break;
-//        }
     }
 
     public void update()
     {
-        checkProjectileCollision();
+        // NOTE: SOME PROJECTILE-SPECIFIC COLLISION INTERACTION CAN BE FOUND IN CollisionChecker CLASS
+
+        // Reset collision
+        xCollisionOn = false;
+        yCollisionOn = false;
+
+        // Check for tile collision
+        gp.cChecker.checkTile(this);
+
+        // Check for OtherPlayer collision
+        int entityIndex = gp.cChecker.checkEntities(this, Client.otherPlayers);
+
+        // Check for player collision
+        boolean collideWithPlayer = gp.cChecker.checkEntity(this, gp.player);
 
         if (!detonating)
         {
+            worldX += velocityX;
+            projectileDistanceX = Math.abs(projectileDistanceX) - Math.abs(velocityX);
 
-            if (!xCollisionOn && !xTileCollisionOn)
-            {
-                worldX += velocityX;
-                projectileDistanceX = Math.abs(projectileDistanceX) - Math.abs(velocityX);
-            }
-            if (!yCollisionOn && !yTileCollisionOn)
-            {
-                worldY += velocityY;
-                projectileDistanceY = Math.abs(projectileDistanceY) - Math.abs(velocityY);
-            }
+            worldY += velocityY;
+            projectileDistanceY = Math.abs(projectileDistanceY) - Math.abs(velocityY);
 
-            if (projectileDistanceX <= 0 || projectileDistanceY <= 0 || xCollisionOn || yCollisionOn || xTileCollisionOn || yTileCollisionOn)
+            if (projectileDistanceX <= 0 || projectileDistanceY <= 0 || xCollisionOn || yCollisionOn)
             {
-                System.out.println("HERE");
                 detonating = true;
-                applyDot = true;
                 spriteCounter = 0;
             }
 
@@ -123,51 +94,16 @@ public abstract class Projectile extends Entity
         }
         else
         {
+            if (entityIndex != -1)
+            {
+                collideWithEntity(Client.otherPlayers, entityIndex);
+            }
+            if (collideWithPlayer)
+            {
+                collideWithEntity(gp.player);
+            }
             detonateOnImpact();
         }
-    }
-
-    protected void checkProjectileCollision()
-    {
-        // NOTE: SINCE PROJECTILES CAN CONTINUALLY COLLIDE WITH TILES AFTER DETONATION, MUST RESET COLLISION TO FALSE AFTER CHECKING TILE COLLISION
-
-        // Check for tile collision
-        xCollisionOn = false;
-        yCollisionOn = false;
-        gp.cChecker.checkTile(this);
-
-        if (xCollisionOn)
-        {
-            xTileCollisionOn = true;
-        }
-        if (yCollisionOn)
-        {
-            yTileCollisionOn = true;
-        }
-
-        xCollisionOn = false;
-        yCollisionOn = false;
-
-        // Check for OtherPlayer collision
-        int entityIndex = gp.cChecker.checkEntities(this, Client.otherPlayers);
-        if (entityIndex != -1)
-        {
-            collideWithEntity(Client.otherPlayers, entityIndex);
-
-            if (detonating || Client.otherPlayers.get(entityIndex) == this.owner)
-            {
-                xCollisionOn = false;
-                yCollisionOn = false;
-            }
-        }
-
-        // Check for player collision
-        if (gp.cChecker.checkEntity(this, gp.player))
-        {
-            collideWithEntity(gp.player);
-        }
-
-
     }
 
     private void collideWithEntity(ArrayList<? extends Entity> fromList, int entityIndex)
@@ -175,12 +111,11 @@ public abstract class Projectile extends Entity
         // call child-specific projectile collision behavior
         if (this instanceof OBJ_Fireball)
         {
-            if (!applyDot)
+            if (!applyDot && this.owner != fromList.get(entityIndex))
             {
                 int damage = this.attack;
                 fromList.get(entityIndex).life -= damage;
                 applyDot = true;
-                spriteCounter = 0;
             }
             else if (detonating)
             {
@@ -196,22 +131,18 @@ public abstract class Projectile extends Entity
         // call child-specific projectile collision behavior
         if (this instanceof OBJ_Fireball)
         {
-
-            if (!applyDot)
+            if (!applyDot && this.owner != entity)
             {
                 int damage = this.attack;
                 entity.life -= damage;
                 applyDot = true;
-                spriteCounter = 0;
             }
             else if (detonating)
             {
                 entity.dotBurningDmgCounter = 180;
                 entity.isBurning = true;
             }
-
         }
-
     }
 
     protected abstract void detonateOnImpact();
