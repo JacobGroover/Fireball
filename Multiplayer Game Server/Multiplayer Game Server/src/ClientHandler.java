@@ -20,6 +20,11 @@ public class ClientHandler
     protected double velocityY;
     protected boolean joinedGame;
 
+    protected int playPressed1;
+
+    protected int mouseX;
+    protected int mouseY;
+
     public ClientHandler()
     {
     }
@@ -118,5 +123,35 @@ public class ClientHandler
     public void setJoinedGame(boolean joinedGame)
     {
         this.joinedGame = joinedGame;
+    }
+
+    public int getPlayPressed1()
+    {
+        return playPressed1;
+    }
+
+    public void setPlayPressed1(int playPressed1)
+    {
+        this.playPressed1 = playPressed1;
+    }
+
+    public int getMouseX()
+    {
+        return mouseX;
+    }
+
+    public void setMouseX(int mouseX)
+    {
+        this.mouseX = mouseX;
+    }
+
+    public int getMouseY()
+    {
+        return mouseY;
+    }
+
+    public void setMouseY(int mouseY)
+    {
+        this.mouseY = mouseY;
     }
 }

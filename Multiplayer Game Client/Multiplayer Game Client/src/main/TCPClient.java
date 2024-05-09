@@ -31,31 +31,50 @@ public class TCPClient extends Client
         }
     }
 
-    public void sendJoinedGame(GamePanel gp)
+    public void sendInfo(GamePanel gp)
     {
         Thread t1 = new Thread(new Runnable()
         {
             @Override
             public void run()
             {
-                try
+                boolean changedGameState = gp.joinedGame;
+                while (socket.isConnected())
                 {
-                    boolean changedGameState = gp.joinedGame;
-                    while (socket.isConnected())
-                    {
 
-                        if (changedGameState != gp.joinedGame)
+                    if (changedGameState != gp.joinedGame)
+                    {
+                        try
                         {
                             bufferedWriter.write("*" + clientUsername + "*" + gp.joinedGame);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
                             changedGameState = gp.joinedGame;
+                        } catch (IOException ioe)
+                        {
+                            closeEverything(socket, bufferedReader, bufferedWriter);
                         }
-
                     }
-                } catch (IOException ioe)
-                {
-                    closeEverything(socket, bufferedReader, bufferedWriter);
+
+                     /*
+                     Later, when more abilities are added to the game, players will transfer their loadout over TCP before joining a game.
+                     This will match left click to the appropriate ability before the lobby is joined
+                     */
+                    // TCP code for left click attack is the number 1
+                    if (gp.mouseHandler.playPressed1 && !gp.mouseHandler.playPressed1Cooldown)
+                    {
+                        try
+                        {
+                            bufferedWriter.write("-" + clientUsername + "-" + 1 + "-" + gp.mouseHandler.mouseX + "-" + gp.mouseHandler.mouseY);
+                            bufferedWriter.newLine();
+                            bufferedWriter.flush();
+                            changedGameState = gp.joinedGame;
+                        } catch (IOException ioe)
+                        {
+                            closeEverything(socket, bufferedReader, bufferedWriter);
+                        }
+                    }
+
                 }
             }
         });
@@ -170,6 +189,23 @@ public class TCPClient extends Client
                                 }
                             }
 
+                        }
+                        else if (messageReceived != null && messageReceived.startsWith("-"))
+                        {
+                            String[] tokens = messageReceived.split("-");
+
+                            if (Integer.parseInt(tokens[2]) == 1)
+                            {
+                                for (int i = 0; i < otherPlayers.size(); i++)
+                                {
+                                    if (otherPlayers.get(i).clientUserName.equals(tokens[1]))
+                                    {
+                                        otherPlayers.get(i).skill1 = true;
+                                        otherPlayers.get(i).mouseX = Integer.parseInt(tokens[3]);
+                                        otherPlayers.get(i).mouseY = Integer.parseInt(tokens[4]);
+                                    }
+                                }
+                            }
                         }
                         else
                         {

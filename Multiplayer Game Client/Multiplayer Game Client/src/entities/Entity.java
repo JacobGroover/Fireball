@@ -50,7 +50,7 @@ public abstract class Entity {
     // ENTITY MATH
     public double unitCircleX;
     public double unitCircleY;
-    public double angle;
+    public static double angle;
 
     // ENTITY STATS
     public boolean alive;
@@ -60,12 +60,12 @@ public abstract class Entity {
     public int maxMana;
     public int mana;
     public int attack;
-    public Projectile projectile;
     boolean isBurning;
     int dotBurningVfxCounter;
     int dotBurningDmgCounter;
 
     // SKILL STATS
+    public boolean skill1; // currently used for getting skills used by otherPlayers from server
 
     // ITEM STATS
     public int projectileDestinationX;

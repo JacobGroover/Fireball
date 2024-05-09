@@ -60,7 +60,6 @@ public class Player extends Entity {
         velocityY = 0;
         maxLife = 100;
         life = maxLife;
-//        projectile = new OBJ_Fireball(gp);
         cooldown1Counter = 30;
     }
 
@@ -178,7 +177,7 @@ public class Player extends Entity {
                 pickUpObject(objIndex);
 
                 // Check for OtherPlayer collision
-                int entityIndex = gp.cChecker.checkEntity(this, Client.otherPlayers);
+                int entityIndex = gp.cChecker.checkEntities(this, Client.otherPlayers);
     //            collideOtherPlayer(entityIndex);
 
                 // Check for NPC collision
@@ -322,10 +321,6 @@ public class Player extends Entity {
     private void attackingAnimation()
     {
         spriteCounter++;
-//        if (spriteCounter <= 3)
-//        {
-//            spriteNum = 1;
-//        }
         if (spriteCounter <= 12)
         {
             spriteNum = 2;
@@ -346,7 +341,6 @@ public class Player extends Entity {
         p.set(projectileDestinationX, projectileDestinationY, direction, true, this);
 
         // ADD PROJECTILE TO ARRAYLIST
-//        gp.projectileAL.add(projectile);
         gp.projectileAL.add(p);
 //        gp.playSFX(0);
     }

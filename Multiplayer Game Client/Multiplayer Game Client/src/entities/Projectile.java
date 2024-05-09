@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public abstract class Projectile extends Entity
 {
 
-    Entity owner;
+    public Entity owner;
     public boolean detonating;
     protected int deathTimer;
 
@@ -98,6 +98,7 @@ public abstract class Projectile extends Entity
 
             if (projectileDistanceX <= 0 || projectileDistanceY <= 0 || xCollisionOn || yCollisionOn || xTileCollisionOn || yTileCollisionOn)
             {
+                System.out.println("HERE");
                 detonating = true;
                 applyDot = true;
                 spriteCounter = 0;
@@ -148,14 +149,20 @@ public abstract class Projectile extends Entity
         yCollisionOn = false;
 
         // Check for OtherPlayer collision
-        int entityIndex = gp.cChecker.checkEntity(this, Client.otherPlayers);
+        int entityIndex = gp.cChecker.checkEntities(this, Client.otherPlayers);
         if (entityIndex != -1)
         {
-            if (Client.otherPlayers.get(entityIndex) != this.owner)
+            // If target is the owner of the projectile and the projectile is not detonating, then DO NOT collide with target (inverse implication logic)
+            // implication logic: (Client.otherPlayers.get(entityIndex) == this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && !detonating)
+            if (!(Client.otherPlayers.get(entityIndex) == this.owner && !detonating))
             {
                 collideWithEntity(Client.otherPlayers, entityIndex);
             }
-            if (detonating)
+//            else
+//            {
+//                collideWithEntity(Client.otherPlayers, entityIndex);
+//            }
+            if (detonating || Client.otherPlayers.get(entityIndex) == this.owner)
             {
                 xCollisionOn = false;
                 yCollisionOn = false;
@@ -163,15 +170,40 @@ public abstract class Projectile extends Entity
         }
 
         // Check for player collision
-        if (detonating && gp.cChecker.checkEntity(this, gp.player))
+        if (gp.cChecker.checkEntity(this, gp.player))
         {
             collideWithEntity(gp.player);
         }
-        if (detonating)
-        {
-            xCollisionOn = false;
-            yCollisionOn = false;
-        }
+//        if (detonating)
+//        {
+//            xCollisionOn = false;
+//            yCollisionOn = false;
+//        }
+
+        // Check for OtherPlayer collision
+//        int entityIndex = gp.cChecker.checkEntity(this, Client.otherPlayers);
+//        if (entityIndex != -1)
+//        {
+//            if (Client.otherPlayers.get(entityIndex) != this.owner)
+//            {
+//                collideWithEntity(Client.otherPlayers, entityIndex);
+//            }
+//            if (detonating)
+//            {
+//                xCollisionOn = false;
+//                yCollisionOn = false;
+//            }
+//        }
+
+//        if (detonating && gp.cChecker.checkEntity(this, gp.player))
+//        {
+//            collideWithEntity(gp.player);
+//        }
+//        if (detonating)
+//        {
+//            xCollisionOn = false;
+//            yCollisionOn = false;
+//        }
 
 
     }
@@ -185,6 +217,8 @@ public abstract class Projectile extends Entity
             {
                 int damage = this.attack;
                 fromList.get(entityIndex).life -= damage;
+                applyDot = true;
+                spriteCounter = 0;
             }
             else if (detonating)
             {
@@ -205,6 +239,8 @@ public abstract class Projectile extends Entity
             {
                 int damage = this.attack;
                 entity.life -= damage;
+                applyDot = true;
+                spriteCounter = 0;
             }
             else if (detonating)
             {

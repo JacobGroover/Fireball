@@ -1,7 +1,5 @@
 import java.io.*;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
 
 /**
  * This class: // Each object of this class will be responsible for communicating with a client from Server class.
@@ -45,16 +43,25 @@ public class TcpHandler extends ClientHandler implements Runnable
             try
             {
                 messageFromClient = bufferedReader.readLine();
-                if (messageFromClient.startsWith("*"))
-                {
-                    String[] tokens = messageFromClient.split("\\*");
-                    this.setJoinedGame(Boolean.parseBoolean(tokens[2].substring(0, 4)));
-                    broadcastMessageAll(tokens[1], Boolean.parseBoolean(tokens[2].substring(0, 4)));
-                }
             } catch (IOException ioe)
             {
                 closeEverything(TCPSocket, bufferedReader, bufferedWriter);
                 break;
+            }
+
+            if (messageFromClient.startsWith("*"))
+            {
+                String[] tokens = messageFromClient.split("\\*");
+                this.setJoinedGame(Boolean.parseBoolean(tokens[2].substring(0, 4)));
+                broadcastJoinGame(tokens[1], Boolean.parseBoolean(tokens[2].substring(0, 4)));
+            }
+            else if (messageFromClient.startsWith("-"))
+            {
+                String[] tokens = messageFromClient.split("-");
+                this.setPlayPressed1(Integer.parseInt(tokens[2]));  // add if/else clause later to check which button was pressed
+                this.setMouseX(Integer.parseInt(tokens[3]));
+                this.setMouseY(Integer.parseInt(tokens[4]));
+                broadcastButtonPress(tokens[1], this.getPlayPressed1(), this.getMouseX(), this.getMouseY());
             }
         }
     }
@@ -98,7 +105,7 @@ public class TcpHandler extends ClientHandler implements Runnable
 
     }
 
-    public void broadcastMessageAll(String clientUsername, boolean joinedGame)
+    public void broadcastJoinGame(String clientUsername, boolean joinedGame)
     {
 
         if (joinedGame)
@@ -109,7 +116,7 @@ public class TcpHandler extends ClientHandler implements Runnable
                 {
                     try
                     {
-                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write("*" + clientUsername + "*" + true);
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write("*" + clientUsername + "*" + joinedGame);
                         ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
                         ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
 
@@ -132,7 +139,7 @@ public class TcpHandler extends ClientHandler implements Runnable
                 {
                     try
                     {
-                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write("*" + clientUsername + "*" + false);
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write("*" + clientUsername + "*" + joinedGame);
                         ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
                         ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
 
@@ -144,7 +151,7 @@ public class TcpHandler extends ClientHandler implements Runnable
             }
             try
             {
-                this.bufferedWriter.write("*" + clientUsername + "*" + false);
+                this.bufferedWriter.write("*" + clientUsername + "*" + joinedGame);
                 this.bufferedWriter.newLine();
                 this.bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
 
@@ -154,6 +161,61 @@ public class TcpHandler extends ClientHandler implements Runnable
             }
 
         }
+
+    }
+
+    public void broadcastButtonPress(String clientUsername, int buttonPressed, int mouseX, int mouseY)
+    {
+
+        if (joinedGame)
+        {
+            for (int i = 0; i < clientDataAL.size(); i++)
+            {
+                if (!clientDataAL.get(i).getClientUsername().equals(clientUsername) && clientDataAL.get(i).getJoinedGame())
+                {
+                    try
+                    {
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write("-" + clientUsername + "-" + buttonPressed + "-" + mouseX + "-" + mouseY);
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+
+                    } catch (IOException ioe)
+                    {
+                        closeEverything(TCPSocket, bufferedReader, bufferedWriter);
+                    }
+                }
+            }
+        }
+//        else
+//        {
+//            for (int i = 0; i < clientDataAL.size(); i++)
+//            {
+//                if (!clientDataAL.get(i).getClientUsername().equals(clientUsername) && clientDataAL.get(i).getJoinedGame())
+//                {
+//                    try
+//                    {
+//                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write("-" + clientUsername + "-" + buttonPressed);
+//                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
+//                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+//
+//                    } catch (IOException ioe)
+//                    {
+//                        closeEverything(TCPSocket, bufferedReader, bufferedWriter);
+//                    }
+//                }
+//            }
+//            try
+//            {
+//                this.bufferedWriter.write("-" + clientUsername + "-" + buttonPressed);
+//                this.bufferedWriter.newLine();
+//                this.bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+//
+//            } catch (IOException ioe)
+//            {
+//                closeEverything(TCPSocket, bufferedReader, bufferedWriter);
+//            }
+//
+//        }
 
     }
 

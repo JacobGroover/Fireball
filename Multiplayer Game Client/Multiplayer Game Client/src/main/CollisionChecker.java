@@ -280,7 +280,7 @@ public class CollisionChecker {
     }
 
     // Check Entity collision
-    public int checkEntity(Entity entity, ArrayList<? extends Entity> target)
+    public int checkEntities(Entity entity, ArrayList<? extends Entity> target)
     {
         double worldX = Player.worldX;
         double worldY = Player.worldY;
@@ -389,8 +389,9 @@ public class CollisionChecker {
 
             if (target.get(i) != null)
             {
-                if (entity instanceof Projectile && index != -1 && !((Projectile) entity).detonating)
+                if (entity instanceof Projectile && index != -1 && !((Projectile) entity).detonating && ((Projectile) entity).owner != target.get(i))
                 {
+                    ((Projectile) entity).detonating = true;
                     entity.worldX = target.get(i).worldX;
                     entity.worldY = target.get(i).worldY;
                 }
@@ -407,30 +408,20 @@ public class CollisionChecker {
 
     public boolean checkEntity(Entity entity, Entity target)
     {
-        double entityWorldX;
-        double entityWorldY;
+        double entityWorldX = entity.worldX;
+        double entityWorldY = entity.worldY;
         if (entity instanceof Player)
         {
             entityWorldX = Player.worldX;
             entityWorldY = Player.worldY;
         }
-        else
-        {
-            entityWorldX = entity.worldX;
-            entityWorldY = entity.worldY;
-        }
 
-        double targetWorldX;
-        double targetWorldY;
+        double targetWorldX = target.worldX;
+        double targetWorldY = target.worldY;
         if (target instanceof Player)
         {
             targetWorldX = Player.worldX;
             targetWorldY = Player.worldY;
-        }
-        else
-        {
-            targetWorldX = target.worldX;
-            targetWorldY = target.worldY;
         }
 
         boolean continueCheck = true;
@@ -438,92 +429,106 @@ public class CollisionChecker {
         {
             continueCheck = false;
         }
+//        if ( entity instanceof Projectile && (((Projectile) entity).detonating || ((Projectile) entity).owner == target))
+        if ( entity instanceof Projectile && (((Projectile) entity).owner == target && !((Projectile) entity).detonating))
+        {
+            continueCheck = false;
+        }
+
         if (continueCheck)
         {
-            if (target != null) {
-                // Get this entity's solid area position
-                entity.solidArea.x = (int)entityWorldX + entity.solidArea.x;
-                entity.solidArea.y = (int)entityWorldY + entity.solidArea.y;
+            // Get this entity's solid area position
+            entity.solidArea.x = (int)entityWorldX + entity.solidArea.x;
+            entity.solidArea.y = (int)entityWorldY + entity.solidArea.y;
 
-                // Get other entity's solid area position
-                target.solidArea.x = (int)targetWorldX + target.solidArea.x;
-                target.solidArea.y = (int)targetWorldY + target.solidArea.y;
+            // Get other entity's solid area position
+            target.solidArea.x = (int)targetWorldX + target.solidArea.x;
+            target.solidArea.y = (int)targetWorldY + target.solidArea.y;
 
-                switch (entity.direction) {
-                    case "up":
-                        entity.solidArea.y -= entity.speed;
-                        if (entity.solidArea.intersects(target.solidArea))
-                        {
-                            entity.yCollisionOn = true;
-                        }
-                        break;
-                    case "down":
-                        entity.solidArea.y += entity.speed;
-                        if (entity.solidArea.intersects(target.solidArea))
-                        {
-                            entity.yCollisionOn = true;
-                        }
-                        break;
-                    case "left":
-                        entity.solidArea.x -= entity.speed;
-                        if (entity.solidArea.intersects(target.solidArea))
-                        {
-                            entity.xCollisionOn = true;
-                        }
-                        break;
-                    case "right":
-                        entity.solidArea.x += entity.speed;
-                        if (entity.solidArea.intersects(target.solidArea))
-                        {
-                            entity.xCollisionOn = true;
-                        }
-                        break;
-                    case "upRight":
-                        entity.solidArea.x += entity.speed;
-                        entity.solidArea.y -= entity.speed;
-                        if (entity.solidArea.intersects(target.solidArea))
-                        {
-                            entity.xCollisionOn = true;
-                            entity.yCollisionOn = true;
-                        }
-                        break;
-                    case "upLeft":
-                        entity.solidArea.x -= entity.speed;
-                        entity.solidArea.y -= entity.speed;
-                        if (entity.solidArea.intersects(target.solidArea))
-                        {
-                            entity.xCollisionOn = true;
-                            entity.yCollisionOn = true;
-                        }
-                        break;
-                    case "downRight":
-                        entity.solidArea.x += entity.speed;
-                        entity.solidArea.y += entity.speed;
-                        if (entity.solidArea.intersects(target.solidArea))
-                        {
-                            entity.xCollisionOn = true;
-                            entity.yCollisionOn = true;
-                        }
-                        break;
-                    case "downLeft":
-                        entity.solidArea.x -= entity.speed;
-                        entity.solidArea.y += entity.speed;
-                        if (entity.solidArea.intersects(target.solidArea))
-                        {
-                            entity.xCollisionOn = true;
-                            entity.yCollisionOn = true;
-                        }
-                        break;
-                }
+            switch (entity.direction) {
+                case "up":
+                    entity.solidArea.y -= entity.speed;
+                    if (entity.solidArea.intersects(target.solidArea))
+                    {
+                        entity.yCollisionOn = true;
+                    }
+                    break;
+                case "down":
+                    entity.solidArea.y += entity.speed;
+                    if (entity.solidArea.intersects(target.solidArea))
+                    {
+                        entity.yCollisionOn = true;
+                    }
+                    break;
+                case "left":
+                    entity.solidArea.x -= entity.speed;
+                    if (entity.solidArea.intersects(target.solidArea))
+                    {
+                        entity.xCollisionOn = true;
+                    }
+                    break;
+                case "right":
+                    entity.solidArea.x += entity.speed;
+                    if (entity.solidArea.intersects(target.solidArea))
+                    {
+                        entity.xCollisionOn = true;
+                    }
+                    break;
+                case "upRight":
+                    entity.solidArea.x += entity.speed;
+                    entity.solidArea.y -= entity.speed;
+                    if (entity.solidArea.intersects(target.solidArea))
+                    {
+                        entity.xCollisionOn = true;
+                        entity.yCollisionOn = true;
+                    }
+                    break;
+                case "upLeft":
+                    entity.solidArea.x -= entity.speed;
+                    entity.solidArea.y -= entity.speed;
+                    if (entity.solidArea.intersects(target.solidArea))
+                    {
+                        entity.xCollisionOn = true;
+                        entity.yCollisionOn = true;
+                    }
+                    break;
+                case "downRight":
+                    entity.solidArea.x += entity.speed;
+                    entity.solidArea.y += entity.speed;
+                    if (entity.solidArea.intersects(target.solidArea))
+                    {
+                        entity.xCollisionOn = true;
+                        entity.yCollisionOn = true;
+                    }
+                    break;
+                case "downLeft":
+                    entity.solidArea.x -= entity.speed;
+                    entity.solidArea.y += entity.speed;
+                    if (entity.solidArea.intersects(target.solidArea))
+                    {
+                        entity.xCollisionOn = true;
+                        entity.yCollisionOn = true;
+                    }
+                    break;
             }
         }
 
-        if (target != null) {
-            entity.solidArea.x = entity.solidAreaDefaultX;
-            entity.solidArea.y = entity.solidAreaDefaultY;
-            target.solidArea.x = target.solidAreaDefaultX;
-            target.solidArea.y = target.solidAreaDefaultY;
+        if (entity instanceof Projectile && (entity.xCollisionOn || entity.yCollisionOn) && !((Projectile) entity).detonating && ((Projectile) entity).owner != target)
+        {
+            ((Projectile) entity).detonating = true;
+            entity.worldX = target.worldX;
+            entity.worldY = target.worldY;
+            if (target instanceof Player)
+            {
+                entity.worldX = Player.worldX;
+                entity.worldY = Player.worldY;
+            }
         }
+
+        entity.solidArea.x = entity.solidAreaDefaultX;
+        entity.solidArea.y = entity.solidAreaDefaultY;
+        target.solidArea.x = target.solidAreaDefaultX;
+        target.solidArea.y = target.solidAreaDefaultY;
 
         return entity.xCollisionOn || entity.yCollisionOn;
     }

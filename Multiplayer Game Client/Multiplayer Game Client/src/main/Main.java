@@ -2,13 +2,11 @@ package main;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Main
 {
@@ -109,7 +107,7 @@ public class Main
 
             // Call listenForMessage() and sendJoinedGame() methods on this client instance; both run on separate threads and are blocked, so they both get called and run continuously while connected.
             tcpClient.listenForMessage(gamePanel);
-            tcpClient.sendJoinedGame(gamePanel);
+            tcpClient.sendInfo(gamePanel);
 
             // Run UDP threads to handle movement and position packets
             udpClient.sendDP();
