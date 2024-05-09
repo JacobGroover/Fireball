@@ -27,13 +27,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener
     {
         if (gp.gameState == gp.PLAY_STATE)
         {
-            if (e.getButton() == MouseEvent.BUTTON1 && !playPressed1Cooldown)
-            {
-                mouseX = e.getX();
-                mouseY = e.getY();
-                //playPressed1Cooldown = true;
-                playPressed1 = true;
-            }
+
         }
         else if (gp.gameState == gp.MAIN_MENU_STATE)
         {
@@ -76,7 +70,12 @@ public class MouseHandler implements MouseListener, MouseMotionListener
     {
         if (gp.gameState == gp.PLAY_STATE)
         {
-
+            if (e.getButton() == MouseEvent.BUTTON1 && !playPressed1Cooldown)
+            {
+                mouseX = e.getX();
+                mouseY = e.getY();
+                playPressed1 = true;
+            }
         }
     }
 

@@ -188,7 +188,6 @@ public abstract class Projectile extends Entity
             }
             else if (detonating)
             {
-                System.out.println("POP");
                 fromList.get(entityIndex).dotBurningDmgCounter = 180;
                 fromList.get(entityIndex).isBurning = true;
             }
@@ -209,7 +208,6 @@ public abstract class Projectile extends Entity
             }
             else if (detonating)
             {
-                System.out.println("POP");
                 entity.dotBurningDmgCounter = 180;
                 entity.isBurning = true;
             }

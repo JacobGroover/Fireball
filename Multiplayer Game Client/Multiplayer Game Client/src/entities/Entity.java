@@ -300,7 +300,7 @@ public abstract class Entity {
 
     protected void drawImage(Graphics2D graphics2, BufferedImage image)
     {
-        int screenX = (int)this.worldX - (int) Player.worldX + gp.player.screenX;  // gp.player.worldX
+        int screenX = (int)this.worldX - (int) Player.worldX + gp.player.screenX;
         int screenY = (int)this.worldY - (int) Player.worldY + gp.player.screenY;
 
         if (worldX + gp.tileSize > Player.worldX - gp.player.screenX &&
