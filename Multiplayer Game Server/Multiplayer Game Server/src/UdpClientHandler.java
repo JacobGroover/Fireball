@@ -37,26 +37,26 @@ public class UdpClientHandler extends ClientHandler
                     if (delta >= 1)
                     {
                         String tempByteString = "";
-                        for (ClientHandler client : clientDataAL)
+                        for (int i = 0; i < clientDataAL.size(); i++)
                         {
-                            if (client.getJoinedGame())
+                            if (clientDataAL.get(i).getJoinedGame())
                             {
                                 tempByteString += (String.format("moving:%s" + "moving:%.16f" + "moving:%.16f" + "moving:%.16f" + "moving:%.16f",
-                                        client.getClientUsername(), client.getVelocityX(), client.getVelocityY(), client.getWorldX(), client.getWorldY()));
+                                        clientDataAL.get(i).getClientUsername(), clientDataAL.get(i).getVelocityX(), clientDataAL.get(i).getVelocityY(), clientDataAL.get(i).getWorldX(), clientDataAL.get(i).getWorldY()));
                             }
                         }
 
                         try
                         {
-                            for (ClientHandler client : clientDataAL)
+                            for (int i = 0; i < clientDataAL.size(); i++)
                             {
-                                if (client.getJoinedGame() && client.isFirstDPReceived())
+                                if (clientDataAL.get(i).getJoinedGame() && clientDataAL.get(i).isFirstDPReceived())
                                 {
                                     byte [] byteArray = tempByteString.getBytes();
 
                                     // Send data back to the client at address and port
-                                    InetAddress address = client.getClientInetAddress();
-                                    int port = client.getPort();
+                                    InetAddress address = clientDataAL.get(i).getClientInetAddress();
+                                    int port = clientDataAL.get(i).getPort();
                                     DatagramPacket responsePacket = new DatagramPacket(byteArray, byteArray.length, address, port);
                                     socket.send(responsePacket);
                                 }
@@ -108,19 +108,19 @@ public class UdpClientHandler extends ClientHandler
                             double worldX = Double.parseDouble(usernameWorldXY[4]);
                             double worldY = Double.parseDouble(usernameWorldXY[5]);
 
-                            for (ClientHandler client : clientDataAL)
+                            for (int i = 0; i < clientDataAL.size(); i++)
                             {
 
-                                if (client.getClientUsername().equals(clientUsername))
+                                if (clientDataAL.get(i).getClientUsername().equals(clientUsername))
                                 {
-                                    client.setVelocityX(velocityX);
-                                    client.setVelocityY(velocityY);
-                                    client.setWorldX(worldX);
-                                    client.setWorldY(worldY);
+                                    clientDataAL.get(i).setVelocityX(velocityX);
+                                    clientDataAL.get(i).setVelocityY(velocityY);
+                                    clientDataAL.get(i).setWorldX(worldX);
+                                    clientDataAL.get(i).setWorldY(worldY);
 
-                                    client.setFirstDPReceived(true);
-                                    client.setClientInetAddress(dgPacket.getAddress());
-                                    client.setPort(dgPacket.getPort());
+                                    clientDataAL.get(i).setFirstDPReceived(true);
+                                    clientDataAL.get(i).setClientInetAddress(dgPacket.getAddress());
+                                    clientDataAL.get(i).setPort(dgPacket.getPort());
 
                                 }
                             }
