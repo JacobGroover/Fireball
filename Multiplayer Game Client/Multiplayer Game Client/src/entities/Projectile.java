@@ -154,15 +154,6 @@ public abstract class Projectile extends Entity
         {
             collideWithEntity(Client.otherPlayers, entityIndex);
 
-//            if (!(Client.otherPlayers.get(entityIndex) == this.owner && !detonating))
-//            {
-//                collideWithEntity(Client.otherPlayers, entityIndex);
-//            }
-
-//            else
-//            {
-//                collideWithEntity(Client.otherPlayers, entityIndex);
-//            }
             if (detonating || Client.otherPlayers.get(entityIndex) == this.owner)
             {
                 xCollisionOn = false;
@@ -175,36 +166,6 @@ public abstract class Projectile extends Entity
         {
             collideWithEntity(gp.player);
         }
-//        if (detonating)
-//        {
-//            xCollisionOn = false;
-//            yCollisionOn = false;
-//        }
-
-        // Check for OtherPlayer collision
-//        int entityIndex = gp.cChecker.checkEntity(this, Client.otherPlayers);
-//        if (entityIndex != -1)
-//        {
-//            if (Client.otherPlayers.get(entityIndex) != this.owner)
-//            {
-//                collideWithEntity(Client.otherPlayers, entityIndex);
-//            }
-//            if (detonating)
-//            {
-//                xCollisionOn = false;
-//                yCollisionOn = false;
-//            }
-//        }
-
-//        if (detonating && gp.cChecker.checkEntity(this, gp.player))
-//        {
-//            collideWithEntity(gp.player);
-//        }
-//        if (detonating)
-//        {
-//            xCollisionOn = false;
-//            yCollisionOn = false;
-//        }
 
 
     }
