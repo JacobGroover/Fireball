@@ -152,12 +152,13 @@ public abstract class Projectile extends Entity
         int entityIndex = gp.cChecker.checkEntities(this, Client.otherPlayers);
         if (entityIndex != -1)
         {
-            // If target is the owner of the projectile and the projectile is not detonating, then DO NOT collide with target (inverse implication logic)
-            // implication logic: (Client.otherPlayers.get(entityIndex) == this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && !detonating)
-            if (!(Client.otherPlayers.get(entityIndex) == this.owner && !detonating))
-            {
-                collideWithEntity(Client.otherPlayers, entityIndex);
-            }
+            collideWithEntity(Client.otherPlayers, entityIndex);
+
+//            if (!(Client.otherPlayers.get(entityIndex) == this.owner && !detonating))
+//            {
+//                collideWithEntity(Client.otherPlayers, entityIndex);
+//            }
+
 //            else
 //            {
 //                collideWithEntity(Client.otherPlayers, entityIndex);

@@ -299,6 +299,12 @@ public class CollisionChecker {
             {
                 continueCheck = false;
             }
+            // If target is the owner of the projectile and the projectile is not detonating, then check collision (implication logic)
+            // equivalent implication logic: (Client.otherPlayers.get(entityIndex) == this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && !detonating)
+            if ( entity instanceof Projectile && (((Projectile) entity).owner == target.get(i) && !((Projectile) entity).detonating))
+            {
+                continueCheck = false;
+            }
             if (continueCheck)
             {
                 if (target.get(i) != null) {
@@ -391,7 +397,6 @@ public class CollisionChecker {
             {
                 if (entity instanceof Projectile && index != -1 && !((Projectile) entity).detonating && ((Projectile) entity).owner != target.get(i))
                 {
-                    ((Projectile) entity).detonating = true;
                     entity.worldX = target.get(i).worldX;
                     entity.worldY = target.get(i).worldY;
                 }
@@ -429,7 +434,8 @@ public class CollisionChecker {
         {
             continueCheck = false;
         }
-//        if ( entity instanceof Projectile && (((Projectile) entity).detonating || ((Projectile) entity).owner == target))
+        // If target is the owner of the projectile and the projectile is not detonating, then check collision (implication logic)
+        // equivalent implication logic: (Client.otherPlayers.get(entityIndex) == this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && !detonating)
         if ( entity instanceof Projectile && (((Projectile) entity).owner == target && !((Projectile) entity).detonating))
         {
             continueCheck = false;
@@ -515,7 +521,6 @@ public class CollisionChecker {
 
         if (entity instanceof Projectile && (entity.xCollisionOn || entity.yCollisionOn) && !((Projectile) entity).detonating && ((Projectile) entity).owner != target)
         {
-            ((Projectile) entity).detonating = true;
             entity.worldX = target.worldX;
             entity.worldY = target.worldY;
             if (target instanceof Player)
