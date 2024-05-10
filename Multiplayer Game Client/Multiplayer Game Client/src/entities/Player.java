@@ -101,11 +101,15 @@ public class Player extends Entity {
             dotBurningDmgCounter--;
         }
 
+        // CHECK FOR DEATH
+
+
         if (!attacking)
         {
             // CHECK FOR SKILL/ABILITY INPUTS
             if (gp.gameState == gp.PLAY_STATE && mouseH.playPressed1 && !mouseH.playPressed1Cooldown)
             {
+                spriteNum = 1;
                 attacking = true;
                 mouseH.playPressed1Cooldown = true;
                 mouseH.playPressed1 = false;

@@ -39,8 +39,8 @@ public abstract class Entity {
     public boolean xCollisionOn = false;
     public boolean yCollisionOn = false;
 
-    public boolean xTileCollisionOn;    // currently used for fireballs
-    public boolean yTileCollisionOn;    // currently used for fireballs
+    public boolean xTileCollisionOn;    // Not currently used, might be useful later
+    public boolean yTileCollisionOn;    // Not currently used, might be useful later
 
     public BufferedImage image, image2;
     public String name;
@@ -53,6 +53,8 @@ public abstract class Entity {
 
     // ENTITY STATS
     public boolean alive;
+    public boolean dying;
+    public int dyingCounter;
     public int speed;
     public int maxLife;
     public int life;
@@ -104,12 +106,10 @@ public abstract class Entity {
         if (projectileDistanceX != 0)
         {
             unitCircleX = projectileDistanceX / hyp;
-//            projectileDistanceX /= hyp;
         }
         if (projectileDistanceY != 0)
         {
             unitCircleY = projectileDistanceY / hyp;
-//            projectileDistanceY /= hyp;
         }
 
         double radian = Math.atan2(unitCircleY, unitCircleX);

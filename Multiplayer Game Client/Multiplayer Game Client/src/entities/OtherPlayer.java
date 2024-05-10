@@ -90,88 +90,92 @@ public class OtherPlayer extends Entity {
         // CHECK FOR SKILL/ABILITY INPUTS
         if (gp.gameState == gp.PLAY_STATE && skill1)
         {
+            spriteNum = 1;
             attacking = true;
             skill1 = false;
             attacking(mouseX, mouseY);
         }
 
-        if (velocityX != 0 || velocityY != 0)
+        if (!attacking)
         {
+            if (velocityX != 0 || velocityY != 0)
+            {
 
 
-            if (velocityX == 0 && velocityY < 0) {
-                direction = "up";
-            }
-            if (velocityX == 0 && velocityY > 0) {
-                direction = "down";
-            }
-            if (velocityX < 0 && velocityY == 0) {
-                direction = "left";
-            }
-            if (velocityX > 0 && velocityY == 0) {
-                direction = "right";
-            }
-
-            if (velocityX < 0 && velocityY < 0) {
-                direction = "upLeft";
-            }
-            if (velocityX > 0 && velocityY < 0) {
-                direction = "upRight";
-            }
-            if (velocityX < 0 && velocityY > 0) {
-                direction = "downLeft";
-            }
-            if (velocityX > 0 && velocityY > 0) {
-                direction = "downRight";
-            }
-
-            // Normalize movement vector
-            double length = Math.sqrt((velocityX * velocityX) + (velocityY * velocityY));
-
-            if (velocityX != 0) {
-                velocityX /= length;
-            }
-            if (velocityY != 0) {
-                velocityY /= length;
-            }
-
-            velocityX *= speed;
-            velocityY *= speed;
-
-            // Check for tile collision
-            gp.cChecker.checkTile(this);
-
-            // Check for object collision
-            int objIndex = gp.cChecker.checkObject(this, true);
-            pickUpObject(objIndex);
-
-            // Check for Player collision (unnecessary due to OtherPlayer collision check in Player.java)
-            //gp.cChecker.checkPlayer(this);
-
-            if (!xCollisionOn) {
-                //lastWorldX += velocityX;    // UDP
-                worldX += velocityX;
-            }
-            if (!yCollisionOn) {
-                //lastWorldY += velocityY;    // UDP
-                worldY += velocityY;
-            }
-
-            spriteCounter++;
-            if (velocityX == 0 && velocityY == 0) {
-                spriteNum = 1;
-            } else if (spriteCounter > 8) {
-                if (spriteNum == 1) {
-                    spriteNum = 2;
-                } else if (spriteNum == 2) {
-                    spriteNum = 3;
-                } else if (spriteNum == 3) {
-                    spriteNum = 2;
+                if (velocityX == 0 && velocityY < 0) {
+                    direction = "up";
                 }
-                spriteCounter = 0;
+                if (velocityX == 0 && velocityY > 0) {
+                    direction = "down";
+                }
+                if (velocityX < 0 && velocityY == 0) {
+                    direction = "left";
+                }
+                if (velocityX > 0 && velocityY == 0) {
+                    direction = "right";
+                }
+
+                if (velocityX < 0 && velocityY < 0) {
+                    direction = "upLeft";
+                }
+                if (velocityX > 0 && velocityY < 0) {
+                    direction = "upRight";
+                }
+                if (velocityX < 0 && velocityY > 0) {
+                    direction = "downLeft";
+                }
+                if (velocityX > 0 && velocityY > 0) {
+                    direction = "downRight";
+                }
+
+                // Normalize movement vector
+                double length = Math.sqrt((velocityX * velocityX) + (velocityY * velocityY));
+
+                if (velocityX != 0) {
+                    velocityX /= length;
+                }
+                if (velocityY != 0) {
+                    velocityY /= length;
+                }
+
+                velocityX *= speed;
+                velocityY *= speed;
+
+                // Check for tile collision
+                gp.cChecker.checkTile(this);
+
+                // Check for object collision
+                int objIndex = gp.cChecker.checkObject(this, true);
+                pickUpObject(objIndex);
+
+                // Check for Player collision (unnecessary due to OtherPlayer collision check in Player.java)
+                //gp.cChecker.checkPlayer(this);
+
+                if (!xCollisionOn) {
+                    //lastWorldX += velocityX;    // UDP
+                    worldX += velocityX;
+                }
+                if (!yCollisionOn) {
+                    //lastWorldY += velocityY;    // UDP
+                    worldY += velocityY;
+                }
+
+                spriteCounter++;
+                if (velocityX == 0 && velocityY == 0) {
+                    spriteNum = 1;
+                } else if (spriteCounter > 8) {
+                    if (spriteNum == 1) {
+                        spriteNum = 2;
+                    } else if (spriteNum == 2) {
+                        spriteNum = 3;
+                    } else if (spriteNum == 3) {
+                        spriteNum = 2;
+                    }
+                    spriteCounter = 0;
+                }
+            } else {
+                spriteNum = 1;
             }
-        } else {
-            spriteNum = 1;
         }
 
         xCollisionOn = false;

@@ -10,7 +10,7 @@ public abstract class Projectile extends Entity
 {
 
     public Entity owner;
-    public boolean detonating;
+    public boolean detonated;
     protected int deathTimer;
 
     // DOTS
@@ -19,7 +19,7 @@ public abstract class Projectile extends Entity
     public Projectile(GamePanel gp)
     {
         super(gp);
-        detonating = false;
+        detonated = false;
     }
 
     public void set(int projectileDestinationX, int projectileDestinationY, double angle360, boolean alive, Entity owner)
@@ -65,7 +65,7 @@ public abstract class Projectile extends Entity
         // Check projectile collisions
         int projectileIndex = gp.cChecker.checkEntities(this, gp.projectileAL);
 
-        if (!detonating)
+        if (!detonated)
         {
             worldX += velocityX;
             projectileDistanceX = Math.abs(projectileDistanceX) - Math.abs(velocityX);
@@ -75,11 +75,11 @@ public abstract class Projectile extends Entity
 
             if (projectileDistanceX <= 0 || projectileDistanceY <= 0 || xCollisionOn || yCollisionOn)
             {
-                detonating = true;
+                detonated = true;
                 spriteCounter = 0;
             }
 
-            if (!detonating)
+            if (!detonated)
             {
                 spriteCounter++;
                 if (spriteCounter > 12)
@@ -125,7 +125,7 @@ public abstract class Projectile extends Entity
                 fromList.get(entityIndex).life -= damage;
                 applyDot = true;
             }
-            else if (detonating)
+            else if (detonated)
             {
                 fromList.get(entityIndex).dotBurningDmgCounter = 180;
                 fromList.get(entityIndex).isBurning = true;
@@ -145,7 +145,7 @@ public abstract class Projectile extends Entity
                 entity.life -= damage;
                 applyDot = true;
             }
-            else if (detonating)
+            else if (detonated)
             {
                 entity.dotBurningDmgCounter = 180;
                 entity.isBurning = true;
