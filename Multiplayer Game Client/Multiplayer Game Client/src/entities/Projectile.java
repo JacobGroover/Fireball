@@ -22,7 +22,7 @@ public abstract class Projectile extends Entity
         detonating = false;
     }
 
-    public void set(int projectileDestinationX, int projectileDestinationY, String direction, boolean alive, Entity owner)
+    public void set(int projectileDestinationX, int projectileDestinationY, double angle360, boolean alive, Entity owner)
     {
         this.worldX = owner.worldX;
         this.worldY = owner.worldY;
@@ -31,7 +31,7 @@ public abstract class Projectile extends Entity
             this.worldX = Player.worldX;
             this.worldY = Player.worldY;
         }
-        this.direction = direction;
+        this.angle360 = angle360;
         this.projectileDestinationX = projectileDestinationX;
         this.projectileDestinationY = projectileDestinationY;
         this.alive = alive;
@@ -42,6 +42,7 @@ public abstract class Projectile extends Entity
         this.projectileDistanceY = owner.projectileDistanceY;
         velocityX = owner.unitCircleX * speed;
         velocityY = owner.unitCircleY * speed;
+        setDirection();
     }
 
     public void update()
@@ -55,11 +56,14 @@ public abstract class Projectile extends Entity
         // Check for tile collision
         gp.cChecker.checkTile(this);
 
-        // Check for OtherPlayer collision
-        int entityIndex = gp.cChecker.checkEntities(this, Client.otherPlayers);
+        // Check for OtherPlayer collisions
+        int otherPlayerIndex = gp.cChecker.checkEntities(this, Client.otherPlayers);
 
         // Check for player collision
         boolean collideWithPlayer = gp.cChecker.checkEntity(this, gp.player);
+
+        // Check projectile collisions
+        int projectileIndex = gp.cChecker.checkEntities(this, gp.projectileAL);
 
         if (!detonating)
         {
@@ -94,13 +98,17 @@ public abstract class Projectile extends Entity
         }
         else
         {
-            if (entityIndex != -1)
+            if (otherPlayerIndex != -1)
             {
-                collideWithEntity(Client.otherPlayers, entityIndex);
+                collideWithEntity(Client.otherPlayers, otherPlayerIndex);
             }
             if (collideWithPlayer)
             {
                 collideWithEntity(gp.player);
+            }
+            if (projectileIndex != -1)
+            {
+                collideWithEntity(gp.projectileAL, projectileIndex);
             }
             detonateOnImpact();
         }
@@ -187,6 +195,43 @@ public abstract class Projectile extends Entity
         image = setup2(imagePath + "Detonate3");
         image2 = setup2(imagePath + "Detonate4");
 
-        // SET ANGLE OF PROJECTILE
+    }
+
+    protected void setDirection()
+    {
+        // Rotate image by angle of projectile
+
+        // Until rotation code is added, use this:
+        if (angle360 < 0.0)
+        {
+            angle360 += 360.0;
+        }
+
+        if (angle360 > 202.5 && angle360 < 247.5)
+        {
+            direction = "upLeft";
+        } else if (angle360 >= 247.5 && angle360 <= 292.5)
+        {
+            direction = "up";
+        } else if (angle360 > 292.5 && angle360 < 337.5)
+        {
+            direction = "upRight";
+        }
+        else if ((angle360 >= 337.5 && angle360 <= 360.0) || angle360 <= 22.5)
+        {
+            direction = "right";
+        } else if (angle360 > 22.5 && angle360 < 67.5)
+        {
+            direction = "downRight";
+        } else if (angle360 >= 67.5 && angle360 <= 112.5)
+        {
+            direction = "down";
+        } else if (angle360 > 112.5 && angle360 < 157.5)
+        {
+            direction = "downLeft";
+        } else if (angle360 >= 157.5 && angle360 <= 202.5)
+        {
+            direction = "left";
+        }
     }
 }

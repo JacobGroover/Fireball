@@ -13,7 +13,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public abstract class Entity {
 
@@ -50,7 +49,7 @@ public abstract class Entity {
     // ENTITY MATH
     public double unitCircleX;
     public double unitCircleY;
-    public static double angle;
+    public double angle360;
 
     // ENTITY STATS
     public boolean alive;
@@ -82,6 +81,75 @@ public abstract class Entity {
         {
             getVFX();
         }
+    }
+
+    protected void attacking(int pointX, int pointY)
+    {
+        double worldX = this.worldX;
+        double worldY = this.worldY;
+
+        if (this instanceof Player)
+        {
+            worldX = Player.worldX;
+            worldY = Player.worldY;
+        }
+
+        projectileDestinationX = (int) worldX + pointX - gp.screenWidth/2;
+        projectileDestinationY = (int)worldY + pointY - gp.screenHeight/2;
+
+        projectileDistanceX = projectileDestinationX - worldX;
+        projectileDistanceY = projectileDestinationY - worldY;
+
+        double hyp = Math.hypot(projectileDistanceX, projectileDistanceY);
+        if (projectileDistanceX != 0)
+        {
+            unitCircleX = projectileDistanceX / hyp;
+//            projectileDistanceX /= hyp;
+        }
+        if (projectileDistanceY != 0)
+        {
+            unitCircleY = projectileDistanceY / hyp;
+//            projectileDistanceY /= hyp;
+        }
+
+        double radian = Math.atan2(unitCircleY, unitCircleX);
+        angle360 = radian * (180 / Math.PI);
+        if (angle360 < 0.0)
+        {
+            angle360 += 360.0;
+        }
+
+        if (angle360 > 202.5 && angle360 < 247.5)
+        {
+            direction = "upLeft";
+        } else if (angle360 >= 247.5 && angle360 <= 292.5)
+        {
+            direction = "up";
+        } else if (angle360 > 292.5 && angle360 < 337.5)
+        {
+            direction = "upRight";
+        }
+        else if ((angle360 >= 337.5 && angle360 <= 360.0) || angle360 <= 22.5)
+        {
+            direction = "right";
+        } else if (angle360 > 22.5 && angle360 < 67.5)
+        {
+            direction = "downRight";
+        } else if (angle360 >= 67.5 && angle360 <= 112.5)
+        {
+            direction = "down";
+        } else if (angle360 > 112.5 && angle360 < 157.5)
+        {
+            direction = "downLeft";
+        } else if (angle360 >= 157.5 && angle360 <= 202.5)
+        {
+            direction = "left";
+        }
+        else
+        {
+            attacking = false;
+        }
+
     }
 
     public void getImages(String imagePath) {

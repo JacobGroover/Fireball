@@ -101,15 +101,15 @@ public class Player extends Entity {
             dotBurningDmgCounter--;
         }
 
-        // CHECK FOR SKILL/ABILITY INPUTS
         if (!attacking)
         {
+            // CHECK FOR SKILL/ABILITY INPUTS
             if (gp.gameState == gp.PLAY_STATE && mouseH.playPressed1 && !mouseH.playPressed1Cooldown)
             {
                 attacking = true;
                 mouseH.playPressed1Cooldown = true;
                 mouseH.playPressed1 = false;
-                attacking();
+                attacking(mouseH.mouseX, mouseH.mouseY);
             }
             else if (gp.gameState == gp.PLAY_STATE && (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed))
             {
@@ -258,66 +258,6 @@ public class Player extends Entity {
         velocityY = 0;
     }
 
-    private void attacking()
-    {
-        projectileDestinationX = (int) worldX + mouseH.mouseX - gp.screenWidth/2;
-        projectileDestinationY = (int)worldY + mouseH.mouseY - gp.screenHeight/2;
-
-        projectileDistanceX = projectileDestinationX - worldX;
-        projectileDistanceY = projectileDestinationY - worldY;
-
-        double hyp = Math.hypot(projectileDistanceX, projectileDistanceY);
-        if (projectileDistanceX != 0)
-        {
-            unitCircleX = projectileDistanceX / hyp;
-//            projectileDistanceX /= hyp;
-        }
-        if (projectileDistanceY != 0)
-        {
-            unitCircleY = projectileDistanceY / hyp;
-//            projectileDistanceY /= hyp;
-        }
-
-        double radian = Math.atan2(unitCircleY, unitCircleX);
-        angle = radian * (180 / Math.PI);
-        if (angle < 0.0)
-        {
-            angle += 360.0;
-        }
-
-        if (angle > 202.5 && angle < 247.5)
-        {
-            direction = "upLeft";
-        } else if (angle >= 247.5 && angle <= 292.5)
-        {
-            direction = "up";
-        } else if (angle > 292.5 && angle < 337.5)
-        {
-            direction = "upRight";
-        }
-        else if ((angle >= 337.5 && angle <= 360.0) || angle <= 22.5)
-        {
-            direction = "right";
-        } else if (angle > 22.5 && angle < 67.5)
-        {
-            direction = "downRight";
-        } else if (angle >= 67.5 && angle <= 112.5)
-        {
-            direction = "down";
-        } else if (angle > 112.5 && angle < 157.5)
-        {
-            direction = "downLeft";
-        } else if (angle >= 157.5 && angle <= 202.5)
-        {
-            direction = "left";
-        }
-        else
-        {
-            attacking = false;
-        }
-
-    }
-
     private void attackingAnimation()
     {
         spriteCounter++;
@@ -338,7 +278,7 @@ public class Player extends Entity {
     {
         // SPAWN PROJECTILE
         Projectile p = new OBJ_Fireball(gp);
-        p.set(projectileDestinationX, projectileDestinationY, direction, true, this);
+        p.set(projectileDestinationX, projectileDestinationY, angle360, true, this);
 
         // ADD PROJECTILE TO ARRAYLIST
         gp.projectileAL.add(p);

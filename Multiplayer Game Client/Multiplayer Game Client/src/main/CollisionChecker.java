@@ -302,19 +302,80 @@ public class CollisionChecker {
 
         int index = -1;
 
-        boolean continueCheck = true;
         for (int i = 0; i < target.size(); i++)
         {
+            boolean continueCheck = true;
+
+            if (entity instanceof Projectile && target.get(i) instanceof Projectile)                // If both are projectiles...
+            {
+                if (!((Projectile) entity).detonating && !((Projectile) target.get(i)).detonating)  // If neither are detonated...
+                {
+                    if (entity == target.get(i))
+                    {
+                        continueCheck = false;
+                    }
+                }
+                if (!((Projectile) entity).detonating && ((Projectile) target.get(i)).detonating)   // If this projectile is NOT detonated and that projectile IS detonated
+                {
+                    continueCheck = false;
+                }
+                if (((Projectile) entity).detonating && ((Projectile) target.get(i)).detonating)
+                {
+                    continueCheck = false;
+                }
+
+                if (((Projectile) entity).detonating && !((Projectile) target.get(i)).detonating)
+                {
+                    continueCheck = false;
+                }
+
+            }
+
             if (target.get(i) instanceof OtherPlayer && !((OtherPlayer) target.get(i)).joinedGame)
             {
                 continueCheck = false;
             }
             // If target is the owner of the projectile, and the projectile is not detonating, then check collision (implication logic)
             // equivalent implication logic: (Client.otherPlayers.get(entityIndex) == this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && !detonating)
-            if ( entity instanceof Projectile && (((Projectile) entity).owner == target.get(i) && !((Projectile) entity).detonating))
+            if (entity instanceof Projectile && (((Projectile) entity).owner == target.get(i) && !((Projectile) entity).detonating))
             {
                 continueCheck = false;
             }
+//            if (target.get(i) instanceof Projectile && entity instanceof Projectile && ((Projectile) entity).owner == ((Projectile) target.get(i)).owner)
+//            if (entity instanceof Projectile && target.get(i) instanceof Projectile)                // If both are projectiles...
+//            {
+//                if (((Projectile) entity).detonating)                                               // ... and this projectile is detonating...
+//                {
+//                    continueCheck = false;                                                          // ... then no collision.
+//                }
+//                else if (entity != target.get(i))                                                   // Otherwise, if this projectile is NOT the projectile being compared...
+//                {
+//                    if (((Projectile) target.get(i)).detonating)                                    // ... then if the projectile being compared is detonating...
+//                    {
+//                        if (i == target.size() - 1)                                                 // ... and if the projectile being compared is at the end of the list...
+//                        {
+//                            continueCheck = false;                                                  // ... then no collision ...
+//                        }
+//                        else                                                                        // ... otherwise...
+//                        {
+//                            i++;                                                                    // ... move to the next projectile to compare...
+//                        }
+//                    }
+//                }
+//                else                                                                                // However, if this projectile IS the projectile being compared...
+//                {
+//                    if (i == target.size() - 1)                                                     // ... and if this projectile is at the end of the list...
+//                    {
+//                        continueCheck = false;                                                      // ... then no collision...
+//                    }
+//                    else                                                                            // ... otherwise...
+//                    {
+//                        i++;                                                                        // ... move to the next projectile to compare.
+//                    }
+//
+//                }
+//            }
+
             if (continueCheck)
             {
                 if (target.get(i) != null) {
@@ -332,6 +393,11 @@ public class CollisionChecker {
                             if (entity.solidArea.intersects(target.get(i).solidArea))
                             {
                                 entity.yCollisionOn = true;
+                                if (entity instanceof Projectile && target.get(i) instanceof Projectile)
+                                {
+//                                    target.get(i).yCollisionOn = true;
+                                    ((Projectile) target.get(i)).detonating = true;
+                                }
                                 index = i;
                             }
                             break;
@@ -340,6 +406,11 @@ public class CollisionChecker {
                             if (entity.solidArea.intersects(target.get(i).solidArea))
                             {
                                 entity.yCollisionOn = true;
+                                if (entity instanceof Projectile && target.get(i) instanceof Projectile)
+                                {
+//                                    target.get(i).yCollisionOn = true;
+                                    ((Projectile) target.get(i)).detonating = true;
+                                }
                                 index = i;
                             }
                             break;
@@ -348,6 +419,11 @@ public class CollisionChecker {
                             if (entity.solidArea.intersects(target.get(i).solidArea))
                             {
                                 entity.xCollisionOn = true;
+                                if (entity instanceof Projectile && target.get(i) instanceof Projectile)
+                                {
+//                                    target.get(i).xCollisionOn = true;
+                                    ((Projectile) target.get(i)).detonating = true;
+                                }
                                 index = i;
                             }
                             break;
@@ -356,6 +432,11 @@ public class CollisionChecker {
                             if (entity.solidArea.intersects(target.get(i).solidArea))
                             {
                                 entity.xCollisionOn = true;
+                                if (entity instanceof Projectile && target.get(i) instanceof Projectile)
+                                {
+//                                    target.get(i).xCollisionOn = true;
+                                    ((Projectile) target.get(i)).detonating = true;
+                                }
                                 index = i;
                             }
                             break;
@@ -366,6 +447,12 @@ public class CollisionChecker {
                             {
                                 entity.xCollisionOn = true;
                                 entity.yCollisionOn = true;
+                                if (entity instanceof Projectile && target.get(i) instanceof Projectile)
+                                {
+//                                    target.get(i).xCollisionOn = true;
+//                                    target.get(i).yCollisionOn = true;
+                                    ((Projectile) target.get(i)).detonating = true;
+                                }
                                 index = i;
                             }
                             break;
@@ -376,6 +463,12 @@ public class CollisionChecker {
                             {
                                 entity.xCollisionOn = true;
                                 entity.yCollisionOn = true;
+                                if (entity instanceof Projectile && target.get(i) instanceof Projectile)
+                                {
+//                                    target.get(i).xCollisionOn = true;
+//                                    target.get(i).yCollisionOn = true;
+                                    ((Projectile) target.get(i)).detonating = true;
+                                }
                                 index = i;
                             }
                             break;
@@ -386,6 +479,12 @@ public class CollisionChecker {
                             {
                                 entity.xCollisionOn = true;
                                 entity.yCollisionOn = true;
+                                if (entity instanceof Projectile && target.get(i) instanceof Projectile)
+                                {
+//                                    target.get(i).xCollisionOn = true;
+//                                    target.get(i).yCollisionOn = true;
+                                    ((Projectile) target.get(i)).detonating = true;
+                                }
                                 index = i;
                             }
                             break;
@@ -396,6 +495,12 @@ public class CollisionChecker {
                             {
                                 entity.xCollisionOn = true;
                                 entity.yCollisionOn = true;
+                                if (entity instanceof Projectile && target.get(i) instanceof Projectile)
+                                {
+//                                    target.get(i).xCollisionOn = true;
+//                                    target.get(i).yCollisionOn = true;
+                                    ((Projectile) target.get(i)).detonating = true;
+                                }
                                 index = i;
                             }
                             break;
@@ -405,6 +510,14 @@ public class CollisionChecker {
 
             if (target.get(i) != null)
             {
+//                if (entity instanceof Projectile && target.get(i) instanceof Projectile)
+//                {
+//                    entity.xCollisionOn = false;
+//                    entity.yCollisionOn = false;
+//
+//                    target.get(i).xCollisionOn = false;
+//                    target.get(i).yCollisionOn = false;
+//                }
                 if (entity instanceof Projectile && index != -1 && !((Projectile) entity).detonating && ((Projectile) entity).owner != target.get(i))
                 {
                     entity.worldX = target.get(i).worldX;

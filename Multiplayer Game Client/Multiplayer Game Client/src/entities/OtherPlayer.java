@@ -32,6 +32,7 @@ public class OtherPlayer extends Entity {
 
         setDefaultValues(clientUserName);
         getImages("/player/FillerPlayer");
+        getPlayerAttackImages("/player/attack/FillerPlayerCast");
     }
 
     public void setDefaultValues(String clientUserName) {
@@ -50,6 +51,18 @@ public class OtherPlayer extends Entity {
 
         maxLife = 100;
         life = maxLife;
+    }
+
+    private void getPlayerAttackImages(String imagePath)
+    {
+        attackUp1 = setup(imagePath + "Up1");
+        attackDown1 = setup(imagePath + "Down1");
+        attackLeft1 = setup(imagePath + "Left1");
+        attackRight1 = setup(imagePath + "Right1");
+        attackUpLeft1 = setup(imagePath + "UpLeft1");
+        attackUpRight1 = setup(imagePath + "UpRight1");
+        attackDownLeft1 = setup(imagePath + "DownLeft1");
+        attackDownRight1 = setup(imagePath + "DownRight1");
     }
 
     public void update()
@@ -79,10 +92,11 @@ public class OtherPlayer extends Entity {
         {
             attacking = true;
             skill1 = false;
-            attacking();
+            attacking(mouseX, mouseY);
         }
 
-        if (velocityX != 0 || velocityY != 0) {
+        if (velocityX != 0 || velocityY != 0)
+        {
 
 
             if (velocityX == 0 && velocityY < 0) {
@@ -187,71 +201,11 @@ public class OtherPlayer extends Entity {
     {
         // SPAWN PROJECTILE
         Projectile p = new OBJ_Fireball(gp);
-        p.set(projectileDestinationX, projectileDestinationY, direction, true, this);
+        p.set(projectileDestinationX, projectileDestinationY, angle360, true, this);
 
         // ADD PROJECTILE TO ARRAYLIST
         gp.projectileAL.add(p);
 //        gp.playSFX(0);
-    }
-
-    private void attacking()
-    {
-        projectileDestinationX = (int) worldX + mouseX - gp.screenWidth/2;
-        projectileDestinationY = (int)worldY + mouseY - gp.screenHeight/2;
-
-        projectileDistanceX = projectileDestinationX - worldX;
-        projectileDistanceY = projectileDestinationY - worldY;
-
-        double hyp = Math.hypot(projectileDistanceX, projectileDistanceY);
-        if (projectileDistanceX != 0)
-        {
-            unitCircleX = projectileDistanceX / hyp;
-//            projectileDistanceX /= hyp;
-        }
-        if (projectileDistanceY != 0)
-        {
-            unitCircleY = projectileDistanceY / hyp;
-//            projectileDistanceY /= hyp;
-        }
-
-        double radian = Math.atan2(unitCircleY, unitCircleX);
-        angle = radian * (180 / Math.PI);
-        if (angle < 0.0)
-        {
-            angle += 360.0;
-        }
-
-        if (angle > 202.5 && angle < 247.5)
-        {
-            direction = "upLeft";
-        } else if (angle >= 247.5 && angle <= 292.5)
-        {
-            direction = "up";
-        } else if (angle > 292.5 && angle < 337.5)
-        {
-            direction = "upRight";
-        }
-        else if ((angle >= 337.5 && angle <= 360.0) || angle <= 22.5)
-        {
-            direction = "right";
-        } else if (angle > 22.5 && angle < 67.5)
-        {
-            direction = "downRight";
-        } else if (angle >= 67.5 && angle <= 112.5)
-        {
-            direction = "down";
-        } else if (angle > 112.5 && angle < 157.5)
-        {
-            direction = "downLeft";
-        } else if (angle >= 157.5 && angle <= 202.5)
-        {
-            direction = "left";
-        }
-        else
-        {
-            attacking = false;
-        }
-
     }
 
     public void pickUpObject(int index) {
