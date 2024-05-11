@@ -226,10 +226,6 @@ public class UI
     private void drawPlayerHUD()
     {
         drawPlayerLife();
-//        if (!gp.player.alive)
-//        {
-//            drawDeathText();
-//        }
     }
 
     private void drawPlayerLife()

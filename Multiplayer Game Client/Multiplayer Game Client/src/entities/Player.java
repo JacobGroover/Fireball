@@ -14,6 +14,8 @@ import java.awt.image.BufferedImage;
 
 public class Player extends Entity {
     public static volatile boolean respawned = false;     // Used to notify the GamePanel Thread when the server has logged the player choosing to respawn after GAME_OVER_STATE respawn option is chosen
+    public boolean freshSpawn;
+    public int freshSpawnCounter;
 
     KeyHandler keyH;
     MouseHandler mouseH;
@@ -68,9 +70,12 @@ public class Player extends Entity {
         alive = true;
         dying = false;
         isBurning = false;
-        deathType = null;
+        deathType = "fire";
         dyingCounter1 = 360;
         dyingCounter2 = 24;
+
+        freshSpawn = true;
+        freshSpawnCounter = 60;
     }
 
     private void getPlayerAttackImages(String imagePath)
@@ -101,6 +106,20 @@ public class Player extends Entity {
 
     public void update()
     {
+
+        // Check for collision on spawn, move until not spawning inside another Entity
+        if (freshSpawn)
+        {
+            if (freshSpawnCounter > 0)
+            {
+                gp.cChecker.checkEntitiesOnSpawn(this, Client.otherPlayers);
+            }
+            else
+            {
+                freshSpawn = false;
+            }
+        }
+
         // CHECK FOR DAMAGE OVER TIME
         if (isBurning)
         {
@@ -202,9 +221,11 @@ public class Player extends Entity {
                     velocityX *= speed;
                     velocityY *= speed;
 
+                    // Reset collision
+                    xCollisionOn = false;
+                    yCollisionOn = false;
+
                     // Check for tile collision
-    //                xCollisionOn = false;
-    //                yCollisionOn = false;
                     gp.cChecker.checkTile(this);
 
                     // Check for object collision
@@ -251,9 +272,6 @@ public class Player extends Entity {
             }
         }
 
-        xCollisionOn = false;
-        yCollisionOn = false;
-
         // UPDATE COOLDOWN TIMERS
         if (mouseH.playPressed1Cooldown)
         {
@@ -292,6 +310,7 @@ public class Player extends Entity {
 
         velocityX = 0;
         velocityY = 0;
+
     }
 
     private void attackingAnimation()

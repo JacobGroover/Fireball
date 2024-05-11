@@ -15,7 +15,7 @@ public class CollisionChecker {
         this.gp = gp;
     }
 
-    public void checkTile(Entity entity)
+    public boolean checkTile(Entity entity)     // boolean return added for use when a Player is spawning and checks its collision against tiles
     {
         double worldX = Player.worldX;
         double worldY = Player.worldY;
@@ -153,7 +153,7 @@ public class CollisionChecker {
                     break;
             }
         }
-
+        return entity.xCollisionOn || entity.yCollisionOn;
     }
 
     public int checkObject(Entity entity, boolean isPlayer)
@@ -286,6 +286,158 @@ public class CollisionChecker {
             }
 
         }
+        return index;
+    }
+
+    // Check Entity spawn collision
+    public int checkEntitiesOnSpawn(Entity entity, ArrayList<? extends Entity> target)
+    {
+        boolean colliding;
+        int index;
+        do
+        {
+            double worldX = Player.worldX;
+            double worldY = Player.worldY;
+            if (!(entity instanceof Player))
+            {
+                worldX = entity.worldX;
+                worldY = entity.worldY;
+            }
+
+            colliding = false;
+            index = -1;
+            for (int i = 0; i < target.size(); i++)
+            {
+                boolean continueCheck = true;
+
+                if (entity instanceof Projectile && target.get(i) instanceof Projectile)
+                {
+                    if (!((Projectile) entity).detonated && !((Projectile) target.get(i)).detonated)
+                    {
+                        if (entity == target.get(i))
+                        {
+                            continueCheck = false;
+                        }
+                    }
+                    if (!((Projectile) entity).detonated && ((Projectile) target.get(i)).detonated)
+                    {
+                        continueCheck = false;
+                    }
+                    if (((Projectile) entity).detonated && ((Projectile) target.get(i)).detonated)
+                    {
+                        continueCheck = false;
+                    }
+
+                    if (((Projectile) entity).detonated && !((Projectile) target.get(i)).detonated)
+                    {
+                        continueCheck = false;
+                    }
+
+                }
+
+                if (target.get(i) instanceof OtherPlayer && !((OtherPlayer) target.get(i)).joinedGame)
+                {
+                    continueCheck = false;
+                }
+                // If target is the owner of the projectile, and the projectile is not detonating, then check collision (implication logic)
+                // equivalent implication logic: (Client.otherPlayers.get(entityIndex) == this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && detonating) || (Client.otherPlayers.get(entityIndex) != this.owner && !detonating)
+                if (entity instanceof Projectile && (((Projectile) entity).owner == target.get(i) && !((Projectile) entity).detonated))
+                {
+                    continueCheck = false;
+                }
+
+                if (continueCheck)
+                {
+                    if (target.get(i) != null)
+                    {
+                        // Get entity's solid area position
+                        entity.solidArea.x = (int)worldX + entity.solidArea.x;
+                        entity.solidArea.y = (int)worldY + entity.solidArea.y;
+
+                        // Get object's solid area position
+                        target.get(i).solidArea.x = (int)target.get(i).worldX + target.get(i).solidArea.x;
+                        target.get(i).solidArea.y = (int)target.get(i).worldY + target.get(i).solidArea.y;
+
+                        if (entity.solidArea.intersects(target.get(i).solidArea))
+                        {
+                            colliding = true;
+                            if (entity instanceof Projectile && target.get(i) instanceof Projectile)
+                            {
+                                ((Projectile) target.get(i)).detonated = true;
+                            }
+                            index = i;
+                        }
+                    }
+                }
+
+                if (target.get(i) != null)
+                {
+                    if (entity instanceof Projectile && colliding && !((Projectile) entity).detonated && ((Projectile) entity).owner != target.get(i))
+                    {
+                        entity.worldX = target.get(i).worldX;
+                        entity.worldY = target.get(i).worldY;
+                        colliding = false;
+                    }
+
+                    entity.solidArea.x = entity.solidAreaDefaultX;
+                    entity.solidArea.y = entity.solidAreaDefaultY;
+                    target.get(i).solidArea.x = target.get(i).solidAreaDefaultX;
+                    target.get(i).solidArea.y = target.get(i).solidAreaDefaultY;
+                }
+
+            }
+
+            if (colliding)
+            {
+                int shiftPosition = (int) (Math.random() * 100);
+                if (shiftPosition < 25)
+                {
+                    if (entity instanceof Player)
+                    {
+                        Player.worldX += gp.tileSize;
+                    }
+                    else
+                    {
+                        entity.worldX += gp.tileSize;
+                    }
+                }
+                if (shiftPosition < 50)
+                {
+                    if (entity instanceof Player)
+                    {
+                        Player.worldY += gp.tileSize;
+                    }
+                    else
+                    {
+                        entity.worldY += gp.tileSize;
+                    }
+                }
+                if (shiftPosition < 75)
+                {
+                    if (entity instanceof Player)
+                    {
+                        Player.worldX -= gp.tileSize;
+                    }
+                    else
+                    {
+                        entity.worldX -= gp.tileSize;
+                    }
+                }
+                if (shiftPosition < 100)
+                {
+                    if (entity instanceof Player)
+                    {
+                        Player.worldY -= gp.tileSize;
+                    }
+                    else
+                    {
+                        entity.worldY -= gp.tileSize;
+                    }
+                }
+            }
+        } while (colliding);
+
+
         return index;
     }
 
@@ -523,7 +675,14 @@ public class CollisionChecker {
 
             switch (entity.direction) {
                 case "up":
-                    entity.solidArea.y -= entity.speed;
+                    if (entity instanceof Projectile)
+                    {
+                        entity.solidArea.y -= (entity.speed + 2);
+                    }
+                    else
+                    {
+                        entity.solidArea.y -= entity.speed;
+                    }
                     if (entity.solidArea.intersects(target.solidArea))
                     {
                         entity.yCollisionOn = true;
@@ -531,7 +690,14 @@ public class CollisionChecker {
                     }
                     break;
                 case "down":
-                    entity.solidArea.y += entity.speed;
+                    if (entity instanceof Projectile)
+                    {
+                        entity.solidArea.y += (entity.speed + 2);
+                    }
+                    else
+                    {
+                        entity.solidArea.y += entity.speed;
+                    }
                     if (entity.solidArea.intersects(target.solidArea))
                     {
                         entity.yCollisionOn = true;
@@ -539,7 +705,14 @@ public class CollisionChecker {
                     }
                     break;
                 case "left":
-                    entity.solidArea.x -= entity.speed;
+                    if (entity instanceof Projectile)
+                    {
+                        entity.solidArea.x -= (entity.speed + 2);
+                    }
+                    else
+                    {
+                        entity.solidArea.x -= entity.speed;
+                    }
                     if (entity.solidArea.intersects(target.solidArea))
                     {
                         entity.xCollisionOn = true;
@@ -547,7 +720,14 @@ public class CollisionChecker {
                     }
                     break;
                 case "right":
-                    entity.solidArea.x += entity.speed;
+                    if (entity instanceof Projectile)
+                    {
+                        entity.solidArea.x += (entity.speed + 2);
+                    }
+                    else
+                    {
+                        entity.solidArea.x += entity.speed;
+                    }
                     if (entity.solidArea.intersects(target.solidArea))
                     {
                         entity.xCollisionOn = true;
@@ -555,8 +735,22 @@ public class CollisionChecker {
                     }
                     break;
                 case "upRight":
-                    entity.solidArea.x += entity.speed;
-                    entity.solidArea.y -= entity.speed;
+                    if (entity instanceof Projectile)
+                    {
+                        entity.solidArea.x += (entity.speed + 2);
+                    }
+                    else
+                    {
+                        entity.solidArea.x += entity.speed;
+                    }
+                    if (entity instanceof Projectile)
+                    {
+                        entity.solidArea.y -= (entity.speed + 2);
+                    }
+                    else
+                    {
+                        entity.solidArea.y -= entity.speed;
+                    }
                     if (entity.solidArea.intersects(target.solidArea))
                     {
                         entity.xCollisionOn = true;
@@ -565,8 +759,22 @@ public class CollisionChecker {
                     }
                     break;
                 case "upLeft":
-                    entity.solidArea.x -= entity.speed;
-                    entity.solidArea.y -= entity.speed;
+                    if (entity instanceof Projectile)
+                    {
+                        entity.solidArea.x -= (entity.speed + 2);
+                    }
+                    else
+                    {
+                        entity.solidArea.x -= entity.speed;
+                    }
+                    if (entity instanceof Projectile)
+                    {
+                        entity.solidArea.y -= (entity.speed + 2);
+                    }
+                    else
+                    {
+                        entity.solidArea.y -= entity.speed;
+                    }
                     if (entity.solidArea.intersects(target.solidArea))
                     {
                         entity.xCollisionOn = true;
@@ -575,8 +783,22 @@ public class CollisionChecker {
                     }
                     break;
                 case "downRight":
-                    entity.solidArea.x += entity.speed;
-                    entity.solidArea.y += entity.speed;
+                    if (entity instanceof Projectile)
+                    {
+                        entity.solidArea.x += (entity.speed + 2);
+                    }
+                    else
+                    {
+                        entity.solidArea.x += entity.speed;
+                    }
+                    if (entity instanceof Projectile)
+                    {
+                        entity.solidArea.y += (entity.speed + 2);
+                    }
+                    else
+                    {
+                        entity.solidArea.y += entity.speed;
+                    }
                     if (entity.solidArea.intersects(target.solidArea))
                     {
                         entity.xCollisionOn = true;
@@ -585,8 +807,22 @@ public class CollisionChecker {
                     }
                     break;
                 case "downLeft":
-                    entity.solidArea.x -= entity.speed;
-                    entity.solidArea.y += entity.speed;
+                    if (entity instanceof Projectile)
+                    {
+                        entity.solidArea.x -= (entity.speed + 2);
+                    }
+                    else
+                    {
+                        entity.solidArea.x -= entity.speed;
+                    }
+                    if (entity instanceof Projectile)
+                    {
+                        entity.solidArea.y += (entity.speed + 2);
+                    }
+                    else
+                    {
+                        entity.solidArea.y += entity.speed;
+                    }
                     if (entity.solidArea.intersects(target.solidArea))
                     {
                         entity.xCollisionOn = true;

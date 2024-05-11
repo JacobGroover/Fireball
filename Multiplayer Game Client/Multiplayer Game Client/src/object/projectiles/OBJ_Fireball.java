@@ -19,7 +19,7 @@ public class OBJ_Fireball extends Projectile
         solidAreaDefaultY = solidArea.y;
 
         name = "Fireball";
-        speed = 5;
+        speed = 10;
         maxLife = 20;
         life = maxLife;
         attack = 20;

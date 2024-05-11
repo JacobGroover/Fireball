@@ -36,6 +36,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener
             {
                 gp.joinedGame = true;
                 gp.gameState = gp.PLAY_STATE;
+                gp.player.setDefaultValues();
             }
             else if (mainMenuHover2)
             {
@@ -67,17 +68,11 @@ public class MouseHandler implements MouseListener, MouseMotionListener
         {
             if (gameOverHover1)
             {
-//                gameOverHover1 = false;
                 gp.joinedGame = false;
                 gp.player.setDefaultValues();
-//                gp.gameState = gp.MAIN_MENU_STATE;
                 Player.respawned = true;
                 gp.gameState = gp.PLAY_STATE;
-//                gp.joinedGame = true;
-//                gp.gameState = gp.PLAY_STATE;
 
-//                gp.joinedGame = true;
-//                gp.gameState = gp.PLAY_STATE;
             }
         }
     }

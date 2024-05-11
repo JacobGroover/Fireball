@@ -58,7 +58,7 @@ public abstract class Entity {
     public boolean dying;
     public int dyingCounter1;
     public int dyingCounter2;
-    protected String deathType;
+    protected String deathType = "fire";    // Once more deathTypes are added to the game, another "generic" deathType needs to be added and set as the default. Until then, this avoids possible null pointer exceptions
     public int speed;
     public int maxLife;
     public int life;
@@ -441,7 +441,6 @@ public abstract class Entity {
                     gp.gameState = gp.GAME_OVER_STATE;
                 }
             }
-//            alive = false;
             if (this instanceof Player || this instanceof OtherPlayer)
             {
                 dyingCounter1 = 48;     // For multiplayer games. Keeps death animation running until the dead player leaves the game or respawns

@@ -51,7 +51,7 @@ public class OtherPlayer extends Entity {
         alive = true;
         dying = false;
         isBurning = false;
-        deathType = null;
+        deathType = "fire";
         dyingCounter1 = 360;
         dyingCounter2 = 24;
 
