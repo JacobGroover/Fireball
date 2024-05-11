@@ -15,6 +15,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener
     public boolean mainMenuHover1, mainMenuHover2, mainMenuHover3;
     public boolean characterMenuHover1;
     public boolean gameMenuHover1;
+    public boolean gameOverHover1;
     public boolean playPressed1;
     public boolean playPressed1Cooldown;
 
@@ -59,8 +60,24 @@ public class MouseHandler implements MouseListener, MouseMotionListener
             if (gameMenuHover1)
             {
                 gp.joinedGame = false;
-//                Client.otherPlayers.clear();
+                gp.player.setDefaultValues();
                 gp.gameState = gp.MAIN_MENU_STATE;
+            }
+        } else if (gp.gameState == gp.GAME_OVER_STATE)
+        {
+            if (gameOverHover1)
+            {
+//                gameOverHover1 = false;
+                gp.joinedGame = false;
+                gp.player.setDefaultValues();
+//                gp.gameState = gp.MAIN_MENU_STATE;
+                Player.respawned = true;
+                gp.gameState = gp.PLAY_STATE;
+//                gp.joinedGame = true;
+//                gp.gameState = gp.PLAY_STATE;
+
+//                gp.joinedGame = true;
+//                gp.gameState = gp.PLAY_STATE;
             }
         }
     }
@@ -70,11 +87,14 @@ public class MouseHandler implements MouseListener, MouseMotionListener
     {
         if (gp.gameState == gp.PLAY_STATE)
         {
-            if (e.getButton() == MouseEvent.BUTTON1 && !playPressed1Cooldown)
+            if (gp.player.alive)
             {
-                mouseX = e.getX();
-                mouseY = e.getY();
-                playPressed1 = true;
+                if (e.getButton() == MouseEvent.BUTTON1 && !playPressed1Cooldown)
+                {
+                    mouseX = e.getX();
+                    mouseY = e.getY();
+                    playPressed1 = true;
+                }
             }
         }
     }
@@ -161,7 +181,20 @@ public class MouseHandler implements MouseListener, MouseMotionListener
         }
         else if (gp.gameState == gp.PLAY_STATE)
         {
-
+//            if (!gp.player.alive)
+//            {
+//                if (e.getX() > gp.ui.getCenteredTextX("RESPAWN") &&
+//                        e.getX() < gp.ui.getCenteredTextX("RESPAWN") + (int)gp.ui.g2.getFontMetrics().getStringBounds("RESPAWN", gp.ui.g2).getWidth() &&
+//                        e.getY() > (int)(gp.screenHeight * 0.75) - (int)gp.ui.g2.getFontMetrics().getStringBounds("RESPAWN", gp.ui.g2).getHeight() + 20 &&
+//                        e.getY() < (int)(gp.screenHeight * 0.75) + 15)
+//                {
+//                    gameOverHover1 = true;
+//                }
+//                else
+//                {
+//                    gameOverHover1 = false;
+//                }
+//            }
         }
         else if (gp.gameState == gp.GAME_MENU_STATE)
         {
@@ -175,6 +208,23 @@ public class MouseHandler implements MouseListener, MouseMotionListener
             else
             {
                 gameMenuHover1 = false;
+            }
+
+            // This line prevents a bug where hovering over RESPAWN text after dying was causing player to teleport back to default spawn if they instead chose to exit to main menu and then clicked play
+//            gameOverHover1 = false;
+        }
+        else if (gp.gameState == gp.GAME_OVER_STATE)
+        {
+            if (e.getX() > gp.ui.getCenteredTextX("RESPAWN") &&
+                    e.getX() < gp.ui.getCenteredTextX("RESPAWN") + (int)gp.ui.g2.getFontMetrics().getStringBounds("RESPAWN", gp.ui.g2).getWidth() &&
+                    e.getY() > (int)(gp.screenHeight * 0.75) - (int)gp.ui.g2.getFontMetrics().getStringBounds("RESPAWN", gp.ui.g2).getHeight() + 20 &&
+                    e.getY() < (int)(gp.screenHeight * 0.75) + 15)
+            {
+                gameOverHover1 = true;
+            }
+            else
+            {
+                gameOverHover1 = false;
             }
         }
     }

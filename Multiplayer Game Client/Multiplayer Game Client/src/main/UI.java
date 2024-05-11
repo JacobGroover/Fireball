@@ -43,7 +43,8 @@ public class UI
         messageOn = true;
     }
 
-    public void draw(Graphics2D g2) {
+    public void draw(Graphics2D g2)
+    {
 
         this.g2 = g2;   // GAME STATE
 
@@ -60,7 +61,7 @@ public class UI
             drawSelectCharacterScreen();
         }
 
-        if (gp.gameState == gp.PLAY_STATE || gp.gameState == gp.GAME_MENU_STATE)
+        if (gp.gameState == gp.PLAY_STATE || gp.gameState == gp.GAME_OVER_STATE || gp.gameState == gp.GAME_MENU_STATE)
         {
             playTime += (double)1/60;
             if (gp.gameState == gp.PLAY_STATE)
@@ -68,6 +69,10 @@ public class UI
                 drawPlayScreen();
             }
             drawPlayerHUD();
+            if (gp.gameState == gp.GAME_OVER_STATE)
+            {
+                drawGameOverScreen();
+            }
             if (gp.gameState == gp.GAME_MENU_STATE)
             {
                 drawGameMenuScreen();
@@ -221,6 +226,10 @@ public class UI
     private void drawPlayerHUD()
     {
         drawPlayerLife();
+//        if (!gp.player.alive)
+//        {
+//            drawDeathText();
+//        }
     }
 
     private void drawPlayerLife()
@@ -248,9 +257,48 @@ public class UI
         }
     }
 
+    private void drawGameOverScreen()
+    {
+        g2.setColor(new Color(0, 0, 0, 0.2f));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+        // Set font and get positioning for death text
+        g2.setFont(g2.getFont().deriveFont(Font.ITALIC + Font.BOLD, 80F));
+        String deathText = "YOU HAVE DIED";
+        int x1 = getCenteredTextX(deathText);
+        int y1 = gp.screenHeight/2;
+
+        // draw death text shadow
+        g2.setColor(Color.BLACK);
+        g2.drawString(deathText, x1+3, y1+3);
+
+        // draw death text
+        g2.setColor(new Color(180, 0, 0, 180));
+        g2.drawString(deathText, x1, y1);
+
+        // Set font and get positioning for respawn text
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));
+        String respawnText = "RESPAWN";
+        int x2 = getCenteredTextX(respawnText);
+        int y2 = (int) (gp.screenHeight * 0.75);
+
+        // draw respawn text shadow
+        g2.setColor(Color.BLACK);
+        g2.drawString(respawnText, x2+3, y2+3);
+
+        // draw respawn text
+        g2.setColor(Color.WHITE);
+        if (gp.mouseHandler.gameOverHover1)
+        {
+            g2.setColor(Color.GREEN);
+        }
+        g2.drawString(respawnText, x2, y2);
+        g2.setColor(Color.WHITE);
+    }
+
     public void drawGameMenuScreen()
     {
-        g2.setColor(new Color(0, 0, 0, 150));
+        g2.setColor(new Color(0, 0, 0, 0.6f));
         g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
         g2.fillRect(gp.screenWidth/6, gp.screenHeight/16, 4 * (gp.screenWidth/6), 14 * (gp.screenHeight/16));

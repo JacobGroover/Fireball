@@ -14,8 +14,7 @@ import java.awt.*;
 public class OtherPlayer extends Entity {
 
     public String clientUserName;
-    //private double lastWorldX;  // UDP
-    //private double lastWorldY;  // UDP
+    public boolean respawned;
     public int hasKey = 0;
     public boolean joinedGame;
     public int mouseX;
@@ -33,11 +32,10 @@ public class OtherPlayer extends Entity {
         setDefaultValues(clientUserName);
         getImages("/player/FillerPlayer");
         getPlayerAttackImages("/player/attack/FillerPlayerCast");
+        getPlayerDeathImages("/player/death/BurningDeath");
     }
 
     public void setDefaultValues(String clientUserName) {
-        //this.lastWorldX = 0.0;   // UDP
-        //this.lastWorldY = 0.0;   // UDP
         startX = 23.00;
         startY = 21.00;
         this.worldX = gp.tileSize * startX;
@@ -47,10 +45,18 @@ public class OtherPlayer extends Entity {
         this.clientUserName = clientUserName;
         velocityX = 0;
         velocityY = 0;
-        joinedGame = true;
-
         maxLife = 100;
         life = maxLife;
+
+        alive = true;
+        dying = false;
+        isBurning = false;
+        deathType = null;
+        dyingCounter1 = 360;
+        dyingCounter2 = 24;
+
+        joinedGame = true;
+        respawned = false;
     }
 
     private void getPlayerAttackImages(String imagePath)
@@ -65,12 +71,25 @@ public class OtherPlayer extends Entity {
         attackDownRight1 = setup(imagePath + "DownRight1");
     }
 
+    private void getPlayerDeathImages(String imagePath)
+    {
+        burningDeath1 = setup(imagePath + "1");
+        burningDeath2 = setup(imagePath + "2");
+        burningDeath3 = setup(imagePath + "3");
+        burningDeath4 = setup(imagePath + "4");
+        burningDeath5 = setup(imagePath + "5");
+        burningDeath6 = setup(imagePath + "6");
+        burningDeath7 = setup(imagePath + "7");
+        burningDeath8 = setup(imagePath + "8");
+        burningDeath9 = setup(imagePath + "9");
+        burningDeath10 = setup(imagePath + "10");
+    }
+
     public void update()
     {
-
-        if (attacking)
+        if (respawned)
         {
-            attackingAnimation();
+            setDefaultValues(this.clientUserName);
         }
 
         // CHECK FOR DAMAGE OVER TIME
@@ -87,94 +106,114 @@ public class OtherPlayer extends Entity {
             dotBurningDmgCounter--;
         }
 
-        // CHECK FOR SKILL/ABILITY INPUTS
-        if (gp.gameState == gp.PLAY_STATE && skill1)
+        if (!dying)
         {
-            spriteNum = 1;
-            attacking = true;
-            skill1 = false;
-            attacking(mouseX, mouseY);
-        }
-
-        if (!attacking)
-        {
-            if (velocityX != 0 || velocityY != 0)
+            // CHECK FOR DEATH
+            if (life <= 0)
             {
+                dying = true;
+                if (isBurning)
+                {
+                    dyingCounter1 = 360;
+                    dyingCounter2 = 24;
+                    deathType = "fire";
+                }
+            }
 
+            if (attacking)
+            {
+                attackingAnimation();
+            }
 
-                if (velocityX == 0 && velocityY < 0) {
-                    direction = "up";
-                }
-                if (velocityX == 0 && velocityY > 0) {
-                    direction = "down";
-                }
-                if (velocityX < 0 && velocityY == 0) {
-                    direction = "left";
-                }
-                if (velocityX > 0 && velocityY == 0) {
-                    direction = "right";
-                }
-
-                if (velocityX < 0 && velocityY < 0) {
-                    direction = "upLeft";
-                }
-                if (velocityX > 0 && velocityY < 0) {
-                    direction = "upRight";
-                }
-                if (velocityX < 0 && velocityY > 0) {
-                    direction = "downLeft";
-                }
-                if (velocityX > 0 && velocityY > 0) {
-                    direction = "downRight";
-                }
-
-                // Normalize movement vector
-                double length = Math.sqrt((velocityX * velocityX) + (velocityY * velocityY));
-
-                if (velocityX != 0) {
-                    velocityX /= length;
-                }
-                if (velocityY != 0) {
-                    velocityY /= length;
-                }
-
-                velocityX *= speed;
-                velocityY *= speed;
-
-                // Check for tile collision
-                gp.cChecker.checkTile(this);
-
-                // Check for object collision
-                int objIndex = gp.cChecker.checkObject(this, true);
-                pickUpObject(objIndex);
-
-                // Check for Player collision (unnecessary due to OtherPlayer collision check in Player.java)
-                //gp.cChecker.checkPlayer(this);
-
-                if (!xCollisionOn) {
-                    //lastWorldX += velocityX;    // UDP
-                    worldX += velocityX;
-                }
-                if (!yCollisionOn) {
-                    //lastWorldY += velocityY;    // UDP
-                    worldY += velocityY;
-                }
-
-                spriteCounter++;
-                if (velocityX == 0 && velocityY == 0) {
-                    spriteNum = 1;
-                } else if (spriteCounter > 8) {
-                    if (spriteNum == 1) {
-                        spriteNum = 2;
-                    } else if (spriteNum == 2) {
-                        spriteNum = 3;
-                    } else if (spriteNum == 3) {
-                        spriteNum = 2;
-                    }
-                    spriteCounter = 0;
-                }
-            } else {
+            // CHECK FOR SKILL/ABILITY INPUTS
+            if (gp.gameState == gp.PLAY_STATE && skill1)
+            {
                 spriteNum = 1;
+                attacking = true;
+                skill1 = false;
+                attacking(mouseX, mouseY);
+            }
+
+            if (!attacking)
+            {
+                if (velocityX != 0 || velocityY != 0)
+                {
+
+
+                    if (velocityX == 0 && velocityY < 0) {
+                        direction = "up";
+                    }
+                    if (velocityX == 0 && velocityY > 0) {
+                        direction = "down";
+                    }
+                    if (velocityX < 0 && velocityY == 0) {
+                        direction = "left";
+                    }
+                    if (velocityX > 0 && velocityY == 0) {
+                        direction = "right";
+                    }
+
+                    if (velocityX < 0 && velocityY < 0) {
+                        direction = "upLeft";
+                    }
+                    if (velocityX > 0 && velocityY < 0) {
+                        direction = "upRight";
+                    }
+                    if (velocityX < 0 && velocityY > 0) {
+                        direction = "downLeft";
+                    }
+                    if (velocityX > 0 && velocityY > 0) {
+                        direction = "downRight";
+                    }
+
+                    // Normalize movement vector
+                    double length = Math.sqrt((velocityX * velocityX) + (velocityY * velocityY));
+
+                    if (velocityX != 0) {
+                        velocityX /= length;
+                    }
+                    if (velocityY != 0) {
+                        velocityY /= length;
+                    }
+
+                    velocityX *= speed;
+                    velocityY *= speed;
+
+                    // Check for tile collision
+                    gp.cChecker.checkTile(this);
+
+                    // Check for object collision
+                    int objIndex = gp.cChecker.checkObject(this, true);
+                    pickUpObject(objIndex);
+
+                    // Check for Player collision (unnecessary due to OtherPlayer collision check in Player.java)
+                    //gp.cChecker.checkPlayer(this);
+
+                    if (!xCollisionOn) {
+                        //lastWorldX += velocityX;    // UDP
+                        worldX += velocityX;
+                    }
+                    if (!yCollisionOn) {
+                        //lastWorldY += velocityY;    // UDP
+                        worldY += velocityY;
+                    }
+
+                    spriteCounter++;
+                    if (velocityX == 0 && velocityY == 0) {
+                        spriteNum = 1;
+                    } else if (spriteCounter > 8) {
+                        if (spriteNum == 1) {
+                            spriteNum = 2;
+                        } else if (spriteNum == 2) {
+                            spriteNum = 3;
+                        } else if (spriteNum == 3) {
+                            spriteNum = 2;
+                        }
+                        spriteCounter = 0;
+                    }
+                } else {
+                    spriteNum = 1;
+                }
             }
         }
 

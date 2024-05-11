@@ -11,6 +11,7 @@ import main.UtilityTool;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -25,6 +26,7 @@ public abstract class Entity {
     public BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, left3, right1, right2, right3,
             upLeft1, upLeft2, upLeft3, upRight1, upRight2, upRight3, downLeft1, downLeft2, downLeft3, downRight1, downRight2, downRight3;
     public BufferedImage attackUp1, attackDown1, attackLeft1, attackRight1, attackUpLeft1, attackUpRight1, attackDownLeft1, attackDownRight1;
+    public BufferedImage burningDeath1, burningDeath2, burningDeath3, burningDeath4, burningDeath5, burningDeath6, burningDeath7, burningDeath8, burningDeath9, burningDeath10;
 
     // Images for visual effects applied to an Entity
     public BufferedImage burning1, burning2;
@@ -54,7 +56,9 @@ public abstract class Entity {
     // ENTITY STATS
     public boolean alive;
     public boolean dying;
-    public int dyingCounter;
+    public int dyingCounter1;
+    public int dyingCounter2;
+    protected String deathType;
     public int speed;
     public int maxLife;
     public int life;
@@ -218,6 +222,7 @@ public abstract class Entity {
     {
 
         BufferedImage image = null;
+
         switch (direction) {
             case "up":
                 if (attacking)
@@ -341,6 +346,12 @@ public abstract class Entity {
                 break;
         }
 
+
+        if (dying)
+        {
+            image = dyingAnimation(graphics2, image);
+        }
+
         if (isBurning)
         {
             if (dotBurningVfxCounter == 0)
@@ -364,6 +375,79 @@ public abstract class Entity {
 
         drawImage(graphics2, image);
 
+    }
+
+    private BufferedImage dyingAnimation(Graphics2D graphics2, BufferedImage image)
+    {
+        if (deathType.equals("fire"))
+        {
+            if (dyingCounter1 > 348 && dyingCounter1 <= 360)
+            {
+                image = burningDeath1;
+            }
+            if (dyingCounter1 > 336 && dyingCounter1 <= 348)
+            {
+                image = burningDeath2;
+            }
+            if (dyingCounter1 > 324 && dyingCounter1 <= 336)
+            {
+                image = burningDeath3;
+            }
+            if (dyingCounter1 > 312 && dyingCounter1 <= 324)
+            {
+                image = burningDeath4;
+            }
+            if (dyingCounter1 > 300 && dyingCounter1 <= 312)
+            {
+                image = burningDeath5;
+            }
+            if (dyingCounter1 > 288 && dyingCounter1 <= 300)
+            {
+                image = burningDeath6;
+            }
+            if (dyingCounter1 > 0 && dyingCounter1 <= 288)
+            {
+                if (dyingCounter1 % 48 == 0)
+                {
+                    dyingCounter2 = 48;
+                }
+                if ((dyingCounter2 > 36 && dyingCounter2 <= 48) || (dyingCounter2 > 12 && dyingCounter2 <= 24))
+                {
+                    image = burningDeath7;
+                }
+                if ((dyingCounter2 > 24 && dyingCounter2 <= 36) || dyingCounter2 <= 12)
+                {
+                    image = burningDeath8;
+                }
+                if (dyingCounter2 > 24 && dyingCounter2 <= 48)
+                {
+                    drawImage(graphics2, burningDeath9);
+                }
+                if (dyingCounter2 <= 24)
+                {
+                    drawImage(graphics2, burningDeath10);
+                }
+
+                dyingCounter2--;
+            }
+        }
+        dyingCounter1--;
+        if (dyingCounter1 <= 0)
+        {
+            if (this instanceof Player)
+            {
+                if (gp.gameState != gp.GAME_MENU_STATE)
+                {
+                    gp.gameState = gp.GAME_OVER_STATE;
+                }
+            }
+//            alive = false;
+            if (this instanceof Player || this instanceof OtherPlayer)
+            {
+                dyingCounter1 = 48;     // For multiplayer games. Keeps death animation running until the dead player leaves the game or respawns
+            }
+        }
+        return image;
     }
 
     protected void drawImage(Graphics2D graphics2, BufferedImage image)

@@ -52,8 +52,15 @@ public class TcpHandler extends ClientHandler implements Runnable
             if (messageFromClient.startsWith("*"))
             {
                 String[] tokens = messageFromClient.split("\\*");
-                this.setJoinedGame(Boolean.parseBoolean(tokens[2].substring(0, 4)));
-                broadcastJoinGame(tokens[1], Boolean.parseBoolean(tokens[2].substring(0, 4)));
+                if (tokens.length < 4)
+                {
+                    this.setJoinedGame(Boolean.parseBoolean(tokens[2].substring(0, 4)));
+                    broadcastJoinGame(tokens[1], Boolean.parseBoolean(tokens[2].substring(0, 4)));
+                }
+                else
+                {
+                    broadcastJoinGame(tokens[1], Boolean.parseBoolean(tokens[2].substring(0, 4)), Boolean.parseBoolean(tokens[3].substring(0, 4)));
+                }
             }
             else if (messageFromClient.startsWith("-"))
             {
@@ -152,6 +159,65 @@ public class TcpHandler extends ClientHandler implements Runnable
             try
             {
                 this.bufferedWriter.write("*" + clientUsername + "*" + joinedGame);
+                this.bufferedWriter.newLine();
+                this.bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+
+            } catch (IOException ioe)
+            {
+                closeEverything(TCPSocket, bufferedReader, bufferedWriter);
+            }
+
+        }
+
+    }
+
+    public void broadcastJoinGame(String clientUsername, boolean joinedGame, boolean respawned)
+    {
+
+        if (joinedGame)
+        {
+            for (int i = 0; i < clientDataAL.size(); i++)
+            {
+                if (!clientDataAL.get(i).getClientUsername().equals(clientUsername) && clientDataAL.get(i).getJoinedGame())
+                {
+                    try
+                    {
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write("*" + clientUsername + "*" + joinedGame);
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+
+                        this.bufferedWriter.write("*" + clientDataAL.get(i).getClientUsername() + "*" + clientDataAL.get(i).getJoinedGame());
+                        this.bufferedWriter.newLine();
+                        this.bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+
+                    } catch (IOException ioe)
+                    {
+                        closeEverything(TCPSocket, bufferedReader, bufferedWriter);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < clientDataAL.size(); i++)
+            {
+                if (!clientDataAL.get(i).getClientUsername().equals(clientUsername) && clientDataAL.get(i).getJoinedGame())
+                {
+                    try
+                    {
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write("*" + clientUsername + "*" + joinedGame + "*" + respawned);
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
+                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+
+                    } catch (IOException ioe)
+                    {
+                        closeEverything(TCPSocket, bufferedReader, bufferedWriter);
+                    }
+                }
+            }
+            try
+            {
+                this.bufferedWriter.write("*" + clientUsername + "*" + joinedGame + "*" + respawned);
                 this.bufferedWriter.newLine();
                 this.bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
 

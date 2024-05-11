@@ -55,10 +55,12 @@ public class GamePanel extends JPanel implements Runnable
 
     // GAME STATE
     public int gameState;
+    public int previousGameState;
     public final int MAIN_MENU_STATE = 0;
     public final int PLAY_STATE = 1;
     public final int SELECT_CHARACTER_STATE = 2;
     public final int GAME_MENU_STATE = 3;
+    public final int GAME_OVER_STATE = 4;
 
     public volatile boolean joinedGame;
 
@@ -174,7 +176,7 @@ public class GamePanel extends JPanel implements Runnable
      *
      */
     public void update() {
-        if (gameState == PLAY_STATE || gameState == GAME_MENU_STATE)
+        if (gameState == PLAY_STATE || gameState == GAME_MENU_STATE || gameState == GAME_OVER_STATE)
         {
             player.update();
 
@@ -184,7 +186,6 @@ public class GamePanel extends JPanel implements Runnable
                 {
                     otherPlayer.update();
                 }
-                //otherPlayer.update();
             }
 
             for (int i = 0; i < projectileAL.size(); i++)

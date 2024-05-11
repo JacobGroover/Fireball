@@ -44,15 +44,31 @@ public class TCPClient extends Client
 
                     if (changedGameState != gp.joinedGame)
                     {
-                        try
+                        if (gp.gameState != gp.GAME_OVER_STATE)
                         {
-                            bufferedWriter.write("*" + clientUsername + "*" + gp.joinedGame);
-                            bufferedWriter.newLine();
-                            bufferedWriter.flush();
-                            changedGameState = gp.joinedGame;
-                        } catch (IOException ioe)
+                            try
+                            {
+                                bufferedWriter.write("*" + clientUsername + "*" + gp.joinedGame);
+                                bufferedWriter.newLine();
+                                bufferedWriter.flush();
+                                changedGameState = gp.joinedGame;
+                            } catch (IOException ioe)
+                            {
+                                closeEverything(socket, bufferedReader, bufferedWriter);
+                            }
+                        }
+                        else
                         {
-                            closeEverything(socket, bufferedReader, bufferedWriter);
+                            try
+                            {
+                                bufferedWriter.write("*" + clientUsername + "*" + gp.joinedGame + "*" + Player.respawned);
+                                bufferedWriter.newLine();
+                                bufferedWriter.flush();
+                                changedGameState = gp.joinedGame;
+                            } catch (IOException ioe)
+                            {
+                                closeEverything(socket, bufferedReader, bufferedWriter);
+                            }
                         }
                     }
 
@@ -61,7 +77,7 @@ public class TCPClient extends Client
                      This will match left click to the appropriate ability before the lobby is joined
                      */
                     // TCP code for left click attack is the number 1
-                    if (gp.mouseHandler.playPressed1 && !gp.mouseHandler.playPressed1Cooldown)
+                    if (gp.mouseHandler.playPressed1 && !gp.mouseHandler.playPressed1Cooldown && !gp.player.dying)
                     {
                         try
                         {
@@ -174,16 +190,36 @@ public class TCPClient extends Client
                             {
                                 if (tokens[1].equals(Client.clientUsername))
                                 {
-                                    otherPlayers.clear();
+                                    if (tokens.length > 3)
+                                    {
+                                        gp.joinedGame = true;
+                                    }
+                                    else
+                                    {
+                                        otherPlayers.clear();
+                                    }
                                 }
                                 else
                                 {
-                                    for (int i = 0; i < otherPlayers.size(); i++)
+                                    if (tokens.length < 4)
                                     {
-                                        if (otherPlayers.get(i).clientUserName.equals(tokens[1]))
+                                        for (int i = 0; i < otherPlayers.size(); i++)
                                         {
-                                            otherPlayers.remove(i);
-                                            i--;
+                                            if (otherPlayers.get(i).clientUserName.equals(tokens[1]))
+                                            {
+                                                otherPlayers.remove(i);
+                                                i--;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int i = 0; i < otherPlayers.size(); i++)
+                                        {
+                                            if (otherPlayers.get(i).clientUserName.equals(tokens[1]))
+                                            {
+                                                otherPlayers.get(i).respawned = true;
+                                            }
                                         }
                                     }
                                 }

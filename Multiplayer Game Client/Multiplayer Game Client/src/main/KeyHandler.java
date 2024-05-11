@@ -47,13 +47,14 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_ESCAPE)
         {
-            if (gp.gameState == gp.PLAY_STATE)
+            if (gp.gameState == gp.PLAY_STATE || gp.gameState == gp.GAME_OVER_STATE)
             {
+                gp.previousGameState = gp.gameState;
                 gp.gameState = gp.GAME_MENU_STATE;
             }
             else if (gp.gameState == gp.GAME_MENU_STATE)
             {
-                gp.gameState = gp.PLAY_STATE;
+                gp.gameState = gp.previousGameState;
             }
         }
 

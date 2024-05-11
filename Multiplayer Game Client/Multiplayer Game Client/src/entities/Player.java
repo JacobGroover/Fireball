@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Player extends Entity {
+    public static volatile boolean respawned = false;     // Used to notify the GamePanel Thread when the server has logged the player choosing to respawn after GAME_OVER_STATE respawn option is chosen
 
     KeyHandler keyH;
     MouseHandler mouseH;
@@ -47,6 +48,7 @@ public class Player extends Entity {
         setDefaultValues();
         getImages("/player/FillerPlayer");
         getPlayerAttackImages("/player/attack/FillerPlayerCast");
+        getPlayerDeathImages("/player/death/BurningDeath");
     }
 
     public void setDefaultValues() {
@@ -61,6 +63,14 @@ public class Player extends Entity {
         maxLife = 100;
         life = maxLife;
         cooldown1Counter = 30;
+        mouseH.playPressed1Cooldown = true;
+
+        alive = true;
+        dying = false;
+        isBurning = false;
+        deathType = null;
+        dyingCounter1 = 360;
+        dyingCounter2 = 24;
     }
 
     private void getPlayerAttackImages(String imagePath)
@@ -75,18 +85,22 @@ public class Player extends Entity {
         attackDownRight1 = setup(imagePath + "DownRight1");
     }
 
+    private void getPlayerDeathImages(String imagePath)
+    {
+        burningDeath1 = setup(imagePath + "1");
+        burningDeath2 = setup(imagePath + "2");
+        burningDeath3 = setup(imagePath + "3");
+        burningDeath4 = setup(imagePath + "4");
+        burningDeath5 = setup(imagePath + "5");
+        burningDeath6 = setup(imagePath + "6");
+        burningDeath7 = setup(imagePath + "7");
+        burningDeath8 = setup(imagePath + "8");
+        burningDeath9 = setup(imagePath + "9");
+        burningDeath10 = setup(imagePath + "10");
+    }
+
     public void update()
     {
-
-//        if (gp.gameState == gp.PLAY_STATE && mouseH.playPressed1)
-//        {
-//            attacking = true;
-//        }
-        if (gp.gameState == gp.PLAY_STATE && attacking)
-        {
-            attackingAnimation();
-        }
-
         // CHECK FOR DAMAGE OVER TIME
         if (isBurning)
         {
@@ -101,121 +115,139 @@ public class Player extends Entity {
             dotBurningDmgCounter--;
         }
 
-        // CHECK FOR DEATH
-
-
-        if (!attacking)
+        if (!dying)
         {
-            // CHECK FOR SKILL/ABILITY INPUTS
-            if (gp.gameState == gp.PLAY_STATE && mouseH.playPressed1 && !mouseH.playPressed1Cooldown)
+            // CHECK FOR DEATH
+            if (life <= 0)
             {
-                spriteNum = 1;
-                attacking = true;
-                mouseH.playPressed1Cooldown = true;
-                mouseH.playPressed1 = false;
-                attacking(mouseH.mouseX, mouseH.mouseY);
+                dying = true;
+                if (isBurning)
+                {
+                    dyingCounter1 = 360;
+                    dyingCounter2 = 24;
+                    deathType = "fire";
+                }
             }
-            else if (gp.gameState == gp.PLAY_STATE && (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed))
+
+            if (gp.gameState == gp.PLAY_STATE && attacking)
             {
-                if (keyH.upPressed) {
-                    velocityY -= 1;
-                }
-                if (keyH.downPressed) {
-                    velocityY += 1;
-                }
-                if (keyH.leftPressed) {
-                    velocityX -= 1;
-                }
-                if (keyH.rightPressed) {
-                    velocityX += 1;
-                }
+                attackingAnimation();
+            }
 
-                if (keyH.upPressed && velocityY != 0) {
-                    direction = "up";
-                }
-                if (keyH.downPressed && velocityY != 0) {
-                    direction = "down";
-                }
-                if (keyH.leftPressed && velocityX != 0) {
-                    direction = "left";
-                }
-                if (keyH.rightPressed && velocityX != 0) {
-                    direction = "right";
-                }
 
-                if (velocityX != 0 && velocityY != 0) {
-                    if (keyH.upPressed && keyH.leftPressed) {
-                        direction = "upLeft";
-                    }
-                    if (keyH.upPressed && keyH.rightPressed) {
-                        direction = "upRight";
-                    }
-                    if (keyH.downPressed && keyH.leftPressed) {
-                        direction = "downLeft";
-                    }
-                    if (keyH.downPressed && keyH.rightPressed) {
-                        direction = "downRight";
-                    }
-                }
-
-                // Normalize movement vector
-                float length = (float) Math.sqrt((velocityX * velocityX) + (velocityY * velocityY));
-
-                if (velocityX != 0) {
-                    velocityX /= length;
-                }
-                if (velocityY != 0) {
-                    velocityY /= length;
-                }
-
-                velocityX *= speed;
-                velocityY *= speed;
-
-                // Check for tile collision
-//                xCollisionOn = false;
-//                yCollisionOn = false;
-                gp.cChecker.checkTile(this);
-
-                // Check for object collision
-                int objIndex = gp.cChecker.checkObject(this, true);
-                pickUpObject(objIndex);
-
-                // Check for OtherPlayer collision
-                int entityIndex = gp.cChecker.checkEntities(this, Client.otherPlayers);
-    //            collideOtherPlayer(entityIndex);
-
-                // Check for NPC collision
-    //            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
-    //            interactNPC(npcIndex);
-
-                // Check Event triggers
-                gp.eventHandler.checkEvent();
-
-                if (!xCollisionOn)
+            if (!attacking)
+            {
+                // CHECK FOR SKILL/ABILITY INPUTS
+                if (gp.gameState == gp.PLAY_STATE && mouseH.playPressed1 && !mouseH.playPressed1Cooldown)
                 {
-                    worldX += velocityX;
-                }
-                if (!yCollisionOn)
-                {
-                    worldY += velocityY;
-                }
-
-                spriteCounter++;
-                if (velocityX == 0 && velocityY == 0) {
                     spriteNum = 1;
-                } else if (spriteCounter > 8) {
-                    if (spriteNum == 1) {
-                        spriteNum = 2;
-                    } else if (spriteNum == 2) {
-                        spriteNum = 3;
-                    } else if (spriteNum == 3) {
-                        spriteNum = 2;
-                    }
-                    spriteCounter = 0;
+                    attacking = true;
+                    mouseH.playPressed1Cooldown = true;
+                    mouseH.playPressed1 = false;
+                    attacking(mouseH.mouseX, mouseH.mouseY);
                 }
-            } else
-            {
-                spriteNum = 1;
+                else if (gp.gameState == gp.PLAY_STATE && (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed))
+                {
+                    if (keyH.upPressed) {
+                        velocityY -= 1;
+                    }
+                    if (keyH.downPressed) {
+                        velocityY += 1;
+                    }
+                    if (keyH.leftPressed) {
+                        velocityX -= 1;
+                    }
+                    if (keyH.rightPressed) {
+                        velocityX += 1;
+                    }
+
+                    if (keyH.upPressed && velocityY != 0) {
+                        direction = "up";
+                    }
+                    if (keyH.downPressed && velocityY != 0) {
+                        direction = "down";
+                    }
+                    if (keyH.leftPressed && velocityX != 0) {
+                        direction = "left";
+                    }
+                    if (keyH.rightPressed && velocityX != 0) {
+                        direction = "right";
+                    }
+
+                    if (velocityX != 0 && velocityY != 0) {
+                        if (keyH.upPressed && keyH.leftPressed) {
+                            direction = "upLeft";
+                        }
+                        if (keyH.upPressed && keyH.rightPressed) {
+                            direction = "upRight";
+                        }
+                        if (keyH.downPressed && keyH.leftPressed) {
+                            direction = "downLeft";
+                        }
+                        if (keyH.downPressed && keyH.rightPressed) {
+                            direction = "downRight";
+                        }
+                    }
+
+                    // Normalize movement vector
+                    float length = (float) Math.sqrt((velocityX * velocityX) + (velocityY * velocityY));
+
+                    if (velocityX != 0) {
+                        velocityX /= length;
+                    }
+                    if (velocityY != 0) {
+                        velocityY /= length;
+                    }
+
+                    velocityX *= speed;
+                    velocityY *= speed;
+
+                    // Check for tile collision
+    //                xCollisionOn = false;
+    //                yCollisionOn = false;
+                    gp.cChecker.checkTile(this);
+
+                    // Check for object collision
+                    int objIndex = gp.cChecker.checkObject(this, true);
+                    pickUpObject(objIndex);
+
+                    // Check for OtherPlayer collision
+                    int entityIndex = gp.cChecker.checkEntities(this, Client.otherPlayers);
+        //            collideOtherPlayer(entityIndex);
+
+                    // Check for NPC collision
+        //            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+        //            interactNPC(npcIndex);
+
+                    // Check Event triggers
+                    gp.eventHandler.checkEvent();
+
+                    if (!xCollisionOn)
+                    {
+                        worldX += velocityX;
+                    }
+                    if (!yCollisionOn)
+                    {
+                        worldY += velocityY;
+                    }
+
+                    spriteCounter++;
+                    if (velocityX == 0 && velocityY == 0) {
+                        spriteNum = 1;
+                    } else if (spriteCounter > 8) {
+                        if (spriteNum == 1) {
+                            spriteNum = 2;
+                        } else if (spriteNum == 2) {
+                            spriteNum = 3;
+                        } else if (spriteNum == 3) {
+                            spriteNum = 2;
+                        }
+                        spriteCounter = 0;
+                    }
+                } else
+                {
+                    spriteNum = 1;
+                }
             }
         }
 
