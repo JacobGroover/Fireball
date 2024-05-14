@@ -4,6 +4,8 @@ import entities.OtherPlayer;
 import entities.Player;
 
 import java.io.*;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class TCPClient extends Client
@@ -38,9 +40,19 @@ public class TCPClient extends Client
             @Override
             public void run()
             {
+                int FPS = 2;
+                double drawInterval = (double) 1000000000 / FPS;
+                double delta = 0;
+                long lastTime = System.nanoTime();
+                long currentTime;
+
                 boolean changedGameState = gp.joinedGame;
                 while (socket.isConnected())
                 {
+
+                    currentTime = System.nanoTime();
+                    delta += (currentTime - lastTime) / drawInterval;
+                    lastTime = currentTime;
 
                     if (changedGameState != gp.joinedGame)
                     {
@@ -77,14 +89,14 @@ public class TCPClient extends Client
                      This will match left click to the appropriate ability before the lobby is joined
                      */
                     // TCP code for left click attack is the number 1
-                    if (gp.mouseHandler.playPressed1 && !gp.mouseHandler.playPressed1Cooldown && !gp.player.dying)
+                    if (delta >= 1 && gp.mouseHandler.playPressed1 && !gp.mouseHandler.playPressed1Cooldown && !gp.player.dying)
                     {
                         try
                         {
                             bufferedWriter.write("-" + clientUsername + "-" + 1 + "-" + gp.mouseHandler.mouseX + "-" + gp.mouseHandler.mouseY);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
-                            changedGameState = gp.joinedGame;
+                            delta = 0;
                         } catch (IOException ioe)
                         {
                             closeEverything(socket, bufferedReader, bufferedWriter);
