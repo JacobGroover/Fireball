@@ -59,6 +59,17 @@ public class UdpClientHandler extends ClientHandler
                                     int port = clientDataAL.get(i).getPort();
                                     DatagramPacket responsePacket = new DatagramPacket(byteArray, byteArray.length, address, port);
                                     socket.send(responsePacket);
+                                    String[] tokens = tempByteString.split("moving:");
+//                                    System.out.println("data goes to " + clientDataAL.get(i).getClientUsername() + " at " + address + ":" + port);
+//                                    if (tokens.length > 6)
+//                                    {
+//                                        System.out.println(tokens[1] + " " + clientDataAL.get(1).getClientInetAddress() + ":" + clientDataAL.get(1).getPort() + " " + tokens[6]);
+//                                    }
+//                                    else
+//                                    {
+//                                        System.out.println(tokens[1]);
+//                                    }
+
                                 }
                             }
 

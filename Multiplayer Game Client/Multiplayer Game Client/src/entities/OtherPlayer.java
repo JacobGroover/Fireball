@@ -120,11 +120,6 @@ public class OtherPlayer extends Entity {
                 }
             }
 
-            if (attacking)
-            {
-                attackingAnimation();
-            }
-
             // CHECK FOR SKILL/ABILITY INPUTS
             if (gp.gameState == gp.PLAY_STATE && skill1)
             {
@@ -132,6 +127,11 @@ public class OtherPlayer extends Entity {
                 attacking = true;
                 skill1 = false;
                 attacking(mouseX, mouseY);
+            }
+
+            if (attacking)
+            {
+                attackingAnimation();
             }
 
             if (!attacking)

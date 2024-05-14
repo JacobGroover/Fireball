@@ -496,7 +496,8 @@ public class CollisionChecker {
 
             if (continueCheck)
             {
-                if (target.get(i) != null) {
+                if (target.get(i) != null)
+                {
                     // Get entity's solid area position
                     entity.solidArea.x = (int)worldX + entity.solidArea.x;
                     entity.solidArea.y = (int)worldY + entity.solidArea.y;
@@ -505,7 +506,8 @@ public class CollisionChecker {
                     target.get(i).solidArea.x = (int)target.get(i).worldX + target.get(i).solidArea.x;
                     target.get(i).solidArea.y = (int)target.get(i).worldY + target.get(i).solidArea.y;
 
-                    switch (entity.direction) {
+                    switch (entity.direction)
+                    {
                         case "up":
                             entity.solidArea.y -= entity.speed;
                             if (entity.solidArea.intersects(target.get(i).solidArea))
@@ -616,18 +618,17 @@ public class CollisionChecker {
 
             if (target.get(i) != null)
             {
-                if (entity instanceof Projectile && index != -1 && !((Projectile) entity).detonated && ((Projectile) entity).owner != target.get(i))
-                {
-                    entity.worldX = target.get(i).worldX;
-                    entity.worldY = target.get(i).worldY;
-                }
-
                 entity.solidArea.x = entity.solidAreaDefaultX;
                 entity.solidArea.y = entity.solidAreaDefaultY;
                 target.get(i).solidArea.x = target.get(i).solidAreaDefaultX;
                 target.get(i).solidArea.y = target.get(i).solidAreaDefaultY;
             }
 
+        }
+        if (entity instanceof Projectile && index != -1 && !((Projectile) entity).detonated && ((Projectile) entity).owner != target.get(index))
+        {
+            entity.worldX = target.get(index).worldX;
+            entity.worldY = target.get(index).worldY;
         }
         return index;
     }

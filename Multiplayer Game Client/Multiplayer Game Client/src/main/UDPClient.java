@@ -123,18 +123,31 @@ public class UDPClient extends Client
                             String worldX = usernameVelocityXY[i + 3];
                             String worldY = usernameVelocityXY[i + 4];
 
-                            for (OtherPlayer otherPlayer : otherPlayers)
+                            for (int j = 0; j < otherPlayers.size(); j++)
                             {
 
                                 // update local client with data from server
-                                if (clientUsername.equals(otherPlayer.clientUserName))
+                                if (clientUsername.equals(otherPlayers.get(j).clientUserName))
                                 {
-                                    otherPlayer.velocityX = Double.parseDouble(velocityX);
-                                    otherPlayer.velocityY = Double.parseDouble(velocityY);
-                                    otherPlayer.worldX = Double.parseDouble(worldX);
-                                    otherPlayer.worldY = Double.parseDouble(worldY);
+                                    otherPlayers.get(j).velocityX = Double.parseDouble(velocityX);
+                                    otherPlayers.get(j).velocityY = Double.parseDouble(velocityY);
+                                    otherPlayers.get(j).worldX = Double.parseDouble(worldX);
+                                    otherPlayers.get(j).worldY = Double.parseDouble(worldY);
                                 }
                             }
+
+//                            for (OtherPlayer otherPlayer : otherPlayers)
+//                            {
+//
+//                                // update local client with data from server
+//                                if (clientUsername.equals(otherPlayer.clientUserName))
+//                                {
+//                                    otherPlayer.velocityX = Double.parseDouble(velocityX);
+//                                    otherPlayer.velocityY = Double.parseDouble(velocityY);
+//                                    otherPlayer.worldX = Double.parseDouble(worldX);
+//                                    otherPlayer.worldY = Double.parseDouble(worldY);
+//                                }
+//                            }
                         }
                     }
 

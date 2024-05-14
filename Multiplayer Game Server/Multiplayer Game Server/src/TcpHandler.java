@@ -17,7 +17,6 @@ public class TcpHandler extends ClientHandler implements Runnable
         try
         {
             this.TCPSocket = serverSocketTCP;
-            // Home IP 192.168.2.102
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(serverSocketTCP.getOutputStream()));   // OutputStreamWriter is for character streams, OutputStream is for bytes. Therefore, wrap the byte stream in a character stream. Buffering the stream increases efficiency.
             this.bufferedReader = new BufferedReader(new InputStreamReader(serverSocketTCP.getInputStream()));   // BufferedWriter stream is for sending, BufferedReader for receiving.
 
@@ -43,6 +42,7 @@ public class TcpHandler extends ClientHandler implements Runnable
             try
             {
                 messageFromClient = bufferedReader.readLine();
+                System.out.println(messageFromClient + " " + this.TCPSocket.getInetAddress() + ":" + this.TCPSocket.getPort());
             } catch (IOException ioe)
             {
                 closeEverything(TCPSocket, bufferedReader, bufferedWriter);
@@ -65,7 +65,7 @@ public class TcpHandler extends ClientHandler implements Runnable
             else if (messageFromClient.startsWith("-"))
             {
                 String[] tokens = messageFromClient.split("-");
-                this.setPlayPressed1(Integer.parseInt(tokens[2]));  // add if/else clause later to check which button was pressed
+                this.setPlayPressed1(Integer.parseInt(tokens[2]));  // add if/else clause later to check which button was pressed (when more abilities are added)
                 this.setMouseX(Integer.parseInt(tokens[3]));
                 this.setMouseY(Integer.parseInt(tokens[4]));
                 broadcastButtonPress(tokens[1], this.getPlayPressed1(), this.getMouseX(), this.getMouseY());

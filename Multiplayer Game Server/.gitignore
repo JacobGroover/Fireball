@@ -29,3 +29,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/Multiplayer Game Server/src/META-INF/MANIFEST.MF

@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements Runnable
 
     // Set game screen size to 4x3 (Length x Width) ratio
     public final int maxScreenCol = 32;    // 16
-    public final int maxScreenRow = 24;    // 12
+    public final int maxScreenRow = 18;    // 12
     public final int screenWidth = tileSize * maxScreenCol; // 48 * 16 = 768 pixels
     public final int screenHeight = tileSize * maxScreenRow;   // 48 * 12 = 576 pixels
 

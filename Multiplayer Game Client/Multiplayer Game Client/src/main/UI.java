@@ -1,6 +1,7 @@
 package main;
 
 import entities.Entity;
+import entities.Player;
 import object.OBJ_BloodDroplet;
 import object.OBJ_Key;
 
@@ -226,6 +227,7 @@ public class UI
     private void drawPlayerHUD()
     {
         drawPlayerLife();
+        drawUsernames();
     }
 
     private void drawPlayerLife()
@@ -251,6 +253,36 @@ public class UI
             x += gp.tileSize/2;
             i++;
         }
+    }
+
+    private void drawUsernames()
+    {
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(Font.ITALIC + Font.BOLD, 20F));
+        for (int i = 0; i < Client.otherPlayers.size(); i++)
+        {
+            String OPname = Client.otherPlayers.get(i).clientUserName;
+
+            int length = (int)g2.getFontMetrics().getStringBounds(OPname, g2).getWidth();
+
+            int OPx = (int)Client.otherPlayers.get(i).worldX - length/2;
+
+            //int OPx = Client.otherPlayers.get(i).worldX;
+            int OPy = (int)Client.otherPlayers.get(i).worldY;
+
+            int screenX = OPx - (int) Player.worldX + gp.player.screenX + gp.tileSize/2;
+            int screenY = OPy - (int) Player.worldY + gp.player.screenY;
+
+            if (OPx + gp.tileSize > Player.worldX - gp.player.screenX &&
+                    OPx - gp.tileSize < Player.worldX + gp.player.screenX &&
+                    OPy + gp.tileSize > Player.worldY - gp.player.screenY &&
+                    OPy - gp.tileSize < Player.worldY + gp.player.screenY)
+            {
+                g2.drawString(OPname, screenX, -gp.tileSize/4 + screenY);
+            }
+
+        }
+        g2.drawString(Client.clientUsername, getCenteredTextX(Client.clientUsername), -(3 * (gp.tileSize/4)) + (gp.screenHeight/2));
     }
 
     private void drawGameOverScreen()
