@@ -38,7 +38,7 @@ public class TcpHandler extends ClientHandler implements Runnable
             try
             {
                 messageFromClient = bufferedReader.readLine();
-                System.out.println(messageFromClient + " " + this.TCPSocket.getInetAddress() + ":" + this.TCPSocket.getPort());
+//                System.out.println(messageFromClient + " " + this.TCPSocket.getInetAddress() + ":" + this.TCPSocket.getPort());   // FOR TESTING
             } catch (IOException ioe)
             {
                 closeEverything(TCPSocket, bufferedReader, bufferedWriter);
@@ -291,8 +291,9 @@ public class TcpHandler extends ClientHandler implements Runnable
     public void removeClientHandler()
     {
         clientDataAL.remove(this);
-        System.out.println("A client has disconnected!");
-        broadcastMessage("Server: " + clientUsername + " has left the chat!");
+        Server.clientCount--;
+        Server.clientLabel.setText("Clients Connected: " + Server.clientCount);
+//        broadcastMessage("Server: " + clientUsername + " has left the chat!");
     }
 
     public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter)

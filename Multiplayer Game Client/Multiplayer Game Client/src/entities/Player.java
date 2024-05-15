@@ -349,14 +349,14 @@ public class Player extends Entity {
 
             switch (objectName) {
                 case "Key":
-                    gp.playSFX(0);
+//                    gp.playSFX(0);
                     hasKey++;
                     gp.obj[index] = null;
                     gp.ui.displayMessage("You found a key!");
                     break;
                 case "Door":
                     if (hasKey > 0) {
-                        gp.playSFX(0);
+//                        gp.playSFX(0);
                         gp.obj[index] = null;
                         hasKey--;
                         gp.ui.displayMessage("You unlocked a door!");
@@ -366,7 +366,7 @@ public class Player extends Entity {
                     break;
                 case "Chest":
                     if (hasKey > 0) {
-                        gp.playSFX(0);
+//                        gp.playSFX(0);
                         gp.obj[index] = null;
                         hasKey--;
                         gp.ui.gameFinished = true;
@@ -375,7 +375,7 @@ public class Player extends Entity {
                     }
                     break;
                 case "YinYang":
-                    gp.playSFX(0);
+//                    gp.playSFX(0);
                     speed += 2;
                     gp.obj[index] = null;
                     gp.ui.displayMessage("Speed Increased!");

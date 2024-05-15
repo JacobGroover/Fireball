@@ -678,7 +678,7 @@ public class CollisionChecker {
                 case "up":
                     if (entity instanceof Projectile)
                     {
-                        entity.solidArea.y -= (entity.speed + 2);
+                        entity.solidArea.y -= (entity.speed);
                     }
                     else
                     {
@@ -693,7 +693,7 @@ public class CollisionChecker {
                 case "down":
                     if (entity instanceof Projectile)
                     {
-                        entity.solidArea.y += (entity.speed + 2);
+                        entity.solidArea.y += (entity.speed);
                     }
                     else
                     {
@@ -708,7 +708,7 @@ public class CollisionChecker {
                 case "left":
                     if (entity instanceof Projectile)
                     {
-                        entity.solidArea.x -= (entity.speed + 2);
+                        entity.solidArea.x -= (entity.speed);
                     }
                     else
                     {
@@ -723,7 +723,7 @@ public class CollisionChecker {
                 case "right":
                     if (entity instanceof Projectile)
                     {
-                        entity.solidArea.x += (entity.speed + 2);
+                        entity.solidArea.x += (entity.speed);
                     }
                     else
                     {
@@ -738,7 +738,7 @@ public class CollisionChecker {
                 case "upRight":
                     if (entity instanceof Projectile)
                     {
-                        entity.solidArea.x += (entity.speed + 2);
+                        entity.solidArea.x += (entity.speed);
                     }
                     else
                     {
@@ -746,7 +746,7 @@ public class CollisionChecker {
                     }
                     if (entity instanceof Projectile)
                     {
-                        entity.solidArea.y -= (entity.speed + 2);
+                        entity.solidArea.y -= (entity.speed);
                     }
                     else
                     {
@@ -762,7 +762,7 @@ public class CollisionChecker {
                 case "upLeft":
                     if (entity instanceof Projectile)
                     {
-                        entity.solidArea.x -= (entity.speed + 2);
+                        entity.solidArea.x -= (entity.speed);
                     }
                     else
                     {
@@ -770,7 +770,7 @@ public class CollisionChecker {
                     }
                     if (entity instanceof Projectile)
                     {
-                        entity.solidArea.y -= (entity.speed + 2);
+                        entity.solidArea.y -= (entity.speed);
                     }
                     else
                     {
@@ -786,7 +786,7 @@ public class CollisionChecker {
                 case "downRight":
                     if (entity instanceof Projectile)
                     {
-                        entity.solidArea.x += (entity.speed + 2);
+                        entity.solidArea.x += (entity.speed);
                     }
                     else
                     {
@@ -794,7 +794,7 @@ public class CollisionChecker {
                     }
                     if (entity instanceof Projectile)
                     {
-                        entity.solidArea.y += (entity.speed + 2);
+                        entity.solidArea.y += (entity.speed);
                     }
                     else
                     {
@@ -810,7 +810,7 @@ public class CollisionChecker {
                 case "downLeft":
                     if (entity instanceof Projectile)
                     {
-                        entity.solidArea.x -= (entity.speed + 2);
+                        entity.solidArea.x -= (entity.speed);
                     }
                     else
                     {
@@ -818,7 +818,7 @@ public class CollisionChecker {
                     }
                     if (entity instanceof Projectile)
                     {
-                        entity.solidArea.y += (entity.speed + 2);
+                        entity.solidArea.y += (entity.speed);
                     }
                     else
                     {

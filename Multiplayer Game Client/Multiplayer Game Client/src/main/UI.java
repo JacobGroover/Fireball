@@ -170,58 +170,28 @@ public class UI
     public void drawPlayScreen()
     {
         // ALL BELOW TO BE DEPRECATED
-        if (gameFinished) {
+        g2.setFont(arial_40);
+        g2.setColor(Color.lightGray);
+        g2.drawImage(keyImage, gp.tileSize/2, gp.tileSize/2, gp.tileSize, gp.tileSize, null);
+        g2.drawString("x " + gp.player.hasKey, 74, 65);
 
-            String text;
-            int textLength;
-            int x;
-            int y;
+        // GAME TIME
+        g2.drawString("Time: " + df.format(playTime), gp.screenWidth - (gp.tileSize * 5), 65);
 
-            text = "You won the game!";
-            textLength = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
-            x = gp.screenWidth/2 - textLength/2;
-            y = gp.screenHeight/2 - (gp.tileSize*3);
-            g2.drawString(text, x, y);
+        // MESSAGE
+        if (messageOn) {
 
-            text = "Your time is: " + df.format(playTime) + "!";
-            textLength = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
-            x = gp.screenWidth/2 - textLength/2;
-            y = gp.screenHeight/2 + (gp.tileSize*4);
-            g2.drawString(text, x, y);
+            g2.setFont(g2.getFont().deriveFont(25F));
+            g2.drawString(message, (gp.screenWidth/2) - (gp.tileSize * 2), (gp.screenHeight/2) - (gp.tileSize*2));
 
-            g2.setFont(arial_80B);
-            g2.setColor(Color.yellow);
-            text = "CONGRATULATIONS!";
-            textLength = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
-            x = gp.screenWidth/2 - textLength/2;
-            y = gp.screenHeight/2 + (gp.tileSize*2);
-            g2.drawString(text, x, y);
+            messageCounter++;
 
-            gp.gameThread = null;
-
-        } else {
-            g2.setFont(arial_40);
-            g2.setColor(Color.lightGray);
-            g2.drawImage(keyImage, gp.tileSize/2, gp.tileSize/2, gp.tileSize, gp.tileSize, null);
-            g2.drawString("x " + gp.player.hasKey, 74, 65);
-
-            // GAME TIME
-            g2.drawString("Time: " + df.format(playTime), gp.screenWidth - (gp.tileSize * 5), 65);
-
-            // MESSAGE
-            if (messageOn) {
-
-                g2.setFont(g2.getFont().deriveFont(25F));
-                g2.drawString(message, (gp.screenWidth/2) - (gp.tileSize * 2), (gp.screenHeight/2) - (gp.tileSize*2));
-
-                messageCounter++;
-
-                if (messageCounter > 120) {
-                    messageCounter = 0;
-                    messageOn = false;
-                }
+            if (messageCounter > 120) {
+                messageCounter = 0;
+                messageOn = false;
             }
         }
+
     }
 
     private void drawPlayerHUD()

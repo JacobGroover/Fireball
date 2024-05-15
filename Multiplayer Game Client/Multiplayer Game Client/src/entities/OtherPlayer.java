@@ -190,11 +190,9 @@ public class OtherPlayer extends Entity {
                     //gp.cChecker.checkPlayer(this);
 
                     if (!xCollisionOn) {
-                        //lastWorldX += velocityX;    // UDP
                         worldX += velocityX;
                     }
                     if (!yCollisionOn) {
-                        //lastWorldY += velocityY;    // UDP
                         worldY += velocityY;
                     }
 

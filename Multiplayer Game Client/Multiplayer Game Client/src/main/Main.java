@@ -1,6 +1,7 @@
 package main;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,11 +25,10 @@ public class Main
         login.setResizable(false);
         login.setTitle("Login");
 
-        login.setLayout(new BoxLayout(login.getContentPane(), BoxLayout.Y_AXIS));
+        login.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
         JLabel label1 = new JLabel("PLEASE CREATE A USERNAME TO LOGIN:");
         label1.setFont(new Font("Arial", Font.PLAIN, 20));
-        label1.setBorder(new EmptyBorder(40, 40, 40, 40));
         label1.setAlignmentX(Component.CENTER_ALIGNMENT);
         label1.setAlignmentY(Component.TOP_ALIGNMENT);
         login.add(label1);
@@ -40,11 +40,18 @@ public class Main
         textField1.setAlignmentY(Component.CENTER_ALIGNMENT);
         login.add(textField1);
 
-        JButton button1 = new JButton("ONLINE SESSION");
-        button1.setFont(new Font("Arial", Font.BOLD, 40));
-        button1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        //button1.setPreferredSize(new Dimension(500, 50));
-        login.add(button1);
+        JLabel label2 = new JLabel("SERVER IP ADDRESS:");
+        label2.setFont(new Font("Arial", Font.PLAIN, 20));
+        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label2.setAlignmentY(Component.TOP_ALIGNMENT);
+        login.add(label2);
+
+        JTextField textField2 = new JTextField(15);
+        textField2.setFont(new Font("Arial", Font.PLAIN, 40));
+        textField2.setMaximumSize(new Dimension(600, 50));
+        textField2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        textField2.setAlignmentY(Component.CENTER_ALIGNMENT);
+        login.add(textField2);
 
         JButton button2 = new JButton("LOGIN");
         button2.setFont(new Font("Arial", Font.BOLD, 80));
@@ -52,27 +59,8 @@ public class Main
         button2.setAlignmentY(Component.BOTTOM_ALIGNMENT);
         login.add(button2);
 
-        //login.pack();
         login.setLocationRelativeTo(null);
         login.setVisible(true);
-
-        button1.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                clickCount++;
-                if (clickCount == 1)
-                {
-                    button1.setText("LOCAL SESSION");
-                }
-                if (clickCount == 2)
-                {
-                    button1.setText("ONLINE SESSION");
-                    clickCount = 0;
-                }
-            }
-        });
 
         button2.addActionListener(new ActionListener()
         {
@@ -89,59 +77,58 @@ public class Main
                 }
                 else
                 {
-                    loginAttempt = true;
-                    if (button1.getText().equals("ONLINE SESSION"))
+                    Client.serverAddress = textField2.getText();
+                    if (Client.serverAddress.isBlank())
                     {
-                        onlineSession = true;
+                        JOptionPane.showMessageDialog(null, "Please enter a server IP address in the form xxx.xxx.xxx.xxx or enter any other text to indicate an offline session.",
+                                "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
                     }
                     else
                     {
-                        onlineSession = false;
+                        loginAttempt = true;
                     }
                 }
             }
         });
 
-        Socket socket;
+        while (!loginAttempt)
+        {
+            Thread.onSpinWait();
+        }
+        loginAttempt = false;
+
+        Socket socket = null;
+        TCPClient tcpClient = null;
         try
         {
             socket = new Socket(Client.serverAddress, Client.serverTcpPort1);
+            do
+            {
+
+                tcpClient = new TCPClient(socket);
+
+                validEntry = tcpClient.verifyLogin();
+                if (!validEntry)
+                {
+                    JOptionPane.showMessageDialog(null, "That username is already taken!",
+                            "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
+                    while (!loginAttempt)
+                    {
+                        Thread.onSpinWait();
+                    }
+                    loginAttempt = false;
+
+                }
+
+            } while (!validEntry);
+            
         } catch (IOException e)
         {
-            System.err.println("Host could not be found!");
-            throw new RuntimeException(e);
+            JOptionPane.showMessageDialog(null, "HOST COULD NOT BE FOUND! STARTING GAME IN OFFLINE MODE.",
+                    "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
+//            System.err.println("Host could not be found!");
+//            throw new RuntimeException(e);    // If this is uncommented, offline games will not work (since throwing the exception will end runtime)
         }
-
-        TCPClient tcpClient;
-        do
-        {
-            while (!loginAttempt)
-            {
-                Thread.onSpinWait();
-            }
-            loginAttempt = false;
-
-            if (onlineSession)
-            {
-                Client.serverAddress = "99.147.220.159";
-            }
-            else
-            {
-                Client.serverAddress = "192.168.2.102";
-            }
-
-            tcpClient = new TCPClient(socket);
-
-            validEntry = tcpClient.verifyLogin();
-            if (!validEntry)
-            {
-                JOptionPane.showMessageDialog(null, "That username is already taken!",
-                        "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
-                Thread.onSpinWait();
-
-            }
-
-        } while (!validEntry);
         login.dispose();
 
         JFrame window = new JFrame();   // create a window
@@ -160,15 +147,19 @@ public class Main
 
         gamePanel.setupGame();
         gamePanel.startGameThread();
-        UDPClient udpClient = new UDPClient(gamePanel);
 
-        // Call listenForMessage() and sendJoinedGame() methods on this client instance; both run on separate threads and are blocked, so they both get called and run continuously while connected.
-        tcpClient.listenForMessage(gamePanel);
-        tcpClient.sendInfo(gamePanel);
+        if (socket != null)
+        {
+            UDPClient udpClient = new UDPClient(gamePanel);
 
-        // Run UDP threads to handle movement and position packets
-        udpClient.sendDP();
-        udpClient.receiveDP();
+            // Call listenForMessage() and sendInfo() methods on this client instance; both run on separate threads and are blocked, so they both get called and run continuously while connected.
+            tcpClient.listenForMessage(gamePanel);
+            tcpClient.sendInfo(gamePanel);
+
+            // Run UDP threads to handle movement and position packets
+            udpClient.sendDP();
+            udpClient.receiveDP();
+        }
 
     }
 }

@@ -10,7 +10,7 @@ public class Sound {
     URL soundURL[] = new URL[30];
 
     public Sound() {
-        soundURL[0] = getClass().getResource("/sound/SFX.wav");
+//        soundURL[0] = getClass().getResource("/sound/...");
     }
 
     public void setFile(int i) {
