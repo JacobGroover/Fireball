@@ -28,6 +28,7 @@ public class TCPClient extends Client
 
     public void sendInfo(GamePanel gp)
     {
+//        Thread t1 = Thread.startVirtualThread(new Runnable()
         Thread t1 = new Thread(new Runnable()
         {
             @Override
@@ -105,6 +106,7 @@ public class TCPClient extends Client
 
     public void listenForMessage(GamePanel gp)
     {
+//        Thread t2 = Thread.startVirtualThread(new Runnable()
         Thread t2 = new Thread(new Runnable()
         {
             @Override

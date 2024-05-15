@@ -8,6 +8,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.time.format.DateTimeFormatter;
 
 public class UDPClient extends Client
 {
@@ -84,6 +85,7 @@ public class UDPClient extends Client
 
     protected void receiveDP()
     {
+//        Thread t2 = Thread.startVirtualThread(new Runnable()
         Thread t2 = new Thread(new Runnable()
         {
             @Override
@@ -95,7 +97,6 @@ public class UDPClient extends Client
                 {
                     if (gp.joinedGame)
                     {
-
                         String messageReceived = "";
                         try
                         {
