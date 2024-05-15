@@ -12,7 +12,7 @@ public class TcpHandler extends ClientHandler implements Runnable
     private BufferedReader bufferedReader;  // Reads messages sent from the client
     private BufferedWriter bufferedWriter;  // Sends messages to the client (either from other clients or from the server)
 
-    public TcpHandler(Socket serverSocketTCP, int tcpPort)
+    public TcpHandler(Socket serverSocketTCP)
     {
         try
         {
@@ -20,10 +20,6 @@ public class TcpHandler extends ClientHandler implements Runnable
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(serverSocketTCP.getOutputStream()));   // OutputStreamWriter is for character streams, OutputStream is for bytes. Therefore, wrap the byte stream in a character stream. Buffering the stream increases efficiency.
             this.bufferedReader = new BufferedReader(new InputStreamReader(serverSocketTCP.getInputStream()));   // BufferedWriter stream is for sending, BufferedReader for receiving.
 
-            this.clientUsername = bufferedReader.readLine();
-            clientDataAL.add(this);
-
-            broadcastMessage("Server: " + clientUsername + " has entered the chat!");
         } catch (IOException ioe)
         {
             closeEverything(serverSocketTCP, bufferedReader, bufferedWriter);
@@ -70,6 +66,43 @@ public class TcpHandler extends ClientHandler implements Runnable
                 this.setMouseY(Integer.parseInt(tokens[4]));
                 broadcastButtonPress(tokens[1], this.getPlayPressed1(), this.getMouseX(), this.getMouseY());
             }
+            else if (messageFromClient.startsWith("+"))
+            {
+                validateLoginCredentials(messageFromClient);
+            }
+        }
+    }
+
+    private void validateLoginCredentials(String messageFromClient)
+    {
+        try
+        {
+            this.clientUsername = messageFromClient.substring(1);
+            boolean duplicate = false;
+            for (int i = 0; i < clientDataAL.size(); i++)
+            {
+                if (clientDataAL.get(i).clientUsername.equalsIgnoreCase(messageFromClient.substring(1)))
+                {
+                    duplicate = true;
+                    // SEND TCP PACKET INDICATING VALID ENTRY TO CLIENT
+                    this.bufferedWriter.write("+" + false);
+                    this.bufferedWriter.newLine();
+                    this.bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+                    break;
+                }
+            }
+            if (!duplicate)
+            {
+                clientDataAL.add(this);
+                // SEND TCP PACKET INDICATING VALID ENTRY TO CLIENT
+                this.bufferedWriter.write("+" + true);
+                this.bufferedWriter.newLine();
+                this.bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
+            }
+
+        } catch (IOException ioe)
+        {
+            closeEverything(TCPSocket, bufferedReader, bufferedWriter);
         }
     }
 
@@ -252,36 +285,6 @@ public class TcpHandler extends ClientHandler implements Runnable
                 }
             }
         }
-//        else
-//        {
-//            for (int i = 0; i < clientDataAL.size(); i++)
-//            {
-//                if (!clientDataAL.get(i).getClientUsername().equals(clientUsername) && clientDataAL.get(i).getJoinedGame())
-//                {
-//                    try
-//                    {
-//                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.write("-" + clientUsername + "-" + buttonPressed);
-//                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.newLine();
-//                        ((TcpHandler) clientDataAL.get(i)).bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
-//
-//                    } catch (IOException ioe)
-//                    {
-//                        closeEverything(TCPSocket, bufferedReader, bufferedWriter);
-//                    }
-//                }
-//            }
-//            try
-//            {
-//                this.bufferedWriter.write("-" + clientUsername + "-" + buttonPressed);
-//                this.bufferedWriter.newLine();
-//                this.bufferedWriter.flush();   // Buffer won't be sent to Output Stream unless it is full, so flush() is necessary to force the buffer to send the message and empty.
-//
-//            } catch (IOException ioe)
-//            {
-//                closeEverything(TCPSocket, bufferedReader, bufferedWriter);
-//            }
-//
-//        }
 
     }
 

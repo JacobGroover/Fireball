@@ -21,7 +21,6 @@ public class Server
     public Server(ServerSocket serverSocketTCP)
     {
         this.serverSocketTCP = serverSocketTCP;
-        //this.serverSocketUDP = serverSocketUDP;   // UDP
     }
 
     public void startServer()
@@ -33,7 +32,7 @@ public class Server
             {
                 Socket serverSocketTCP = this.serverSocketTCP.accept(); // Suspends code here until a client connects. When a client connects, values are stored to a socket object, which can be used to communicate with that client
                 System.out.println("A new client has connected!");  // TEST CODE
-                TcpHandler tcpHandler = new TcpHandler(serverSocketTCP, tcpPort);  // Custom class; see ClientHandler for details
+                TcpHandler tcpHandler = new TcpHandler(serverSocketTCP);  // Custom class; see ClientHandler for details
 
                 Thread tcpThread = new Thread(tcpHandler);   // Spawn a new Thread to handle the client connection, pass ClientHandler object to it
                 tcpThread.start();

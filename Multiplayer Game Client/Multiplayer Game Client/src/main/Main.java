@@ -11,9 +11,9 @@ import java.net.Socket;
 public class Main
 {
 
-    public static String username;
     public static int clickCount;
-    public static boolean onlineSession;
+    public static boolean onlineSession = true;
+    public static volatile boolean loginAttempt;
     public static volatile boolean validEntry;
     public static void main(String[] args)
     {
@@ -44,7 +44,6 @@ public class Main
         button1.setFont(new Font("Arial", Font.BOLD, 40));
         button1.setAlignmentX(Component.CENTER_ALIGNMENT);
         //button1.setPreferredSize(new Dimension(500, 50));
-        boolean changeSession = false;
         login.add(button1);
 
         JButton button2 = new JButton("LOGIN");
@@ -52,6 +51,10 @@ public class Main
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button2.setAlignmentY(Component.BOTTOM_ALIGNMENT);
         login.add(button2);
+
+        //login.pack();
+        login.setLocationRelativeTo(null);
+        login.setVisible(true);
 
         button1.addActionListener(new ActionListener()
         {
@@ -76,17 +79,17 @@ public class Main
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                username = textField1.getText();
-                if (username.length() < 2 || username.length() > 15 || username.contains("+") || username.contains("-") ||
-                        username.contains(":") || username.contains("*") || username.substring(0, 1).matches("\\d"))
+                Client.clientUsername = textField1.getText();
+                if (Client.clientUsername.length() < 2 || Client.clientUsername.length() > 15 || Client.clientUsername.contains("+") || Client.clientUsername.contains("-") ||
+                        Client.clientUsername.contains(":") || Client.clientUsername.contains("*") || Client.clientUsername.substring(0, 1).matches("\\d"))
                 {
-                    validEntry = false;
+                    loginAttempt = false;
                     JOptionPane.showMessageDialog(null, "Name must be between 2 and 15 characters, cannot start with a number, and cannot contain '+', '-', ':' or '*'",
                             "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
                 }
                 else
                 {
-                    validEntry = true;
+                    loginAttempt = true;
                     if (button1.getText().equals("ONLINE SESSION"))
                     {
                         onlineSession = true;
@@ -95,37 +98,56 @@ public class Main
                     {
                         onlineSession = false;
                     }
-                    login.dispose();
                 }
             }
         });
 
-        //login.pack();
-        login.setLocationRelativeTo(null);
-        login.setVisible(true);
-
-        while (!validEntry)
+        Socket socket;
+        try
         {
-            Thread.onSpinWait();
+            socket = new Socket(Client.serverAddress, Client.serverTcpPort1);
+        } catch (IOException e)
+        {
+            System.err.println("Host could not be found!");
+            throw new RuntimeException(e);
         }
 
-        // Oghma-Infinium Home IP 192.168.2.102
-        if (onlineSession)
+        TCPClient tcpClient;
+        do
         {
-            Client.serverAddress = "99.147.220.159";
-        }
-        else
-        {
-            Client.serverAddress = "192.168.2.102";
-        }
-        Client.serverTcpPort1 = 6682;
-        Client.serverUdpPort1 = 4445;
+            while (!loginAttempt)
+            {
+                Thread.onSpinWait();
+            }
+            loginAttempt = false;
+
+            if (onlineSession)
+            {
+                Client.serverAddress = "99.147.220.159";
+            }
+            else
+            {
+                Client.serverAddress = "192.168.2.102";
+            }
+
+            tcpClient = new TCPClient(socket);
+
+            validEntry = tcpClient.verifyLogin();
+            if (!validEntry)
+            {
+                JOptionPane.showMessageDialog(null, "That username is already taken!",
+                        "Invalid Input", JOptionPane.INFORMATION_MESSAGE);
+                Thread.onSpinWait();
+
+            }
+
+        } while (!validEntry);
+        login.dispose();
 
         JFrame window = new JFrame();   // create a window
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // set window to exit when closed
-        //window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         window.setResizable(false); // prevents resizing of the window
-        window.setTitle(username);  // set name of the window
+        window.setTitle(Client.clientUsername);  // set name of the window
 
         // Add GamePanel object to main method for instantiating GUI on game launch
         GamePanel gamePanel = new GamePanel();
@@ -138,26 +160,15 @@ public class Main
 
         gamePanel.setupGame();
         gamePanel.startGameThread();
+        UDPClient udpClient = new UDPClient(gamePanel);
 
-        try
-        {
-            Socket socket = new Socket(Client.serverAddress, Client.serverTcpPort1);
-            TCPClient tcpClient = new TCPClient(socket, username);
-            UDPClient udpClient = new UDPClient(gamePanel);
+        // Call listenForMessage() and sendJoinedGame() methods on this client instance; both run on separate threads and are blocked, so they both get called and run continuously while connected.
+        tcpClient.listenForMessage(gamePanel);
+        tcpClient.sendInfo(gamePanel);
 
-            // Call listenForMessage() and sendJoinedGame() methods on this client instance; both run on separate threads and are blocked, so they both get called and run continuously while connected.
-            tcpClient.listenForMessage(gamePanel);
-            tcpClient.sendInfo(gamePanel);
-
-            // Run UDP threads to handle movement and position packets
-            udpClient.sendDP();
-            udpClient.receiveDP();
-
-        } catch (IOException ioe)
-        {
-            System.err.println("Host could not be found!");
-            //throw new RuntimeException(ioe);
-        }
+        // Run UDP threads to handle movement and position packets
+        udpClient.sendDP();
+        udpClient.receiveDP();
 
     }
 }

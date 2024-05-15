@@ -136,18 +136,6 @@ public class UDPClient extends Client
                                 }
                             }
 
-//                            for (OtherPlayer otherPlayer : otherPlayers)
-//                            {
-//
-//                                // update local client with data from server
-//                                if (clientUsername.equals(otherPlayer.clientUserName))
-//                                {
-//                                    otherPlayer.velocityX = Double.parseDouble(velocityX);
-//                                    otherPlayer.velocityY = Double.parseDouble(velocityY);
-//                                    otherPlayer.worldX = Double.parseDouble(worldX);
-//                                    otherPlayer.worldY = Double.parseDouble(worldY);
-//                                }
-//                            }
                         }
                     }
 

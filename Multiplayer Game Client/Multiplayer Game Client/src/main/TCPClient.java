@@ -4,28 +4,21 @@ import entities.OtherPlayer;
 import entities.Player;
 
 import java.io.*;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
 import java.net.Socket;
 
 public class TCPClient extends Client
 {
-    private Socket socket;
+    public Socket socket;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
 
-    public TCPClient(Socket socket, String clientUsername)
+    public TCPClient(Socket socket)
     {
+        this.socket = socket;
         try
         {
-            this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            Client.clientUsername = clientUsername;
-
-            bufferedWriter.write(clientUsername);
-            bufferedWriter.newLine();
-            bufferedWriter.flush();
 
         } catch (IOException ioe)
         {
@@ -107,58 +100,6 @@ public class TCPClient extends Client
             }
         });
         t1.start();
-
-    }
-
-    public void sendPosition()
-    {
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    bufferedWriter.write(clientUsername);
-                    bufferedWriter.newLine();
-                    bufferedWriter.flush();
-
-
-                    int FPS = 60;
-                    double drawInterval = (double)1000000000/ FPS;
-                    double delta = 0;
-                    long lastTime = System.nanoTime();
-                    long currentTime;
-                    //long timer = 0;
-                    //int drawCount = 0;
-
-                    while (socket.isConnected())
-                    {
-
-                        currentTime = System.nanoTime();
-
-                        delta += (currentTime - lastTime) / drawInterval;
-
-                        lastTime = currentTime;
-
-                        if (delta >= 1) {
-
-                            // TCP MOVEMENT
-                            bufferedWriter.write("*" + Player.sendVelocity + clientUsername);
-                            bufferedWriter.newLine();
-                            bufferedWriter.flush();
-
-
-                            delta--;
-                            //drawCount++;
-                        }
-                    }
-                } catch (IOException ioe)
-                {
-                    closeEverything(socket, bufferedReader, bufferedWriter);
-                }
-            }
-        });
 
     }
 
@@ -293,4 +234,41 @@ public class TCPClient extends Client
             ioe.printStackTrace();
         }
     }
+
+    public boolean verifyLogin()
+    {
+        boolean validEntry = false;
+        if (socket.isConnected())
+        {
+
+            String message = "";
+            try
+            {
+                bufferedWriter.write("+" + clientUsername);
+                bufferedWriter.newLine();
+                bufferedWriter.flush();
+
+                while (message.isEmpty())
+                {
+                    message = bufferedReader.readLine().trim();
+                }
+
+            } catch (IOException ioe)
+            {
+                closeEverything(socket, bufferedReader, bufferedWriter);
+            }
+
+            if (message.startsWith("+") && Boolean.parseBoolean(message.substring(1)))
+            {
+                validEntry = true;
+            }
+
+        }
+        else
+        {
+            closeEverything(socket, bufferedReader, bufferedWriter);
+        }
+        return validEntry;
+    }
+
 }
