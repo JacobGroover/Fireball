@@ -2,7 +2,7 @@
 README
 =============
 
-- This is a small Java Swing project I undertook to teach myself net code and multithreading concepts.
+- This is a Java Swing project I undertook to teach myself Swing, net code and multithreading concepts.
 - It is meant to be run on a dedicated server (project files included here) but the client will run without the server.
 - For convenience, the server and client have been packaged into executable .jar files separately.
 - Will need JRE to run the jar files, JDK 22.0.1 was used for the project: https://www.oracle.com/java/technologies/downloads/#jdk21-windows
@@ -28,6 +28,6 @@ NOTES:
 =============
 KNOWN ISSUES:
 =============
-- Projectiles should have used ConcurrentHashMaps instead of ArrayLists. It's a challenge to make this evident given the small scale of the game.
+- Projectiles should have used ConcurrentHashMaps instead of ArrayLists for better response time to collision checks and for thread safety.
 - I was learning as I went and was aware the server should be authoritative for many of the checks that are client-side (i.e., collisions, final determination of damage dealt, position, etc.) but decided to see if I could get it working before worrying about that. With enough latency, this can lead to a player being dead on one client's screen while they are alive on another. If this causes a desync in player state and/or position, pressing ESC and exiting to main menu, then returning to game lobby will fix it.
 - Also due to lack of server authority, the method for preventing players spawning inside one another and getting stuck that way can also cause players to teleport to nearby locations when running into each other (if there is enough latency).
