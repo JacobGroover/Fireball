@@ -12,7 +12,8 @@
 !*.jar
 
 # .. But ignore those files types in the out subdirectories.
-/*out
+#/*out/*
 #out/*
+*/out
 #/Multiplayer Game Server/out/
 #/Multiplayer Game Client/out/
