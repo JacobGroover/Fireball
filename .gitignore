@@ -1,32 +1,12 @@
-### IntelliJ IDEA ###
-.idea/*
-*.iml
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+# Ignore everything
+*
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+# .. Except subdirectories...
+!*/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
-.vscode/
-
-### Mac OS ###
-.DS_Store
-/res/META-INF/MANIFEST.MF
+# .. And except for these files...
+!.gitignore
+!*.java
+!*.png
+!*.txt
+!*.jar
