@@ -8,6 +8,8 @@ README
 - Will need JRE to run the jar files, JDK 22.0.1 was used for the project: https://www.oracle.com/java/technologies/downloads/#jdk21-windows
 
 - The login screen will prompt for a username. That username is used to communicate game packets between clients during the game session.
+- For server setup: TCP Port for server is set to 6682. To host a dedicated server, port forwarding must be set up. Once the server is running, clients can enter the public IP address 
+  of the server machine and establish a TCP connection on port 6682.
 
 =============
 CONTROLS:
