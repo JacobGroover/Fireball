@@ -10,3 +10,5 @@
 !*.png
 !*.txt
 !*.jar
+
+out/
