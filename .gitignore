@@ -10,3 +10,6 @@
 !*.png
 !*.txt
 !*.jar
+
+# .. But ignore those files types in the out subdirectories.
+out
