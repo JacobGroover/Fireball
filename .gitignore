@@ -13,4 +13,4 @@
 
 # .. But ignore those files types in the out subdirectories.
 #./out/
-out/
+out/*
