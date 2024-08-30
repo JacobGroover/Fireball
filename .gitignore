@@ -11,4 +11,5 @@
 !*.txt
 !*.jar
 
+# .. And exclude out directories.
 out/
