@@ -6,6 +6,7 @@ README
 - It is meant to be run on a dedicated server (project files included here) but the client will run without the server.
 - For convenience, the server and client have been packaged into executable .jar files separately.
 - Will need JRE to run the jar files, JDK 22.0.1 was used for the project: https://www.oracle.com/java/technologies/downloads/#jdk21-windows
+- NOTE: If using IntelliJ, you must mark the res folder as Resource Root, otherwise a null exception will be returned when the java files attempt to access the resources for images.
 
 - The login screen will prompt for a username. That username is used to communicate game packets between clients during the game session.
 - For server setup: TCP Port for server is set to 6682. To host a dedicated server, port forwarding must be set up. Once the server is running, clients can enter the public IP address 
